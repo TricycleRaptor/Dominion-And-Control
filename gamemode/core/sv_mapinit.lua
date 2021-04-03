@@ -11,10 +11,10 @@ function CleanupMapEntities()
 			ent:Remove() -- Remove it
 		end
 	end
-	--print("[BFRS:] Map entities cleanup operated successfully.")
+	--print("[DAC:] Map entities cleanup operated successfully.")
 end
 
---game.CleanUpMap( false, { "bfrs_*" } )
+--game.CleanUpMap( false, { "DAC_*" } )
 
 -- This is commented out for now, but what the above function does is allow us to put in filters for ignoring entities when a map is cleaned up. This is especially
 -- helpful for when we want to start new rounds and reset the map without removing critical entities like the team spawns and objectives established in the setup phase.

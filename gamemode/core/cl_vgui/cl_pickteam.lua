@@ -96,32 +96,19 @@ function GM:ShowTeam()
 		teamPanel:Dock(LEFT)
 		teamPanel:DockPadding(10,10,10,10)
 
-		teamLabel = vgui.Create("DLabel", teamPanel)
+		local teamLabel = vgui.Create("DLabel", teamPanel)
 		teamLabel:SetTall(40)
 		teamLabel:Dock(TOP)
 		teamLabel:SetContentAlignment(8)
 		teamLabel:SetFont("DAC.PickTeam")
 		teamLabel:SetColor(teamData.color)
 		teamLabel:SetText(teamData.name)
+		teamPanel:SetCursor("hand")
 
-		local model = table.Random(teamData.models)
-		local modelPanel = vgui.Create("DModelPanel", teamPanel)
-		modelPanel:Dock(FILL)
-		modelPanel:SetModel(model)
-
-		modelPanel.Think = function(p)
-			if p:IsHovered() then
-				opacity = math.Approach(opacity, 0.9, FrameTime() * 0.6)
-			else
-				opacity = math.Approach(opacity, 0.05, FrameTime() * 2)
-			end
-		end
-
-		modelPanel.DoClick = function(p)
+		teamPanel.OnMouseReleased = function()
 			self:HideTeam()
 			RunConsoleCommand( "DAC_changeteam", teamKey )
 		end
-
 	end
 end
 

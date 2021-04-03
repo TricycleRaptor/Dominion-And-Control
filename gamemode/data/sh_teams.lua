@@ -8,7 +8,7 @@ local logoParams = "smooth"
 GM.Teams = {
 	[TEAM_BLUE] = {
 		name = "Blue Team",
-		color = Color(0, 255, 130, 255),
+		color = Color(0, 130, 255, 255),
 		joinable = true,
 		logo = CLIENT and Material("dominion/ui/flag.png", logoParams)
 	},

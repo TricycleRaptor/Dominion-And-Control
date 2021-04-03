@@ -1,19 +1,9 @@
 function GM:PlayerSpawn(ply)
-
-   --hook.Call("PlayerLoadout", GAMEMODE, ply)
-   hook.Call("PlayerSetModel", GAMEMODE, ply)
-
-   ply:SetupHands()
-
+	self.BaseClass:PlayerSpawn(ply)
 end
 
 function GM:PlayerSetModel(ply)
-
-	-- Grab a random model from the two indexed team model tables
-	local mdl = GetRandomPlayerModel(ply:Team()) or "models/player/kleiner.mdl"
-	util.PrecacheModel(mdl)
-	ply:SetModel(mdl)
-	-- Playermodel is set
+	self.BaseClass:PlayerSetModel(ply)
 end
 
 function GM:PlayerFootstep(ply, pos, foot)

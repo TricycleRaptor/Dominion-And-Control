@@ -1,7 +1,7 @@
 local WorkShopDls = {}
 
 local WorkshopMaps = {
-	["2292681414"] = "ares_atrium"
+	["1449731878"] = "gm_vyten"
 }
 
 if SERVER then
