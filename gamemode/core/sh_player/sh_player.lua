@@ -1,5 +1,5 @@
 function GM:PlayerSpawn(ply)
-	self:SyncGameStage(ply)
+	DAC:SyncGameStage(ply)
 	self.BaseClass:PlayerSpawn(ply)
 end
 
@@ -48,13 +48,13 @@ function GM:PlayerCanJoinTeam( ply, teamid )
 	local TimeBetweenSwitches = GAMEMODE.SecondsBetweenTeamSwitches or 10
 	if ( ply.LastTeamSwitch && RealTime()-ply.LastTeamSwitch < TimeBetweenSwitches ) then
 		ply.LastTeamSwitch = ply.LastTeamSwitch + 1
-		ply:ChatPrint( Format( "[BFRS:] Please wait %i seconds before trying to change teams.", ( TimeBetweenSwitches - ( RealTime() - ply.LastTeamSwitch ) ) + 1 ) )
+		ply:ChatPrint( Format( "[DAC:] Please wait %i seconds before trying to change teams.", ( TimeBetweenSwitches - ( RealTime() - ply.LastTeamSwitch ) ) + 1 ) )
 		return false
 	end
 
 	-- Already on this team!
 	if ( ply:Team() == teamid ) then
-		ply:ChatPrint( "[BFRS:] You're already on that team." )
+		ply:ChatPrint( "[DAC:] You're already on that team." )
 		return false
 	end
 
@@ -66,7 +66,7 @@ function GM:PlayerRequestTeam( ply, teamid )
 
 	-- This team isn't joinable
 	if ( !team.Joinable( teamid ) ) then
-		ply:ChatPrint( "[BFRS:] You can't join that team." )
+		ply:ChatPrint( "[DAC:] You can't join that team." )
 	return end
 
 	-- This team isn't joinable
@@ -124,6 +124,6 @@ function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 
 	end
 
-	PrintMessage( HUD_PRINTTALK, Format( "[BFRS:] %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
+	PrintMessage( HUD_PRINTTALK, Format( "[DAC:] %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
 
 end

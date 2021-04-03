@@ -1,6 +1,3 @@
-GAMESTAGE_BUILD = 1
-GAMESTAGE_PLAY = 2
-
 DAC.GameStage = DAC.GameStage or {}
 
 local GameStage = DAC.GameStage
@@ -58,4 +55,8 @@ end
 
 function GameStage:GetTimeRemaining()
 	return self:GetEndTime() - CurTime()
+end
+
+function GameStage:GetData()
+	return DAC.GameStages[self.stage] or {}
 end
