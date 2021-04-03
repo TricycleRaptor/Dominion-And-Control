@@ -1,5 +1,5 @@
-hook.Add( "CreateClientsideRagdoll", "fade_out_corpses", function( entity, ragdoll )
+hook.Add( "CreateClientsideRagdoll", "RemoveClientRagdoll", function( entity, ragdoll )
 	if entity:IsPlayer() then
-        entity.remove()
+        ragdoll:Remove()
     end
 end )
