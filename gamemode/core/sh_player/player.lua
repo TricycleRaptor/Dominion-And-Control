@@ -1,4 +1,5 @@
 function GM:PlayerSpawn(ply)
+	self:SyncGameStage(ply)
 	self.BaseClass:PlayerSpawn(ply)
 end
 

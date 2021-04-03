@@ -6,6 +6,9 @@ GM.TeamBased = true
 GM.Color = Color(195, 198, 31,255)
 DeriveGamemode("sandbox")
 
+
+DAC = DAC or {}
+
 -- ███████╗███╗   ██╗██╗   ██╗███╗   ███╗███████╗
 -- ██╔════╝████╗  ██║██║   ██║████╗ ████║██╔════╝
 -- █████╗  ██╔██╗ ██║██║   ██║██╔████╔██║███████╗
@@ -73,3 +76,21 @@ end
 InitFiles(GM.Name.."/gamemode/lib") -- Load libraries first`
 InitFiles(GM.Name.."/gamemode/core") -- Load the core gamemode
 InitFiles(GM.Name.."/gamemode/data") -- load gamemode data - teams, items, weapons, ect. Might be better to make this seperate in the future with a schema gamemode or addon. Works for now.
+
+--  ██████╗  █████╗ ███╗   ███╗███████╗███████╗████████╗ █████╗  ██████╗ ███████╗
+-- ██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔════╝ ██╔════╝
+-- ██║  ███╗███████║██╔████╔██║█████╗  ███████╗   ██║   ███████║██║  ███╗█████╗
+-- ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ╚════██║   ██║   ██╔══██║██║   ██║██╔══╝
+-- ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗███████║   ██║   ██║  ██║╚██████╔╝███████╗
+--  ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+
+function GM:GetGameStage()
+	return self.CurrentGameStage
+end
+
+function GM:SetGameStage(gameStage)
+	self.CurrentGameStage = gameStage
+	if SERVER then
+		self:SyncGameStage()
+	end
+end
