@@ -10,4 +10,6 @@ function GM:Initialize()
 	gameStage:SetDuration(10)
 	gameStage:Start()
 	DAC:SetGameStage(gameStage)
+
+	GetConVar("sbox_weapons"):SetBool(false)
 end
