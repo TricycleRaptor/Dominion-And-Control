@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/ctf_flag/flagred"
+	"$surfaceprop" "Metal"
+}
