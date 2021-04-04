@@ -1,7 +1,7 @@
 DAC.GameStage = DAC.GameStage or {}
 
 local GameStage = DAC.GameStage
-GameStage.stage = GAMESTAGE_BUILD
+GameStage.stage = 1
 GameStage.startTime = 0
 GameStage.active = false
 

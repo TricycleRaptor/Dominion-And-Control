@@ -2,6 +2,8 @@ GAMESTAGE_BASEPLACE = 1
 GAMESTAGE_BUILD = 2
 GAMESTAGE_PLAY = 3
 
+DAC.DefaultGameStage = GAMESTAGE_BASEPLACE
+
 DAC:RegisterGameStage(GAMESTAGE_BASEPLACE, {
 	name = "Base Selection",
 	showOnHud = true,
