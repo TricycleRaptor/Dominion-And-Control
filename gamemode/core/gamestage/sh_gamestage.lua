@@ -53,7 +53,7 @@ function GameStage:GetEndTime()
 end
 
 function GameStage:GetTimeRemaining()
-	return self:GetEndTime() - CurTime()
+	return math.max(self:GetEndTime() - CurTime(), 0)
 end
 
 function GameStage:GetData()

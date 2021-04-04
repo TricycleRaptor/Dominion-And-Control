@@ -26,8 +26,8 @@ hook.Add("Think", "DAC.GameStage.Think", function()
 		curGameStage:Think()
 
 		local data = curGameStage:GetData()
-		if data.nextAutoStage and CurTime() >= curGameStage:GetEndTime() then
-			local newStage = DAC.GameStage.New(data.nextAutoStage)
+		if SERVER and data.nextStage and CurTime() >= curGameStage:GetEndTime() then
+			local newStage = DAC.GameStage.New(data.nextStage)
 			DAC:SetGameStage(newStage)
 		end
 	end

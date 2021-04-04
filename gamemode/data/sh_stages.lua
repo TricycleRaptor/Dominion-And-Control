@@ -14,8 +14,9 @@ DAC:RegisterGameStage(GAMESTAGE_BUILD, {
 	name = "Build",
 	showOnHud = true,
 	pvp = false,
+	allowBuilding = true,
 	nextStage = GAMESTAGE_PLAY,
-	duration = 10,
+	duration = 0.2,
 	color = Color(0, 255, 0)
 })
 

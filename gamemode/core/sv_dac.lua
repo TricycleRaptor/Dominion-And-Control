@@ -19,3 +19,13 @@ hook.Add("EntityTakeDamage", "DAC.GameStage.Damage", function(ent, dmginfo)
 		return true
 	end
 end)
+
+hook.Add("PlayerSpawnObject", "DAC.PlayerSpawnedProp", function(ply, model, ent)
+	local stage = DAC:GetGameStage()
+	local data = stage and stage:GetData()
+	if not data.allowBuilding then
+	-- if not data.allowBuilding and not ply:IsAdmin() then
+		ply:ChatPrint("Cannot build while the game stage is "..data.name)
+		return false
+	end
+end)
