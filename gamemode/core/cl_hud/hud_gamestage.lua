@@ -1,14 +1,13 @@
 
 hook.Add("HUDPaint", "DAC.HudGameStage", function()
-	local w, h = ScrW(), ScrH()
 	local gameStage = DAC:GetGameStage()
 	local data = gameStage:GetData()
-
 	if data.showOnHud then
+		local w, h = ScrW(), ScrH()
 		local hudX = w *0.5
 		local hudY = 10
 		draw.SimpleTextOutlined(data.name, "DAC.GameStage", hudX, hudY, data.color, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, Color(0,0,0,255))
-			if data.timed then
+		if data.duration then
 			local timeRemaining = math.Round(gameStage:GetTimeRemaining())
 			local minutes = math.floor(timeRemaining / 60)
 			local seconds = timeRemaining - (minutes * 60)

@@ -107,7 +107,7 @@ function GM:ShowTeam()
 
 		teamPanel.OnMouseReleased = function()
 			self:HideTeam()
-			RunConsoleCommand( "DAC_changeteam", teamKey )
+			RunConsoleCommand( "dac_changeteam", teamKey )
 		end
 	end
 end

@@ -5,10 +5,7 @@ include("shared.lua")
 GM.CurrentGameStage = nil
 
 function GM:Initialize()
-	local gameStage = DAC.GameStage.New()
-	gameStage:SetStage(GAMESTAGE_BUILD)
-	gameStage:SetDuration(10)
-	gameStage:Start()
+	local gameStage = DAC.GameStage.New(GAMESTAGE_BASEPLACE)
 	DAC:SetGameStage(gameStage)
 
 	GetConVar("sbox_weapons"):SetBool(false)
