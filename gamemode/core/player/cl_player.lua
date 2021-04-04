@@ -2,7 +2,7 @@ local deathRagdolls = {}
 
 hook.Add( "CreateClientsideRagdoll", "RemoveClientRagdoll", function( entity, ragdoll )
 	-- if DAC.ConVars.deathSound:GetBool() and entity:IsPlayer() then
-	if DAC.ConVars.deathSound:GetBool() then
+	if DAC.ConVars.deathSound:GetBool() and table.Count(deathRagdolls) < 16 then
         sound.PlayFile("sound/spazter/death"..math.random(1,112)..".wav", "3d", function(channel)
             if IsValid(channel) then
                 ragdoll.soundChannel = channel
