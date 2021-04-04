@@ -1,5 +1,5 @@
 function GM:PlayerSpawn(ply)
-	DAC:SyncGameStage(ply)
+	DACSyncGameStage(ply)
 	self.BaseClass:PlayerSpawn(ply)
 end
 
@@ -7,54 +7,18 @@ function GM:PlayerSetModel(ply)
 	self.BaseClass:PlayerSetModel(ply)
 end
 
-function GM:PlayerFootstep(ply, pos, foot)
-	if(ply:Team() == TEAM_COMBINE) then
-		if( ply:GetVelocity():Length2D() > 150 ) then -- Gear shuffle when moving at a certain speed
-			local soundFile = foot == 0 and "NPC_MetroPolice.RunFootstepLeft" or "NPC_MetroPolice.RunFootstepRight"
-			if CLIENT and ply == LocalPlayer() then
-				ply:EmitSound(soundFile, 70, 100, 0.7)
-			elseif SERVER then
-				local filter = RecipientFilter()
-				filter:AddPAS(ply:GetPos())
-				filter:RemovePlayer(ply)
-
-				local footSound = CreateSound(ply, soundFile, filter)
-				footSound:SetSoundLevel(75)
-				footSound:Play()
-			end
-
-			return true
-
-		elseif ply:OnGround() then
-			return false -- No gear shuffle
-		end
-
-	else -- Rebel team
-
-		if( ply:GetVelocity():Length2D() > 150 ) then
-			return false
-		else
-			return true -- Silent footsteps when crouch walking
-		end
-
-	end
-
-	self.BaseClass:PlayerFootstep( ply, pos, foot, s, vol, rf );
-
-end
-
 function GM:PlayerCanJoinTeam( ply, teamid )
 
 	local TimeBetweenSwitches = GAMEMODE.SecondsBetweenTeamSwitches or 10
-	if ( ply.LastTeamSwitch && RealTime()-ply.LastTeamSwitch < TimeBetweenSwitches ) then
+	if ( ply.LastTeamSwitch and RealTime()-ply.LastTeamSwitch < TimeBetweenSwitches ) then
 		ply.LastTeamSwitch = ply.LastTeamSwitch + 1
-		ply:ChatPrint( Format( "[DAC:] Please wait %i seconds before trying to change teams.", ( TimeBetweenSwitches - ( RealTime() - ply.LastTeamSwitch ) ) + 1 ) )
+		ply:ChatPrint( Format( "[DAC] Please wait %i seconds before trying to change teams.", ( TimeBetweenSwitches - ( RealTime() - ply.LastTeamSwitch ) ) + 1 ) )
 		return false
 	end
 
 	-- Already on this team!
 	if ( ply:Team() == teamid ) then
-		ply:ChatPrint( "[DAC:] You're already on that team." )
+		ply:ChatPrint( "[DAC] You're already on that team." )
 		return false
 	end
 
@@ -66,7 +30,7 @@ function GM:PlayerRequestTeam( ply, teamid )
 
 	-- This team isn't joinable
 	if ( !team.Joinable( teamid ) ) then
-		ply:ChatPrint( "[DAC:] You can't join that team." )
+		ply:ChatPrint( "[DAC] You can't join that team." )
 	return end
 
 	-- This team isn't joinable
@@ -124,6 +88,6 @@ function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 
 	end
 
-	PrintMessage( HUD_PRINTTALK, Format( "[DAC:] %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
+	PrintMessage( HUD_PRINTTALK, Format( "[DAC] %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
 
 end
