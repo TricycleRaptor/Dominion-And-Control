@@ -127,9 +127,3 @@ function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 	PrintMessage( HUD_PRINTTALK, Format( "[DAC:] %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
 
 end
-
-hook.Add( "CreateEntityRagdoll", "RemoveClientRagdoll", function( entity, ragdoll )
-	if entity:IsPlayer() then
-        ragdoll:Remove()
-    end
-end )

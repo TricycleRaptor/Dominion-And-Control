@@ -11,3 +11,10 @@ BuildFont("DAC.PickTeam", {
 	alias = true,
 	weight = 900,
 })
+
+BuildFont("DAC.GameStage", {
+	font = "Trebuchet MS",
+	size = ScrH() * 0.04,
+	alias = true,
+	weight = 900,
+})
