@@ -1,0 +1,14 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/ctf_sphere/spherered"
+	"$surfaceprop" "Glass"
+	"Proxies"
+	{
+		"AnimatedTexture"
+		 {
+			 "animatedtexturevar" "$basetexture"
+			 "animatedtextureframenumvar" "$frame"
+			 "animatedtextureframerate" "24"
+		}
+	 }
+}

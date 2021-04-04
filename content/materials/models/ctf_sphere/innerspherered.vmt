@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/ctf_sphere/spherered"
+	"$surfaceprop" "Metal"
+	"$translucent" 1
+	"$model" 1
+}
