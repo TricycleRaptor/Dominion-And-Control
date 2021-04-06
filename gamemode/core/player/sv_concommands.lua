@@ -7,12 +7,12 @@ concommand.Add("dac_set_gamestage", function(ply, cmd, args)
 
 	local stage = tonumber(args[1])
 	if not DAC.GameStages[stage] then
-		ply:ChatPrint("Invalid Stage Id: "..stage)
+		ply:ChatPrint("[DAC]: Invalid stage ID: "..stage)
 		return
 	end
 
 	local newStage = DAC.GameStage.New(stage)
 	DAC:SetGameStage(newStage)
 	DAC:SyncGameStage()
-	ply:ChatPrint("Setting Game Stage too "..newStage:GetData().name)
+	ply:ChatPrint("[DAC]: Setting game stage to "..newStage:GetData().name)
 end)

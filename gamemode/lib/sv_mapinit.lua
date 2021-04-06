@@ -11,7 +11,7 @@ function CleanupMapEntities()
 			ent:Remove() -- Remove it
 		end
 	end
-	--print("[DAC:] Map entities cleanup operated successfully.")
+	--print("[DAC]: Map entities cleanup operated successfully.")
 end
 
 --game.CleanUpMap( false, { "DAC_*" } )
