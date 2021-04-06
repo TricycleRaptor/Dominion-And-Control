@@ -74,3 +74,5 @@ end
 InitFiles(GM.Name.."/gamemode/lib") -- Load libraries first`
 InitFiles(GM.Name.."/gamemode/core") -- Load the core gamemode
 InitFiles(GM.Name.."/gamemode/data") -- load gamemode data - teams, items, weapons, ect. Might be better to make this seperate in the future with a schema gamemode or addon. Works for now.
+
+hook.Run("DAC.GamemodeInitialLoad")

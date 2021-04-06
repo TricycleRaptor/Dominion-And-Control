@@ -33,6 +33,11 @@ hook.Add("Think", "DAC.GameStage.Think", function()
 	end
 end)
 
+hook.Run("DAC.GamemodeInitialLoad", "DAC.SetDefaultGameStage", function()
+	local defaultStage = DAC.GameStage.New(DAC.DefaultGameStage)
+	DAC:SetGameStage(defaultStage)
+end)
+
 function DAC:RegisterGameStage(key, data)
 	self.GameStages[key] = data
 end
