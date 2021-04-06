@@ -14,7 +14,7 @@ hook.Add("EntityTakeDamage", "DAC.GameStage.Damage", function(ent, dmginfo)
 	local attacker = dmginfo:GetAttacker()
 	local data = stage:GetData()
 	if not data.pvp and attacker:IsPlayer() and ent:IsPlayer() then
-		attacker:ChatPrint("Damage is Disabled while the game stage is "..data.name)
+		attacker:ChatPrint("[DAC]: Damage is disabled while the game stage is "..data.name)
 		dmginfo:ScaleDamage(0)
 		return true
 	end
@@ -25,7 +25,7 @@ hook.Add("PlayerSpawnObject", "DAC.PlayerSpawnedProp", function(ply, model, ent)
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
 	-- if not data.allowBuilding and not ply:IsAdmin() then
-		ply:ChatPrint("Cannot build while the game stage is "..data.name)
+		ply:ChatPrint("[DAC]: Cannot build while the game stage is "..data.name)
 		return false
 	end
 end)

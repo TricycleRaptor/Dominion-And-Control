@@ -57,7 +57,7 @@ local function InitFiles(dir, realm)
 		end
 		if SERVER and fileRealm ~= REALM_CL then -- Only sv_ files will pass this check and is loaded only on the server.
 			include(dir.."/"..v)
-			print("Loading "..dir.."/"..v.." on the server...")
+			print("Loading "..dir.."/"..v.." on the SERVER...")
 		end --Everytihng else, such as sh_, will pass both checks and is shared.
 	end
 
