@@ -12,7 +12,7 @@ GM.Teams = {
 		joinable = true,
 		logo = CLIENT and Material("dominion/ui/flag.png", logoParams)
 	},
-	[TEAM_RED]= {
+	[TEAM_RED] = {
 		name = "Red Team",
 		color = Color(255, 0, 0, 255),
 		joinable = true,
