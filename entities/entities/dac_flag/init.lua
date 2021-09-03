@@ -17,6 +17,7 @@ function ENT:Initialize()
 	self:SetOnBase(true)
 	self:SetHeld(false)
 	self:SetCarrier(nil)
+	self:SetDropTime(0)
 
 	-- Check the spawning player's team and set the value of the flag to the player's team. This will change later to coordinate from a SWEP rather than the spawn menu
 	--self:SetTeam(1)
@@ -35,8 +36,8 @@ function ENT:StartTouch(entity)
 		
 		-- Broadcast flag pickup
 
-		self:SetOnBase(false)
 		print("[DAC]: The flag is away!")
+		self:SetOnBase(false)
 		self:SetHeld(true)
 		self:SetCarrier(entity)
 
@@ -50,15 +51,16 @@ function ENT:StartTouch(entity)
 		self.Entity:SetParent(entity)
 		self.Entity:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 
-	elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == false then
-		self.Entity:ReturnFlag()
-
+	elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == false then -- Team member touched the flag
+		
 		-- Network that the flag has been returned
+		self.Entity:ReturnFlag()
+		
 	end
-
 
 end
 
+-- TO DO: Work on return flag, maybe do a callback on a return function with existing network vars
 function ENT:ReturnFlag()
 
 	local flagBase = self.flagBase
@@ -67,9 +69,7 @@ function ENT:ReturnFlag()
 	self:SetParent()
 	self:SetPos(flagBase:GetPos() + flagBase:GetUp() * 10)
 	self:SetAngles(flagBase:GetAngles())
-	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
-
-	
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)	
 
 end
 

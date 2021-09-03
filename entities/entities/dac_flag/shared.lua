@@ -27,6 +27,7 @@ function ENT:SetupDataTables()
             values = teamList -- Get team data from sh_teams.lua
         }
     })
+    self:NetworkVar("Int", 1, "DropTime")
     self:NetworkVar("Bool", 0, "Held")
     self:NetworkVar("Bool", 1, "OnBase")
     self:NetworkVar("Entity", 0, "Carrier")
@@ -41,7 +42,32 @@ end
 
 function ENT:Think()
 
-    self:AnimateFlag()
+    self:AnimateFlag() -- Call animation function
+
+    if self.Entity:GetHeld() == true and self:GetCarrier():IsPlayer() and not self.Entity:GetCarrier():Alive() then -- This will trigger when the flag carrier dies
+
+        self.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
+
+        self.Entity:SetHeld(false)
+        self.Entity:SetCarrier(NULL)
+
+        self.Entity:PhysWake()
+        self.Entity:SetParent(NULL)
+        self.Entity:SetAngles(Angle(0,0,0))
+        self.Entity:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+
+        --BroadcastFlagDropped(self.Entity:GetNWInt("Team"))
+
+    elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 15 then -- Return the flag after 15 seconds of inactivity
+
+        self.Entity:ReturnFlag()
+
+        --BroadcastFlagReturned(self.Entity:GetNWInt("Team"))
+    end
+
+    if self.Entity:GetCarrier() == NULL or self.Entity:GetCarrier() == nil then
+        self.Entity:SetHeld(false)
+    end
 
 end
 
@@ -57,15 +83,19 @@ function ENT:AnimateFlag()
 	local animTime = CurTime() % totalTime
 
 	for i=0,(numFrames-1) do
+
 		local progress = animTime / frameTime - i
 		if progress <= 0 or progress > 1 then
 			progress = 0
 		end
+
 		local prev = i - 1
 		if prev < 0 then
 			prev = numFrames - 1
 		end
+
 		self.Entity:SetFlexWeight(i, progress)
+
 		if (progress > 0) then
 			self.Entity:SetFlexWeight(prev, 1 - progress)
 			return
