@@ -3,7 +3,7 @@
 	"base"		"base"
 	"title"		"Dominion and Control"
 	"version"	"Beta"
-	"author_name"	"DragonByte & Bizz"
+	"author_name"	"Tricycle Raptor"
 	"author_email"	""
 	"maps"	"^dac_"
 	"category"	"pvp"

@@ -1,7 +1,13 @@
-local WorkShopDls = {}
+local WorkShopDls = {
+	["771487490"] = "[simfphys] LUA Vehicles - Base",
+	["831680603"] = "[simfphys] armed vehicles",
+	["1571918906"] = "[LFS] - Planes"
+}
 
 local WorkshopMaps = {
-	["1449731878"] = "gm_vyten"
+	["1449731878"] = "gm_vyten",
+	["1289646999"] = "gm_rhine",
+	["1864156937"] = "rp_deadcity"
 }
 
 if SERVER then

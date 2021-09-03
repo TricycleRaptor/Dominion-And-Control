@@ -7,8 +7,8 @@ function ENT:Initialize()
 	self:SetModel("models/ctf_flagbase/ctf_flagbase.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
-	self.IsBase = true
-	self.HasFlag = true
+	--self.IsBase = true
+	--self.HasFlag = true
 
 	local flagEnt = ents.Create("dac_flag")
 	flagEnt:SetPos(self:GetFlagPos())
@@ -16,6 +16,10 @@ function ENT:Initialize()
 	flagEnt:SetParent(self)
 
 	self.ChildFlag = flagEnt
+
+	-- Set a base condition for the networked vars
+	-- The flag starts attached to the flag, so adjust these values accordingly
+	self:SetHasFlag(true)
 
 end
 

@@ -21,6 +21,9 @@ function ENT:SetupDataTables()
         teamList[teamData.name] = teamIndex
     end
 
+    -- The second argument is a unique identifier slot in the backend
+    -- You can have one of each data type in one slot
+    -- Don't lose track of your shit, boss
     self:NetworkVar("Int", 0, "Team", {
         KeyName = "team",
         Edit = {
@@ -28,6 +31,7 @@ function ENT:SetupDataTables()
             values = teamList
         }
     })
+    self:NetworkVar("Bool", 0, "HasFlag")
 
     if SERVER then
 

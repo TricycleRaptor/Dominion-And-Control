@@ -35,7 +35,7 @@ function GM:ShowTeam()
 	pickTeam:SetContentAlignment(8)
 	pickTeam:SetFont("DAC.PickTeam")
 	pickTeam:SetColor(GAMEMODE.Color)
-	pickTeam:SetText( "Choose your side" )
+	pickTeam:SetText( "Team Select" )
 
 	local bottomBar = vgui.Create("DPanel", TEAM_FRAME)
 	bottomBar:SetTall(120)

@@ -1,4 +1,3 @@
-
 hook.Add("HUDPaint", "DAC.HudGameStage", function()
 	local gameStage = DAC:GetGameStage()
 	local data = gameStage:GetData()

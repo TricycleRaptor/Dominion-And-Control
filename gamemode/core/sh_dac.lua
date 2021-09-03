@@ -11,7 +11,7 @@ DAC.GameStages = {}
 --  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝  ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 
 DAC.ConVars = {}
-DAC.ConVars.deathSound = CreateConVar("dac_death_sounds", 0, bit.bor(FCVAR_ARCHIVE, FCVAR_REPLICATED), "Play funny Death sounds")
+DAC.ConVars.buildTime = CreateConVar("dac_build_time", 1, bit.bor(FCVAR_ARCHIVE, FCVAR_REPLICATED), "Time allocated for build stage.", 1, 60)
 
 --  ██████╗  █████╗ ███╗   ███╗███████╗███████╗████████╗ █████╗  ██████╗ ███████╗
 -- ██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔════╝ ██╔════╝

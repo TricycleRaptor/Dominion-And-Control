@@ -5,7 +5,7 @@ GAMESTAGE_PLAY = 3
 DAC.DefaultGameStage = GAMESTAGE_BASEPLACE
 
 DAC:RegisterGameStage(GAMESTAGE_BASEPLACE, {
-	name = "Base Selection",
+	name = "SETUP",
 	showOnHud = true,
 	pvp = false,
 	nextStage = nil,
@@ -13,18 +13,18 @@ DAC:RegisterGameStage(GAMESTAGE_BASEPLACE, {
 })
 
 DAC:RegisterGameStage(GAMESTAGE_BUILD, {
-	name = "Build",
+	name = "BUILD",
 	showOnHud = true,
 	pvp = false,
 	allowBuilding = true,
 	nextStage = GAMESTAGE_PLAY,
-	duration = 0.2,
+	duration = 0.5, -- Should ideally use a CVar here over a hardcoded value
 	color = Color(0, 255, 0)
 })
 
 DAC:RegisterGameStage(GAMESTAGE_PLAY, {
-	name = "Play",
-	showOnHud = false,
+	name = "BATTLE",
+	showOnHud = true,
 	pvp = true,
 	nextStage = nil,
 	color = Color(255, 0, 0)
