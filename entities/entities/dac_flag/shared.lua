@@ -44,29 +44,30 @@ function ENT:Think()
 
     self:AnimateFlag() -- Call animation function
 
-    if self.Entity:GetHeld() == true and self:GetCarrier():IsPlayer() and not self.Entity:GetCarrier():Alive() then -- This will trigger when the flag carrier dies
+    if SERVER then -- Don't bother the client with this part
 
-        self.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
+        if self.Entity:GetHeld() == true and self:GetCarrier():IsPlayer() and not self.Entity:GetCarrier():Alive() then -- This will trigger when the flag carrier dies
 
-        self.Entity:SetHeld(false)
-        self.Entity:SetCarrier(NULL)
+            self.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
 
-        self.Entity:PhysWake()
-        self.Entity:SetParent(NULL)
-        self.Entity:SetAngles(Angle(0,0,0))
-        self.Entity:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+            self.Entity:SetHeld(false)
+            self.Entity:SetCarrier(NULL)
 
-        --BroadcastFlagDropped(self.Entity:GetNWInt("Team"))
+            self.Entity:PhysWake()
+            self.Entity:SetParent(NULL)
+            self.Entity:SetAngles(Angle(0,0,0))
+            self.Entity:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 
-    elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 15 then -- Return the flag after 15 seconds of inactivity
+        elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 15 then -- Return the flag after 15 seconds of inactivity
 
-        self.Entity:ReturnFlag()
+            self.Entity:ReturnFlag()
 
-        --BroadcastFlagReturned(self.Entity:GetNWInt("Team"))
-    end
+        end
 
-    if self.Entity:GetCarrier() == NULL or self.Entity:GetCarrier() == nil then
-        self.Entity:SetHeld(false)
+        if self.Entity:GetCarrier() == NULL or self.Entity:GetCarrier() == nil then -- Covering bases here, probably isn't necessary
+            self.Entity:SetHeld(false)
+        end
+
     end
 
 end

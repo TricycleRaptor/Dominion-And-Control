@@ -4,8 +4,9 @@ include("shared.lua")
 
 function ENT:Initialize()
 
-	--self.IsFlag = true
-	--self.CanMove = 0
+	local ParentBase = nil
+	self:SetName("dac_flag")
+
 	self:SetModel("models/ctf_flag/ctf_flag.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_NONE)
@@ -34,12 +35,16 @@ function ENT:StartTouch(entity)
 
 	if entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() != self:GetTeam() then -- Consider adding a condition to check against spectators, come back to this later
 		
+		-- Can't set this in the entity initialization hook for some reason, so I have to fucking do it here
+		if(self:GetOnBase() == true and self:GetHeld() == false) then
+			self.ParentBase = self:GetParent()
+		end
+		
 		-- Broadcast flag pickup
-
-		print("[DAC]: The flag is away!")
 		self:SetOnBase(false)
 		self:SetHeld(true)
 		self:SetCarrier(entity)
+		self.ParentBase:SetHasFlag(false)
 
 		-- Setup angles
 		local angles = entity:GetAngles()
@@ -54,22 +59,26 @@ function ENT:StartTouch(entity)
 	elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == false then -- Team member touched the flag
 		
 		-- Network that the flag has been returned
+		--print("[DAC]: " .. entity:Nick() .. " returned the flag.")
 		self.Entity:ReturnFlag()
 		
 	end
 
 end
 
--- TO DO: Work on return flag, maybe do a callback on a return function with existing network vars
 function ENT:ReturnFlag()
 
-	local flagBase = self.flagBase
-	if not flagBase then return end
+	--print("[DAC]: Return function called. Parent base is " .. tostring(self.ParentBase))
 
-	self:SetParent()
-	self:SetPos(flagBase:GetPos() + flagBase:GetUp() * 10)
-	self:SetAngles(flagBase:GetAngles())
-	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)	
+	self:SetParent(self.ParentBase)
+	self:SetPos(self.ParentBase:GetPos() + self.ParentBase:GetUp() * 10)
+	self:SetAngles(self.ParentBase:GetAngles())
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+
+	self:SetOnBase(true)
+	self:SetHeld(false)
+	self:SetCarrier(NULL)
+	self.ParentBase:SetHasFlag(true)
 
 end
 

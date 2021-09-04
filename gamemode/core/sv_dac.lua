@@ -70,3 +70,7 @@ hook.Add("PlayerSpawnSENT", "DAC.PlayerSpawnSENT", function(ply, class)
 		return false
 	end
 end)
+
+hook.Add("PhysgunPickup", "DAC.DenyFlagPhysgun", function( ply, ent )
+	if ent:GetName() == "dac_flag" then return false end
+end )
