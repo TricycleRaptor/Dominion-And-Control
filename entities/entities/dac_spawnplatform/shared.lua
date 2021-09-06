@@ -1,17 +1,13 @@
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
-ENT.PrintName = "Flag Point"
+ENT.PrintName = "Team Spawn"
 ENT.Author = "Arrin Bevers"
-ENT.Purpose = "Base for flag objective"
+ENT.Purpose = "Gamemode team spawn"
 ENT.Category = "DAC"
 
 ENT.Spawnable = true
 ENT.AdminSpawnable = false
 ENT.Editable = true
-
-function ENT:GetFlagPos()
-    return self:GetPos() + self:GetUp() * 10
-end
 
 function ENT:SetupDataTables()
 
@@ -26,12 +22,11 @@ function ENT:SetupDataTables()
     -- Don't lose track of your shit, boss
     self:NetworkVar("Int", 0, "Team", {
         KeyName = "team",
-        Edit = {
+        Edit = { -- Adds entity properties to the context menu for debug purposes
             type = "Combo",
-            values = teamList
+            values = teamList -- Get team data from sh_teams.lua
         }
     })
-    self:NetworkVar("Bool", 0, "HasFlag")
 
     if SERVER then
 

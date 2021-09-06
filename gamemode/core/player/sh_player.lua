@@ -1,6 +1,15 @@
 function GM:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)
 	self.BaseClass:PlayerSpawn(ply)
+
+	-- Check for spawn platforms in the map, call the spawn platform's spawn function on the player if true
+	for _, ent in pairs(ents.GetAll()) do 
+		if (ent.IsSpawnRegion and ply:Team() == ent:GetTeam()) then
+			ply:SetPos(ent:GetSpawnPos())
+			break
+		end
+ 	end
+
 end
 
 function GM:PlayerSetModel(ply)

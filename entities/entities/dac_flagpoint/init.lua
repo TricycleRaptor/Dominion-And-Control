@@ -7,8 +7,6 @@ function ENT:Initialize()
 	self:SetModel("models/ctf_flagbase/ctf_flagbase.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
-	--self.IsBase = true
-	--self.HasFlag = true
 
 	local flagEnt = ents.Create("dac_flag")
 	flagEnt:SetPos(self:GetFlagPos())
