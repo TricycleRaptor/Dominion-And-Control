@@ -14,7 +14,7 @@ hook.Add("EntityTakeDamage", "DAC.GameStage.Damage", function(ent, dmginfo)
 	local attacker = dmginfo:GetAttacker()
 	local data = stage:GetData()
 	if not data.pvp and attacker:IsPlayer() and ent:IsPlayer() then
-		--attacker:ChatPrint("[DAC]: Damage is disabled while the game stage is "..data.name)
+		attacker:ChatPrint("[DAC]: Damage is disabled during the "..data.name .. " stage.")
 		dmginfo:ScaleDamage(0)
 		return true
 	end
@@ -24,7 +24,6 @@ hook.Add("PlayerSpawnObject", "DAC.PlayerSpawnProp", function(ply, model, ent)
 	local stage = DAC:GetGameStage()
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
-	-- if not data.allowBuilding and not ply:IsAdmin() then
 		ply:ChatPrint("[DAC]: Cannot spawn props during the " .. data.name .. " stage.")
 		return false
 	end
@@ -34,8 +33,7 @@ hook.Add("PlayerSpawnVehicle", "DAC.PlayerSpawnVehicle", function(ply, model, na
 	local stage = DAC:GetGameStage()
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
-	-- if not data.allowBuilding and not ply:IsAdmin() then
-		--ply:ChatPrint("[DAC]: Cannot spawn vehicles during the " .. data.name .. " stage.")
+		ply:ChatPrint("[DAC]: Cannot spawn vehicles during the " .. data.name .. " stage.")
 		return false
 	end
 end)
@@ -44,8 +42,7 @@ hook.Add("PlayerSpawnSWEP", "DAC.PlayerSpawnSWEP", function(ply, class, info) --
 	local stage = DAC:GetGameStage()
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
-	-- if not data.allowBuilding and not ply:IsAdmin() then
-		--ply:ChatPrint("[DAC]: Cannot spawn weapons during the " .. data.name .. " stage.")
+		ply:ChatPrint("[DAC]: Cannot spawn weapons during the " .. data.name .. " stage.")
 		return false
 	end
 end)
@@ -54,8 +51,7 @@ hook.Add("PlayerSpawnNPC", "DAC.PlayerSpawnNPC", function(ply, npc_type, weapon)
 	local stage = DAC:GetGameStage()
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
-	-- if not data.allowBuilding and not ply:IsAdmin() then
-		--ply:ChatPrint("[DAC]: Cannot spawn NPCs during the " .. data.name .. " stage.")
+		ply:ChatPrint("[DAC]: Cannot spawn NPCs during the " .. data.name .. " stage.")
 		return false
 	end
 end)
@@ -65,8 +61,7 @@ hook.Add("PlayerSpawnSENT", "DAC.PlayerSpawnSENT", function(ply, class)
 	local stage = DAC:GetGameStage()
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
-	-- if not data.allowBuilding and not ply:IsAdmin() then
-		--ply:ChatPrint("[DAC]: Cannot spawn entities during the " .. data.name .. " stage.")
+		ply:ChatPrint("[DAC]: Cannot spawn entities during the " .. data.name .. " stage.")
 		return false
 	end
 end)

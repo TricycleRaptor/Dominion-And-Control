@@ -1,6 +1,8 @@
 function GM:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)
 	self.BaseClass:PlayerSpawn(ply)
+	ply:SetPlayerCarrierStatus(false) -- This should always be false since a player should never spawn with a flag. Probably not necessary but it's better to cover edge cases.
+	--print("[DAC DEBUG]: " .. ply:Nick() .. "'s flag carrier status is " .. tostring(ply:GetPlayerCarrierStatus()) .. "!")
 
 	-- Check for spawn platforms in the map, call the spawn platform's spawn function on the player if true
 	for _, ent in pairs(ents.GetAll()) do 

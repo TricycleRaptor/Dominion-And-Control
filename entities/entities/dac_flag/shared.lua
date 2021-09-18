@@ -49,10 +49,13 @@ function ENT:Think()
         if self.Entity:GetHeld() == true and self:GetCarrier():IsPlayer() and not self.Entity:GetCarrier():Alive() then -- This will trigger when the flag carrier dies
 
             self.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
+            print("[DAC DEBUG]: A flag was dropped!")
 
             self.Entity:SetHeld(false)
+            self.Entity:GetCarrier():SetPlayerCarrierStatus(false) -- Send carrier boolean status to player entity
+            print("[DAC DEBUG]: Set " .. self.Entity:GetCarrier():Nick() .. "'s flag carrier status to " .. tostring(self.Entity:GetCarrier():GetPlayerCarrierStatus()) .. ".")
             self.Entity:SetCarrier(NULL)
-
+            
             self.Entity:PhysWake()
             self.Entity:SetParent(NULL)
             self.Entity:SetAngles(Angle(0,0,0))
@@ -69,6 +72,25 @@ function ENT:Think()
         end
 
     end
+
+end
+
+function ENT:ReturnFlag()
+
+	print("[DAC DEBUG]: Return function called. Parent base is " .. tostring(self.ParentBase))
+
+    self:SetOnBase(true)
+	self:SetHeld(false)
+	self:SetCarrier(NULL)
+
+	self:SetParent(NULL)
+	self:SetParent(self.ParentBase)
+	self:SetPos(self.ParentBase:GetPos() + self.ParentBase:GetUp() * 10)
+	self:SetAngles(self.ParentBase:GetAngles())
+	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+
+
+	self.ParentBase:SetHasFlag(true)
 
 end
 

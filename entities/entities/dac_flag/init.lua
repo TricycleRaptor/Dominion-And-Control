@@ -29,8 +29,8 @@ function ENT:StartTouch(entity)
 
 	-- Debugging network vars
 	if (entity:IsPlayer()) then
-		print("[DAC]: " .. entity:Nick() .. " interacted with a flag!")
-		print("[DAC]: " .. entity:Nick() .. "'s team ID is " .. entity:Team() .. " and the flag's team ID is " .. self:GetTeam() .. ".")
+		print("[DAC DEBUG]: " .. entity:Nick() .. " touched a flag!")
+		--print("[DAC DEBUG]: " .. entity:Nick() .. "'s team ID is " .. entity:Team() .. " and the flag's team ID is " .. self:GetTeam() .. ".")
 	end
 
 	if entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() != self:GetTeam() then -- Consider adding a condition to check against spectators, come back to this later
@@ -45,6 +45,8 @@ function ENT:StartTouch(entity)
 		self:SetHeld(true)
 		self:SetCarrier(entity)
 		self.ParentBase:SetHasFlag(false)
+		entity:SetPlayerCarrierStatus(true) -- Send carrier boolean status to player entity
+		print("[DAC DEBUG]: Set " .. entity:Nick() .. "'s flag carrier status to " .. tostring(entity:GetPlayerCarrierStatus()) .. ".")
 
 		-- Setup angles
 		local angles = entity:GetAngles()
@@ -62,23 +64,25 @@ function ENT:StartTouch(entity)
 		--print("[DAC]: " .. entity:Nick() .. " returned the flag.")
 		self.Entity:ReturnFlag()
 		
+	elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == true then -- Flag is on base and the player is on the same team
+
+		if(entity:GetPlayerCarrierStatus() == true) then
+			
+			print("[DAC DEBUG]: Score condition tripped.")
+			
+			for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
+				if (child:GetClass() == "dac_flag") then
+					print("[DAC DEBUG]: Child flag identified. Returning...")
+					child:ReturnFlag()
+					break -- Stop iterations after flag is identified
+				end
+			end
+
+			entity:SetPlayerCarrierStatus(false)
+
+		end
+
 	end
-
-end
-
-function ENT:ReturnFlag()
-
-	--print("[DAC]: Return function called. Parent base is " .. tostring(self.ParentBase))
-
-	self:SetParent(self.ParentBase)
-	self:SetPos(self.ParentBase:GetPos() + self.ParentBase:GetUp() * 10)
-	self:SetAngles(self.ParentBase:GetAngles())
-	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
-
-	self:SetOnBase(true)
-	self:SetHeld(false)
-	self:SetCarrier(NULL)
-	self.ParentBase:SetHasFlag(true)
 
 end
 
