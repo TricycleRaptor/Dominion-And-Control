@@ -4,7 +4,7 @@ include("shared.lua")
 
 function ENT:Initialize()
 
-	local ParentBase = nil
+	local ScoreCount = nil
 	self:SetName("dac_flag")
 
 	self:SetModel("models/ctf_flag/ctf_flag.mdl")
@@ -39,6 +39,10 @@ function ENT:StartTouch(entity)
 		if(self:GetOnBase() == true and self:GetHeld() == false) then
 			self.ParentBase = self:GetParent()
 		end
+
+		net.Start("SendTakenAudio")
+		net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
+		net.Broadcast() -- This sends to all players, not just the flag carrier
 		
 		-- Broadcast flag pickup
 		self:SetOnBase(false)
@@ -63,22 +67,30 @@ function ENT:StartTouch(entity)
 		-- Network that the flag has been returned
 		--print("[DAC]: " .. entity:Nick() .. " returned the flag.")
 		self.Entity:ReturnFlag()
+		net.Start("SendReturnedAudio")
+		net.WriteFloat(self.Entity:GetTeam()) -- Pass in the flag carrier's team for networking behavior
+		net.Broadcast() -- This sends to all players, not just the flag carrier
 		
 	elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == true then -- Flag is on base and the player is on the same team
 
 		if(entity:GetPlayerCarrierStatus() == true) then
 			
 			print("[DAC DEBUG]: Score condition tripped.")
+			self:ScoreFlag()
 			
 			for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
 				if (child:GetClass() == "dac_flag") then
-					print("[DAC DEBUG]: Child flag identified. Returning...")
+					print("[DAC DEBUG]: Child flag identified. Returning.")
 					child:ReturnFlag()
 					break -- Stop iterations after flag is identified
 				end
 			end
 
 			entity:SetPlayerCarrierStatus(false)
+
+			net.Start("SendScoreAudio")
+			net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
+			net.Broadcast() -- This sends to all players, not just the flag carrier
 
 		end
 

@@ -1,5 +1,5 @@
 -- Reduce RPG damage given to players in vehicles
-hook.Add("EntityTakeDamage", "ExplosionModifiers", function(target, dmginfo)
+hook.Add("EntityTakeDamage", "DAC.ExplosionModifiers", function(target, dmginfo)
 	if (
 		target:IsPlayer()
 		and target:InVehicle()
@@ -7,7 +7,7 @@ hook.Add("EntityTakeDamage", "ExplosionModifiers", function(target, dmginfo)
 		and dmginfo:IsExplosionDamage()
 		and dmginfo:GetDamage() >= 100
 	) then
-		dmginfo:ScaleDamage(0) -- Significantly reduce damage in vehicles
+		dmginfo:ScaleDamage(0.1) -- Significantly reduce damage in vehicles
 	elseif (
 		target:IsPlayer()
 		and not target:InVehicle()

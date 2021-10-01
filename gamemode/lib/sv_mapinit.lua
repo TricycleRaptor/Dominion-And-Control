@@ -23,3 +23,12 @@ end
 function GM:InitPostEntity() -- This is called after the server has initialized the map and all entities within it
 	CleanupMapEntities() -- Remove the entities we don't want in the map using the function defined in shared.lua
 end
+
+-- https://wiki.facepunch.com/gmod/GM:PostCleanupMap
+hook.Add("PostCleanupMap", "DAC.MapCleaned", function(ply, cmd)
+	for _, ply in pairs(player.GetAll()) do
+		ply:SetPlayerCarrierStatus(false)
+		-- Set each player's flag carrier status to false if the map is cleaned up.
+		-- This needs to be considered for what we're working with on line 17 of this file. In particular, how we're going to handle a map cleanup.
+	end
+end)

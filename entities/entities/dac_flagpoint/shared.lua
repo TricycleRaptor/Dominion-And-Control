@@ -32,6 +32,14 @@ function ENT:SetupDataTables()
         }
     })
     self:NetworkVar("Bool", 0, "HasFlag")
+    self:NetworkVar("Int", 1, "FlagScore", {
+        KeyName = "flagscore",
+        Edit = {
+            type = "Int",
+            min = 0,
+            max = 3 -- We should change this to a CVAR value but for now we're hardcoding it to be three.
+        }
+    })
 
     if SERVER then
 

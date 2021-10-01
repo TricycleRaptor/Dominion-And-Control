@@ -5,7 +5,7 @@ ENT.Author = "Arrin Bevers"
 ENT.Purpose = "Primary gamemode objective"
 ENT.Category = "DAC"
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.Editable = true
 
@@ -42,11 +42,17 @@ end
 
 function ENT:Think()
 
-    self:AnimateFlag() -- Call animation function
+    if CLIENT then
+        self:AnimateFlag() -- Call animation function
+    end
 
     if SERVER then -- Don't bother the client with this part
 
         if self.Entity:GetHeld() == true and self:GetCarrier():IsPlayer() and not self.Entity:GetCarrier():Alive() then -- This will trigger when the flag carrier dies
+
+            net.Start("SendDroppedAudio")
+			net.WriteFloat(self:GetCarrier():Team()) -- Pass in the flag carrier's team for networking behavior
+			net.Broadcast() -- This sends to all players, not just the flag carrier
 
             self.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
             print("[DAC DEBUG]: A flag was dropped!")
@@ -64,6 +70,10 @@ function ENT:Think()
         elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 15 then -- Return the flag after 15 seconds of inactivity
 
             self.Entity:ReturnFlag()
+
+            net.Start("SendReturnedAudio")
+            net.WriteFloat(self.Entity:GetTeam()) -- Pass team's flag into net message
+            net.Broadcast() -- This sends to all players, not just the flag carrier
 
         end
 
@@ -89,8 +99,32 @@ function ENT:ReturnFlag()
 	self:SetAngles(self.ParentBase:GetAngles())
 	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 
-
 	self.ParentBase:SetHasFlag(true)
+
+end
+
+function ENT:ScoreFlag()
+
+    if SERVER then
+        if(self:GetParent():IsPlayer() == false and self:GetCarrier() == NULL and self:GetOnBase() == true and self:GetHeld() == false) then
+            self.ParentBase = self:GetParent() -- We touched a flag as a carrier and the flag we touched is on the base, so we can assume the parent is the flag base.
+            self.ParentBase:SetFlagScore(self.ParentBase:GetFlagScore() + 1) -- We're getting this from the networked variables on the flagpoint. We can use this for score keeping.
+        else
+            print("[DAC DEBUG]: Guard code for scoring was triggered. Check parent variables.")
+        end
+    end
+    
+    print("[DAC DEBUG]: Local flagpoint " .. tostring(self.ParentBase) .. " has a score of " .. tostring(self.ParentBase:GetFlagScore()))
+
+end
+
+function ENT:ResetFlagScore()
+
+    if SERVER then
+        self.ParentBase:SetFlagScore(0)
+    end
+    
+    print("[DAC DEBUG]: Local flagpoint " .. tostring(self.ParentBase) .. "'s flag score has been reset.")
 
 end
 
