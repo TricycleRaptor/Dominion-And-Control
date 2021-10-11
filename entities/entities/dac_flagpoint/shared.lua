@@ -44,6 +44,7 @@ function ENT:SetupDataTables()
     if SERVER then
 
         self:NetworkVarNotify("Team", self.OnTeamChanged)
+        self:NetworkVarNotify("FlagScore", self.OnScoreChanged)
 
     end
 

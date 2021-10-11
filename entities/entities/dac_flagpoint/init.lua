@@ -32,3 +32,23 @@ function ENT:OnTeamChanged(_, _, newValue) -- _ makes these unimportant
 	self.ChildFlag:SetTeam(newValue)
 
 end
+
+function ENT:OnScoreChanged(_, oldValue, newValue) -- _ makes these unimportant
+
+	--print("[DAC DEBUG]: Score network notify passed.")
+
+	for k, v in pairs(team.GetAllTeams()) do
+		if (k == self:GetTeam()) then
+			
+			-- print("[DAC DEBUG]: Team network comparison passed.")
+			
+			--team.SetScore(k, team.GetScore(k) + 1)
+			team.SetScore(k, newValue)
+		
+			--print("[DAC DEBUG]: Blue team's score is " .. team.GetScore(1))
+			--print("[DAC DEBUG]: Red team's score is " .. team.GetScore(2))
+
+		end
+	end
+
+end

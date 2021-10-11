@@ -23,9 +23,9 @@ DAC:RegisterGameStage(GAMESTAGE_BUILD, {
 })
 
 DAC:RegisterGameStage(GAMESTAGE_PLAY, {
-	name = "BATTLE",
+	name = "MATCH",
 	showOnHud = true,
 	pvp = true,
 	nextStage = nil,
-	color = Color(255, 0, 0)
+	color = Color(251, 255, 0)
 })

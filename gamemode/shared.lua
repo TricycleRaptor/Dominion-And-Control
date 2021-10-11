@@ -1,11 +1,12 @@
 GM.Name		= "Dominion"
-GM.Author	= "TricycleRaptor"
+GM.Author	= "Tricycle Raptor"
 GM.Email	= "arrinbevers@yahoo.com"
 GM.Website  = ""
 GM.TeamBased = true
 GM.Color = Color(195, 198, 31,255)
 DeriveGamemode("sandbox")
 
+-- Credit goes to Bizzclaw (Joseph Tomlinson) for dynamic module integration as seen below
 
 -- ███████╗███╗   ██╗██╗   ██╗███╗   ███╗███████╗
 -- ██╔════╝████╗  ██║██║   ██║████╗ ████║██╔════╝
