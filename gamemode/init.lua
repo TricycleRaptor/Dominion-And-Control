@@ -6,6 +6,7 @@ GM.CurrentGameStage = nil
 
 function GM:Initialize()
 	GetConVar("sbox_weapons"):SetBool(false)
+	RunConsoleCommand("mp_falldamage", "1")
 end
 
 function GM:PlayerSpawnNPC(ply, npc, wep)

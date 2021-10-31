@@ -17,6 +17,17 @@ hook.Add("EntityTakeDamage", "DAC.GameStage.Damage", function(ent, dmginfo)
 		attacker:ChatPrint("[DAC]: Damage is disabled during the "..data.name .. " stage.")
 		dmginfo:ScaleDamage(0)
 		return true
+	elseif data.pvp and attacker:IsPlayer() and ent:IsPlayer() then
+		if attacker:Team() == ent:Team() then
+			if GetConVar("dac_friendlyfire"):GetInt() == 1 then
+				return true
+			else
+				dmginfo:ScaleDamage(0)
+				return true
+			end
+		else
+			return true
+		end
 	end
 end)
 

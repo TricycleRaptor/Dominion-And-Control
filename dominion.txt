@@ -8,4 +8,88 @@
 	"maps"	"^dac_"
 	"category"	"pvp"
 	"menusystem"	"1"
+	"settings"
+	{
+		1
+		{
+			"name"		"dac_build_time"
+			"text"		"Build Time"
+			"help"		"The number in minutes where teams can build."
+			"type"		"Numeric"
+			"default"	"30"
+		}
+
+		2
+		{
+			"name"		"dac_zone_scale"
+			"text"		"Build Zone Scale"
+			"help"		"The scale of the team build area."
+			"type"		"Numeric"
+			"default"	"2"
+		}
+
+		3
+		{
+			"name"		"dac_capture_target"
+			"text"		"Capture Target"
+			"help"		"Number of flag captures needed to win."
+			"type"		"Numeric"
+			"default"	"3"
+		}
+		
+		4
+		{
+			"name"		"dac_respawn_time"
+			"text"		"Respawn Time"
+			"help"		"Number of seconds before a player can respawn."
+			"type"		"Numeric"
+			"default"	"10"
+		}
+		
+		5
+		{
+			"name"		"dac_friendlyfire"
+			"text"		"Friendly Fire"
+			"help"		"Enable or disable friendly fire."
+			"type"		"CheckBox"
+			"default"	"1"
+		}
+		
+		6
+		{
+			"name"		"dac_income_timer"
+			"text"		"Income Timer (seconds)"
+			"help"		"Sets the interval for passive income timer (In seconds)."
+			"type"		"Numeric"
+			"default"	"600"
+		}
+		
+		7
+		{
+			"name"		"dac_income_amount"
+			"text"		"Income Reward"
+			"help"		"Amount awarded to players passively."
+			"type"		"Numeric"
+			"default"	"250"
+		}
+		
+		8
+		{
+			"name"		"dac_income_balance"
+			"text"		"Starting Balance"
+			"help"		"Amount given to each player at the start of the match."
+			"type"		"Numeric"
+			"default"	"200"
+		}
+		
+		9
+		{
+			"name"		"dac_kill_reward"
+			"text"		"Kill Reward"
+			"help"		"Amount awarded to players for killing another player."
+			"type"		"Numeric"
+			"default"	"50"
+		}
+			
+	}
 }

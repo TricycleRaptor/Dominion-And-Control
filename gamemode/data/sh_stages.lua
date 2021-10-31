@@ -18,7 +18,7 @@ DAC:RegisterGameStage(GAMESTAGE_BUILD, {
 	pvp = false,
 	allowBuilding = true,
 	nextStage = GAMESTAGE_PLAY,
-	duration = 0.5, -- Should ideally use a CVar here over a hardcoded value
+	duration = GetConVar("dac_build_time"):GetInt(),
 	color = Color(0, 255, 0)
 })
 
