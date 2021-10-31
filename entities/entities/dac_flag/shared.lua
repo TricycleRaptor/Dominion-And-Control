@@ -64,7 +64,7 @@ function ENT:Think()
             
             self.Entity:PhysWake()
             self.Entity:SetParent(NULL)
-            self.Entity:SetAngles(Angle(0,0,0))
+            self.Entity:SetAngles(Angle(0,90,0))
             self.Entity:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 
         elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 15 then -- Return the flag after 15 seconds of inactivity

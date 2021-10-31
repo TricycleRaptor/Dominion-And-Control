@@ -19,6 +19,7 @@ function ENT:Initialize()
 	self:SetHeld(false)
 	self:SetCarrier(nil)
 	self:SetDropTime(0)
+	self:SetAngles(0,90,0)
 
 	-- Check the spawning player's team and set the value of the flag to the player's team. This will change later to coordinate from a SWEP rather than the spawn menu
 	--self:SetTeam(1)
@@ -52,13 +53,7 @@ function ENT:StartTouch(entity)
 		entity:SetPlayerCarrierStatus(true) -- Send carrier boolean status to player entity
 		print("[DAC DEBUG]: Set " .. entity:Nick() .. "'s flag carrier status to " .. tostring(entity:GetPlayerCarrierStatus()) .. ".")
 
-		-- Setup angles
-		local angles = entity:GetAngles()
-		angles.p = 0
-		angles.r = 0
-
 		-- Setup collision
-		self.Entity:SetPos(entity:GetPos() - angles:Forward() * 10)
 		self.Entity:SetParent(entity)
 		self.Entity:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 
