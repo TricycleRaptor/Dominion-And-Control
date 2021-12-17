@@ -38,3 +38,8 @@ function GM:PlayerSpawnSENT(ply, class)
 	if not ply:IsAdmin() then return false end
 	return true
 end
+
+function BuildArea(ply, team, spawnPos, flagPos)
+    print("[DAC DEBUG]: Build function called, received values are as follows: " .. tostring(ply) .. ", " .. tostring(team) .. ", " .. tostring(spawnPos) .. ", " .. tostring(flagPos))
+		-- TO DO: Make funny bases spawn now
+end

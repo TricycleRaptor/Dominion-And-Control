@@ -1,3 +1,5 @@
+-- Client Net
+
 net.Receive("dac_gamestage_sync", function()
 	local gameStage = net.ReadGameStage()
 
@@ -7,3 +9,11 @@ net.Receive("dac_gamestage_sync", function()
 		DAC:SetGameStage(gameStage)
 	end
 end)
+
+net.Receive("dac_validspace_sync", function()
+
+    local bool = net.ReadBool()
+    if bool == false then return end
+    DrawConfirmationBox()
+
+end )

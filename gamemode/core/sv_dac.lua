@@ -1,4 +1,9 @@
+-- Serverside Net
+
 util.AddNetworkString("dac_gamestage_sync")
+util.AddNetworkString("dac_validspace_sync")
+util.AddNetworkString("dac_sendbase_confirmation") -- This message is caught in the weapon_dac_baseselector
+
 function DAC:SyncGameStage(ply)
 	net.Start("dac_gamestage_sync")
 	net.WriteGameStage(DAC:GetGameStage())
@@ -8,6 +13,8 @@ function DAC:SyncGameStage(ply)
 		net.Broadcast()
 	end
 end
+
+-- Servside Net end
 
 hook.Add("EntityTakeDamage", "DAC.GameStage.Damage", function(ent, dmginfo)
 	local stage = DAC:GetGameStage()
