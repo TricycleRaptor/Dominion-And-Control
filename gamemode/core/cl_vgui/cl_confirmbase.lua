@@ -1,54 +1,62 @@
 function DrawConfirmationBox()
-    
+
     if CLIENT then
+
+        local Trace = LocalPlayer():GetEyeTrace()
+        local Dist = (Trace.HitPos - LocalPlayer():GetPos()):Length()
         
-        LocalPlayer():EmitSound("buttons/blip1.wav")
+        if Dist <= 350 then
 
-        local Frame = vgui.Create( "DFrame" )
-        Frame:SetTitle("Confirm base selection?")
-        Frame:SetSize( 180, 130 )
-        --Frame:SetSize( ScrW() * 0.209, ScrH() * 0.139 )
-        Frame:Center()			
-        Frame:MakePopup()
-        Frame:SetVisible(true) 
-        Frame:SetDraggable(false) 
-        Frame:ShowCloseButton(false)
-        Frame:SetBackgroundBlur(true)
+            LocalPlayer():EmitSound("buttons/blip1.wav")
 
-        --print("Panel width is: " .. Frame:GetWide())
-        --print("Panel height is: " .. Frame:GetTall())
-                
-        local YesButton = vgui.Create("DButton", Frame)
-        YesButton:SetText("Yes")
-        YesButton:SetTextColor( Color(0,0,0) )
-        YesButton:SetPos( 25, 60 )
-        YesButton:SetSize( Frame:GetWide() * 0.3, Frame:GetTall() * 0.2 )
+            local Frame = vgui.Create( "DFrame" )
+            Frame:SetTitle("Confirm base selection?")
+            --Frame:SetSize( 180, 130 )
+            Frame:SetSize( ScrW() * 0.09375, ScrH() * 0.12 )
+            Frame:Center()			
+            Frame:MakePopup()
+            Frame:SetVisible(true) 
+            Frame:SetDraggable(false) 
+            Frame:ShowCloseButton(false)
+            Frame:SetBackgroundBlur(true)
 
-        --print("Button width is: " .. YesButton:GetWide())
-        --print("Button height is: " .. YesButton:GetTall())
+            --print("Panel width is: " .. Frame:GetWide())
+            --print("Panel height is: " .. Frame:GetTall())
+                    
+            local YesButton = vgui.Create("DButton", Frame)
+            YesButton:SetText("Yes")
+            YesButton:SetTextColor( Color(0,0,0) )
+            YesButton:SetPos( 25, 60 )
+            YesButton:SetSize( Frame:GetWide() * 0.3, Frame:GetTall() * 0.2 )
 
-        YesButton.DoClick = function()
-            --print("[DAC DEBUG]: Selection accepted.")
-            net.Start( "dac_sendbase_confirmation" )
-                net.WriteBool(true)
-            net.SendToServer()
-            Frame:Close()
-            LocalPlayer():EmitSound("buttons/button14.wav")
-        end
+            --print("Button width is: " .. YesButton:GetWide())
+            --print("Button height is: " .. YesButton:GetTall())
 
-        local NoButton = vgui.Create("DButton", Frame)
-        NoButton:SetText("No")
-        NoButton:SetTextColor( Color(0,0,0) )
-        NoButton:SetPos( 100, 60 )
-        NoButton:SetSize( Frame:GetWide() * 0.3, Frame:GetTall() * 0.2 )
+            YesButton.DoClick = function()
+                --print("[DAC DEBUG]: Client accepted selection.")
+                net.Start( "dac_sendbase_confirmation" )
+                    net.WriteBool(true)
+                net.SendToServer()
+                Frame:Close()
+                LocalPlayer():EmitSound("buttons/button14.wav")
+                LocalPlayer():EmitSound("npc/scanner/scanner_nearmiss1.wav")
+            end
 
-        NoButton.DoClick = function()
-            --print( "[DAC DEBUG]: Selection rejected." )
-            net.Start( "dac_sendbase_confirmation" )
-                net.WriteBool(false)
-            net.SendToServer()
-            Frame:Close()
-            LocalPlayer():EmitSound("buttons/button19.wav")
+            local NoButton = vgui.Create("DButton", Frame)
+            NoButton:SetText("No")
+            NoButton:SetTextColor( Color(0,0,0) )
+            NoButton:SetPos( 100, 60 )
+            NoButton:SetSize( Frame:GetWide() * 0.3, Frame:GetTall() * 0.2 )
+
+            NoButton.DoClick = function()
+                --print( "[DAC DEBUG]: Client rejected selection." )
+                net.Start( "dac_sendbase_confirmation" )
+                    net.WriteBool(false)
+                net.SendToServer()
+                Frame:Close()
+                LocalPlayer():EmitSound("buttons/button19.wav")
+            end
+        
         end
 
     end

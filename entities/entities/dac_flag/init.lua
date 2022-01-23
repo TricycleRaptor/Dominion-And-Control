@@ -19,7 +19,7 @@ function ENT:Initialize()
 	self:SetHeld(false)
 	self:SetCarrier(nil)
 	self:SetDropTime(0)
-	self:SetAngles(0,90,0)
+	self:SetAngles(Angle(0,90,0))
 
 	-- Check the spawning player's team and set the value of the flag to the player's team. This will change later to coordinate from a SWEP rather than the spawn menu
 	--self:SetTeam(1)
@@ -30,7 +30,7 @@ function ENT:StartTouch(entity)
 
 	-- Debugging network vars
 	if (entity:IsPlayer()) then
-		print("[DAC DEBUG]: " .. entity:Nick() .. " touched a flag!")
+		--print("[DAC DEBUG]: " .. entity:Nick() .. " touched a flag!")
 		--print("[DAC DEBUG]: " .. entity:Nick() .. "'s team ID is " .. entity:Team() .. " and the flag's team ID is " .. self:GetTeam() .. ".")
 	end
 
@@ -51,7 +51,7 @@ function ENT:StartTouch(entity)
 		self:SetCarrier(entity)
 		self.ParentBase:SetHasFlag(false)
 		entity:SetPlayerCarrierStatus(true) -- Send carrier boolean status to player entity
-		print("[DAC DEBUG]: Set " .. entity:Nick() .. "'s flag carrier status to " .. tostring(entity:GetPlayerCarrierStatus()) .. ".")
+		--print("[DAC DEBUG]: Set " .. entity:Nick() .. "'s flag carrier status to " .. tostring(entity:GetPlayerCarrierStatus()) .. ".")
 
 		-- Setup collision
 		self.Entity:SetParent(entity)
@@ -70,12 +70,12 @@ function ENT:StartTouch(entity)
 
 		if(entity:GetPlayerCarrierStatus() == true) then
 			
-			print("[DAC DEBUG]: Score condition tripped.")
+			--print("[DAC DEBUG]: Score condition tripped.")
 			self:ScoreFlag()
 			
 			for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
 				if (child:GetClass() == "dac_flag") then
-					print("[DAC DEBUG]: Child flag identified. Returning.")
+					--print("[DAC DEBUG]: Child flag identified. Returning.")
 					child:ReturnFlag()
 					break -- Stop iterations after flag is identified
 				end

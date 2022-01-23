@@ -87,7 +87,7 @@ end
 
 function ENT:ReturnFlag()
 
-	print("[DAC DEBUG]: Return function called. Parent base is " .. tostring(self.ParentBase))
+	--print("[DAC DEBUG]: Return function called. Parent base is " .. tostring(self.ParentBase))
 
     self:SetOnBase(true)
 	self:SetHeld(false)
@@ -114,7 +114,7 @@ function ENT:ScoreFlag()
         end
     end
     
-    print("[DAC DEBUG]: Local flagpoint " .. tostring(self.ParentBase) .. " has a score of " .. tostring(self.ParentBase:GetFlagScore()))
+    --print("[DAC DEBUG]: Local flagpoint " .. tostring(self.ParentBase) .. " has a score of " .. tostring(self.ParentBase:GetFlagScore()))
 
 end
 
@@ -124,7 +124,7 @@ function ENT:ResetFlagScore()
         self.ParentBase:SetFlagScore(0)
     end
     
-    print("[DAC DEBUG]: Local flagpoint " .. tostring(self.ParentBase) .. "'s flag score has been reset.")
+    --print("[DAC DEBUG]: Local flagpoint " .. tostring(self.ParentBase) .. "'s flag score has been reset.")
 
 end
 

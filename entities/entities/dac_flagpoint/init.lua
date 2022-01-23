@@ -14,6 +14,7 @@ function ENT:Initialize()
 	flagEnt:SetParent(self)
 
 	self.ChildFlag = flagEnt
+	self.Entity.IsFlagBase = true
 
 	-- Set a base condition for the networked vars
 	-- The flag starts attached to the flag, so adjust these values accordingly

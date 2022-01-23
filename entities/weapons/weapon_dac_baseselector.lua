@@ -4,7 +4,7 @@ SWEP.Category = "DAC"
 SWEP.Base = "weapon_base"
 SWEP.PrintName = "Base Locator"
 SWEP.Author = "Tricycle Raptor"
-SWEP.Instructions = "Left mouse set the origin for your team's base"
+SWEP.Instructions = "Left click to set the origin of your base"
 SWEP.Spawnable = true
 SWEP.AdminSpawnable = true
 SWEP.AdminOnly = true
@@ -42,6 +42,9 @@ local flagEnt = NULL
 local validSpace = false
 local wireColor = Color(255,255,255,255)
 
+local otherTeamPos = Vector(0,0,0)
+local maxDistance = GetConVar("dac_zone_scale"):GetFloat() * 2000
+
 function SWEP:Initialize()
     self:SetWeaponHoldType(self.HoldType)
 end
@@ -56,7 +59,7 @@ function SWEP:Think()
         local Trace = self.Owner:GetEyeTrace()
         local Dist = (Trace.HitPos - self.Owner:GetPos()):Length()
     
-        if Dist <= 300 then -- Maximum base place range, to prevent weirdness
+        if Dist <= 350 then -- Maximum base place range, to prevent weirdness
     
             if spawnEnt == NULL and flagEnt == NULL then
 
@@ -76,7 +79,7 @@ function SWEP:Think()
 
             else
 
-                spawnPos = Trace.HitPos + Trace.HitNormal * 25
+                spawnPos = Trace.HitPos + Trace.HitNormal * 3
                 flagPos = spawnPos + Vector(0,0,100)
 
                 spawnEnt:SetPos(spawnPos)
@@ -85,6 +88,11 @@ function SWEP:Think()
                 flagEnt:SetColor(wireColor)
 
                 self:TraceCheck(spawnEnt, flagEnt)
+
+                --if (TeamLocations[otherTeam] != nil && (spawnPos - TeamLocations[otherTeam]):Length() < GetConVar("dac_zone_scale"):GetFloat() * 2000) then
+                    --wireColor = Color( 255, 0, 0, 255 )
+                    --validSpace = false    
+                --end
 
             end
     
@@ -104,15 +112,33 @@ end
 function SWEP:PrimaryAttack()
 
     if SERVER then
+
         if validSpace == true then
-            net.Start("dac_validspace_sync")
-                net.WriteBool(true)
-            net.Send(user)
+
+            for teamKey, teamData in pairs(GAMEMODE.Teams) do -- Special thanks to Joseph Tomlinson (@BizzClaw) for some pair programming to figure this out
+                if teamKey != userTeam then -- ignore our team
+                    local otherTeamPos = teamData.basePos
+
+                    if (otherTeamPos and otherTeamPos != Vector(0,0,0) and spawnPos:Distance(otherTeamPos) < maxDistance) then -- Check the cVar for the build scale
+                        self:GetOwner():EmitSound("buttons/button8.wav")
+                        return false
+                    else
+                        net.Start("dac_validspace_sync")
+                        net.WriteBool(true)
+                        net.Send(user) -- This SHOULD only send to the player who clicks with the tool, but this will have to be tested with another player present
+                    end
+
+                end
+            end
+
+            GAMEMODE.Teams[userTeam].basePos = spawnPos
+            GAMEMODE.Teams[userTeam].baseSet = true
+
         else
-            --print("[DAC DEBUG]: Invalid space selected.")
             self:GetOwner():EmitSound("buttons/button8.wav") -- Teammates will hear this, too
             self:GetOwner():ChatPrint("[DAC]: Invalid base location selected.")
         end
+        
     end
 
 end
@@ -138,13 +164,13 @@ function SWEP:TraceCheck(spawnEnt, flagEnt)
 	local maxs1 = ent1:OBBMaxs()
 	local startpos1 = ent1:GetPos()
 	local dir1 = ent1:GetUp()
-	local len1 = 90
+	local len1 = 2
 
     local mins2 = ent2:OBBMins()
 	local maxs2 = ent2:OBBMaxs()
 	local startpos2 = ent2:GetPos()
 	local dir2 = ent2:GetUp()
-	local len2 = 90
+	local len2 = 2
 
 	local tr1 = util.TraceHull( {
 		start = startpos1,
@@ -170,14 +196,21 @@ function SWEP:TraceCheck(spawnEnt, flagEnt)
         validSpace = true
     end
 
+    for teamKey, teamData in pairs(GAMEMODE.Teams) do
+        if teamKey != userTeam then
+            local otherTeamPos = teamData.basePos
+            if (otherTeamPos and otherTeamPos != Vector(0,0,0) and spawnPos:Distance(otherTeamPos) < maxDistance) then
+                wireColor = Color( 255, 0, 0, 255 )
+                validSpace = false
+            end
+        end
+    end
+
 end
 
 function SetupTeamArea()
 
-    if SERVER then
-        BuildArea(user, userTeam, spawnPos, flagPos)
-        -- We should pass in the player, the player's team, and the flag/spawnpos
-    end
+    BuildArea(user, userTeam, spawnPos, flagPos) -- We should pass in the player, the player's team, and the flag/spawnpos
 
 end
 
@@ -187,9 +220,9 @@ net.Receive("dac_sendbase_confirmation", function(len, ply)
 	if confirmationBool == true then
         print("[DAC DEBUG]: Server received confirmation message.")
         SetupTeamArea()
+        --PrintTable(GAMEMODE.Teams)
     else
         print("[DAC DEBUG]: Server received rejection message.")
-
     end
 
 end)

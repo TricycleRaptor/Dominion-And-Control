@@ -31,4 +31,14 @@ hook.Add("PostCleanupMap", "DAC.MapCleaned", function(ply, cmd)
 		-- Set each player's flag carrier status to false if the map is cleaned up.
 		-- This needs to be considered for what we're working with on line 17 of this file. In particular, how we're going to handle a map cleanup.
 	end
+
+	for teamKey, teamData in pairs(GAMEMODE.Teams) do
+		GAMEMODE.Teams[teamKey].basePos = Vector(0,0,0)
+		GAMEMODE.Teams[teamKey].baseSet = false
+	end
+
+	--PrintTable(GAMEMODE.Teams)
+	local setupStage = DAC.GameStage.New(1) -- 1 is the ENUM for the setup phase
+	DAC:SetGameStage(setupStage)
+	DAC:SyncGameStage()
 end)
