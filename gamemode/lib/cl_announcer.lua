@@ -13,6 +13,13 @@ ReturnNoise = Sound("announcer/recovered.wav")
 
 -- We'll need to update the HUD as well, but we can do it elsewhere. For now this is just audio.
 
+local function BroadcastBeginAudio(len, ply)
+    local team = net.ReadBool()
+    LocalPlayer():EmitSound(BeginNoise)
+    LocalPlayer():EmitSound(DeployNoise)
+end
+net.Receive("SendBeginAudio", BroadcastBeginAudio)
+
 local function BroadcastTakenAudio(len, ply)
 
     local team = net.ReadFloat() -- The capturing player's team is passed in here
@@ -27,7 +34,6 @@ local function BroadcastScoreAudio(len, ply)
     local team = net.ReadFloat() -- The capturing player's team is passed in here
     LocalPlayer():EmitSound(ScoreNoise)
     LocalPlayer():EmitSound(ScoreNoise2)
-
 
 end
 net.Receive("SendScoreAudio", BroadcastScoreAudio)

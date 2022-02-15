@@ -12,7 +12,6 @@ GM.Teams = {
 		joinable = true,
 		baseSet = false,
 		basePos = Vector(0,0,0),
-		score = 0,
 		logo = CLIENT and Material("dominion/ui/flag.png", logoParams)
 	},
 	[TEAM_RED] = {
@@ -21,13 +20,12 @@ GM.Teams = {
 		joinable = true,
 		baseSet = false,
 		basePos = Vector(0,0,0),
-		score = 0,
 		logo = CLIENT and Material("dominion/ui/flag.png", logoParams)
 	}
 }
 
 function GM:CreateTeams()
 	for teamKey, teamData in pairs(GAMEMODE.Teams) do
-		team.SetUp(teamKey, teamData.name, teamData.color, teamData.joinable, teamData.baseSet, teamData.basePos, teamData.score)
+		team.SetUp(teamKey, teamData.name, teamData.color, teamData.joinable, teamData.baseSet, teamData.basePos)
 	end
 end

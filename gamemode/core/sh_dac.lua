@@ -29,6 +29,10 @@ hook.Add("Think", "DAC.GameStage.Think", function()
 		if SERVER and data.nextStage and CurTime() >= curGameStage:GetEndTime() then
 			local newStage = DAC.GameStage.New(data.nextStage)
 			DAC:SetGameStage(newStage)
+
+			if data.nextStage == GAMESTAGE_PLAY then
+				BeginMatch() -- Run match preparations on players and the map, function is found in sv_dac.lua
+			end
 		end
 	end
 end)

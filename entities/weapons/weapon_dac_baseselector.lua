@@ -2,9 +2,9 @@ AddCSLuaFile()
 
 SWEP.Category = "DAC"
 SWEP.Base = "weapon_base"
-SWEP.PrintName = "Base Locator"
+SWEP.PrintName = "BASE LOCATOR"
 SWEP.Author = "Tricycle Raptor"
-SWEP.Instructions = "Left click to set the origin of your base"
+SWEP.Instructions = "Sets the designated build zone for your team's base. Left click to confirm desired location."
 SWEP.Spawnable = true
 SWEP.AdminSpawnable = true
 SWEP.AdminOnly = true
@@ -22,14 +22,14 @@ SWEP.Weight	= 5
 SWEP.AutoSwitchTo = false
 SWEP.AutoSwitchFrom = false
 
-SWEP.Slot = 1
+SWEP.Slot = 5
 SWEP.SlotPos = 2
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = true
 
-SWEP.ViewModel = "models/weapons/v_pistol.mdl"
+SWEP.ViewModel = "models/weapons/c_pistol.mdl"
 SWEP.WorldModel = "models/weapons/w_pistol.mdl"
-SWEP.UseHands = false
+SWEP.UseHands = true
 SWEP.HoldType = "revolver"
 
 local user = nil
@@ -218,11 +218,9 @@ net.Receive("dac_sendbase_confirmation", function(len, ply)
 
 	local confirmationBool = net.ReadBool()
 	if confirmationBool == true then
-        print("[DAC DEBUG]: Server received confirmation message.")
+        --print("[DAC DEBUG]: Server received confirmation message.")
         SetupTeamArea()
         --PrintTable(GAMEMODE.Teams)
-    else
-        print("[DAC DEBUG]: Server received rejection message.")
     end
 
 end)

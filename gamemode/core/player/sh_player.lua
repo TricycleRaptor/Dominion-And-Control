@@ -1,8 +1,17 @@
 function GM:PlayerSpawn(ply)
-	DAC:SyncGameStage(ply)
+
+	local gameStage = DAC:GetGameStage()
+	local stageData = gameStage:GetData()
+	local teamNum = ply:Team()
+
 	self.BaseClass:PlayerSpawn(ply)
+	DAC:SyncGameStage(ply)
+
+	-- Set up player configurations
+	player_manager.SetPlayerClass(ply, "DAC_playerclass") -- Get the internal player settings from the DAC custom class
+	player_manager.RunClass(ply, "Loadout") -- Get the player loadout
+	player_manager.OnPlayerSpawn(ply) -- Apply all player changes
 	ply:SetPlayerCarrierStatus(false) -- This should always be false since a player should never spawn with a flag. Probably not necessary but it's better to cover edge cases.
-	--print("[DAC DEBUG]: " .. ply:Nick() .. "'s flag carrier status is " .. tostring(ply:GetPlayerCarrierStatus()) .. "!")
 
 	-- Check for spawn platforms in the map, call the spawn platform's spawn function on the player if true
 	for _, ent in pairs(ents.GetAll()) do 
@@ -11,6 +20,31 @@ function GM:PlayerSpawn(ply)
 			break
 		end
  	end
+
+	-- If we're in the build stage, we'll call the class from the player manager to give players their physgun and toolgun (sh_player_class.lua)
+	if stageData.name == "BUILD" then 
+		player_manager.RunClass(ply, "GiveBuildTools")
+	else
+		player_manager.RunClass(ply, "RemoveBuildTools") -- dumb bitch
+	end
+
+	if ply.IsCaptain and GAMEMODE.Teams[teamNum].baseSet == false then
+		ply:SelectWeapon("weapon_dac_baseselector")
+	else
+		ply:SelectWeapon("weapon_physcannon")
+	end
+
+end
+
+function GM:PlayerFootstep(ply, pos, foot)
+
+	if( ply:GetVelocity():Length2D() > 150 ) then
+		return false
+	else
+		return true -- Silent footsteps when crouch walking
+	end
+
+	self.BaseClass:PlayerFootstep( ply, pos, foot, s, vol, rf );
 
 end
 
@@ -97,5 +131,21 @@ function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 	end
 
 	PrintMessage( HUD_PRINTTALK, Format( "[DAC]: %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
+
+end
+
+function GM:PlayerDisconnected(ply)
+
+	local teamNum = ply:Team()
+
+	if (ply.IsCaptain and GAMEMODE.Teams[teamNum].baseSet == false) then
+		for _, v in pairs (team.GetPlayers(teamNum)) do
+			if v != ply then
+				v.IsCaptain = true
+				v:Give("weapon_dac_baseselector")
+				v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
+			end
+		end
+	end
 
 end

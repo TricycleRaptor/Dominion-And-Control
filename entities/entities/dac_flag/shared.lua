@@ -55,11 +55,11 @@ function ENT:Think()
 			net.Broadcast() -- This sends to all players, not just the flag carrier
 
             self.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
-            print("[DAC DEBUG]: A flag was dropped!")
+            --print("[DAC DEBUG]: A flag was dropped!")
 
             self.Entity:SetHeld(false)
             self.Entity:GetCarrier():SetPlayerCarrierStatus(false) -- Send carrier boolean status to player entity
-            print("[DAC DEBUG]: Set " .. self.Entity:GetCarrier():Nick() .. "'s flag carrier status to " .. tostring(self.Entity:GetCarrier():GetPlayerCarrierStatus()) .. ".")
+            --print("[DAC DEBUG]: Set " .. self.Entity:GetCarrier():Nick() .. "'s flag carrier status to " .. tostring(self.Entity:GetCarrier():GetPlayerCarrierStatus()) .. ".")
             self.Entity:SetCarrier(NULL)
             
             self.Entity:PhysWake()
@@ -103,7 +103,7 @@ function ENT:ReturnFlag()
 
 end
 
-function ENT:ScoreFlag()
+function ENT:ScoreFlag(ply)
 
     if SERVER then
         if(self:GetParent():IsPlayer() == false and self:GetCarrier() == NULL and self:GetOnBase() == true and self:GetHeld() == false) then
@@ -111,6 +111,11 @@ function ENT:ScoreFlag()
             self.ParentBase:SetFlagScore(self.ParentBase:GetFlagScore() + 1) -- We're getting this from the networked variables on the flagpoint. We can use this for score keeping.
         else
             print("[DAC DEBUG]: Guard code for scoring was triggered. Check parent variables.")
+        end
+
+        if (self.ParentBase:GetFlagScore() >= GetConVar("dac_capture_target"):GetFloat()) then
+            --print("[DAC DEBUG]: Win condition tripped.")
+            EndMatch(ply) -- Serverside function defined in sv_dac.lua
         end
     end
     

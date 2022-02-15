@@ -20,6 +20,7 @@ function ENT:Initialize()
 	self:SetCarrier(nil)
 	self:SetDropTime(0)
 	self:SetAngles(Angle(0,90,0))
+	self.Entity.IsFlag = true
 
 	-- Check the spawning player's team and set the value of the flag to the player's team. This will change later to coordinate from a SWEP rather than the spawn menu
 	--self:SetTeam(1)
@@ -71,7 +72,7 @@ function ENT:StartTouch(entity)
 		if(entity:GetPlayerCarrierStatus() == true) then
 			
 			--print("[DAC DEBUG]: Score condition tripped.")
-			self:ScoreFlag()
+			self:ScoreFlag(entity) -- Passing in the player for use elsewhere
 			
 			for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
 				if (child:GetClass() == "dac_flag") then

@@ -13,6 +13,7 @@ function ENT:Initialize()
 	self.Entity.IsSphere = true
 	self.Entity.CanMove = 0
 	self.Entity:SetModelScale(self.scale, 0)
+	self.Entity:SetModelScale(GetConVar("dac_zone_scale"):GetFloat())
 
 end
 
@@ -78,7 +79,6 @@ function ENT:Think()
 			end
 		end
 		
-		self.Entity:SetModelScale(GetConVar("dac_zone_scale"):GetFloat())
 	end
 end
 

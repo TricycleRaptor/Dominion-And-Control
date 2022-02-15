@@ -2,12 +2,12 @@ local SH = ScrH()
 local SW = ScrW()
 
 local BLUE_PANE_POS = {x = SW * 0.45, y = (10)}
-local BLUE_PANE_LENGTH = SW * 0.1 -- % of screen width
-local BLUE_PANE_HEIGHT = 80
+local BLUE_PANE_LENGTH = SW * 0.06 -- % of screen width
+local BLUE_PANE_HEIGHT = 50
 
 local RED_PANE_POS = {x = SW * 0.55, y = (10)}
-local RED_PANE_LENGTH = SW * 0.1 -- % of screen width
-local RED_PANE_HEIGHT = 80
+local RED_PANE_LENGTH = SW * 0.06 -- % of screen width
+local RED_PANE_HEIGHT = 50
 
 local PANE_COLOR = Color(0, 0, 0, 235)
 local GROUP_INDICATOR_WIDTH = 10
@@ -73,12 +73,12 @@ hook.Add("HUDPaint", "DAC.HudScoreModules", function()
         drawTrapeziumReversed(BLUE_PANE_POS, BLUE_PANE_HEIGHT, BLUE_PANE_LENGTH, PANE_COLOR)
         surface.SetDrawColor(team.GetColor(1)) -- Blue team is index 1
         surface.DrawPoly(blue_group_indicator_coordinates)
-        drawText({x = BLUE_PANE_POS.x - 35 , y = BLUE_PANE_POS.y + 15}, Color(255, 255, 255), "HUD.AmmoFont48", team.GetScore(1))
+        drawText({x = BLUE_PANE_POS.x - 35 , y = BLUE_PANE_POS.y + 0}, Color(255, 255, 255), "HUD.AmmoFont48", team.GetScore(1))
 
         drawTrapezium(RED_PANE_POS, RED_PANE_HEIGHT, RED_PANE_LENGTH, PANE_COLOR)
         surface.SetDrawColor(team.GetColor(2)) -- Red team is index 2
         surface.DrawPoly(red_group_indicator_coordinates)
-        drawText({x = RED_PANE_POS.x + 10, y = RED_PANE_POS.y + 15}, Color(255, 255, 255), "HUD.AmmoFont48", team.GetScore(2))
+        drawText({x = RED_PANE_POS.x + 10, y = RED_PANE_POS.y + 0}, Color(255, 255, 255), "HUD.AmmoFont48", team.GetScore(2))
 
     end
 
