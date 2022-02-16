@@ -10,6 +10,7 @@ PickupNoise2 = Sound("ambient/levels/canals/windchime2.wav")
 DropNoise = Sound("announcer/dropped.wav")
 DropNoise2 = Sound("ambient/alarms/warningbell1.wav")
 ReturnNoise = Sound("announcer/recovered.wav")
+OverNoise = Sound("announcer/over.wav")
 
 -- We'll need to update the HUD as well, but we can do it elsewhere. For now this is just audio.
 
@@ -19,6 +20,12 @@ local function BroadcastBeginAudio(len, ply)
     LocalPlayer():EmitSound(DeployNoise)
 end
 net.Receive("SendBeginAudio", BroadcastBeginAudio)
+
+local function BroadcastGameOverAudio(len, ply)
+    local team = net.ReadBool()
+    LocalPlayer():EmitSound(OverNoise)
+end
+net.Receive("SendGameOverAudio", BroadcastGameOverAudio)
 
 local function BroadcastTakenAudio(len, ply)
 

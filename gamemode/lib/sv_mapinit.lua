@@ -40,12 +40,10 @@ hook.Add("PostCleanupMap", "DAC.MapCleaned", function(ply, cmd)
 		end
 	end)
 
-	team.SetScore(1, 0)
-	team.SetScore(2, 0)
-
 	for teamKey, teamData in pairs(GAMEMODE.Teams) do
 		GAMEMODE.Teams[teamKey].basePos = Vector(0,0,0)
 		GAMEMODE.Teams[teamKey].baseSet = false
+		team.SetScore(teamKey, 0)
 	end
 
 	--PrintTable(GAMEMODE.Teams)

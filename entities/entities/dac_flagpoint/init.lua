@@ -17,39 +17,29 @@ function ENT:Initialize()
 	self.Entity.IsFlagBase = true
 
 	-- Set a base condition for the networked vars
-	-- The flag starts attached to the flag, so adjust these values accordingly
+	-- The flag starts attached to the flagbase, so adjust these values accordingly
 	self:SetHasFlag(true)
 
 end
 
 function ENT:Think()
 
-
 end
 
 function ENT:OnTeamChanged(_, _, newValue) -- _ makes these unimportant
-
 	self:SetSkin(newValue)
 	self.ChildFlag:SetTeam(newValue)
-
 end
 
 function ENT:OnScoreChanged(_, oldValue, newValue) -- _ makes these unimportant
-
-	--print("[DAC DEBUG]: Score network notify passed.")
-
 	for k, v in pairs(team.GetAllTeams()) do
 		if (k == self:GetTeam()) then
-			
-			-- print("[DAC DEBUG]: Team network comparison passed.")
-			
-			--team.SetScore(k, team.GetScore(k) + 1)
 			team.SetScore(k, newValue)
-		
-			--print("[DAC DEBUG]: Blue team's score is " .. team.GetScore(1))
-			--print("[DAC DEBUG]: Red team's score is " .. team.GetScore(2))
+			-- Maybe consider adding a win condition here as well, though it's not really necessary since this was more for testing purposes with the edit variables
 
 		end
+		if team.GetScore(k) == GetConVar("dac_capture_target"):GetFloat() then
+			EndMatch(k)
+		end
 	end
-
 end

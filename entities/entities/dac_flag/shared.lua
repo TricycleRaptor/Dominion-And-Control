@@ -103,7 +103,7 @@ function ENT:ReturnFlag()
 
 end
 
-function ENT:ScoreFlag(ply)
+function ENT:ScoreFlag(scoredTeam)
 
     if SERVER then
         if(self:GetParent():IsPlayer() == false and self:GetCarrier() == NULL and self:GetOnBase() == true and self:GetHeld() == false) then
@@ -111,11 +111,6 @@ function ENT:ScoreFlag(ply)
             self.ParentBase:SetFlagScore(self.ParentBase:GetFlagScore() + 1) -- We're getting this from the networked variables on the flagpoint. We can use this for score keeping.
         else
             print("[DAC DEBUG]: Guard code for scoring was triggered. Check parent variables.")
-        end
-
-        if (self.ParentBase:GetFlagScore() >= GetConVar("dac_capture_target"):GetFloat()) then
-            --print("[DAC DEBUG]: Win condition tripped.")
-            EndMatch(ply) -- Serverside function defined in sv_dac.lua
         end
     end
     

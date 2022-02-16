@@ -256,34 +256,41 @@ function BeginMatch()
 
 end
 
-function EndMatch(ply) -- Pass in the winning player's team
+function EndMatch(winningTeam) -- Pass in the winning team
 
-	local winningTeam = ply:Team() -- We can use this to network different sounds and the winning logo
-	-- Lock players in place
-	for k, v in pairs(player.GetAll()) do
-		v:Lock()
-	end
+	local winTeam = winningTeam
+
+	--print("[DAC DEBUG]: Winning team index is " .. tostring(winTeam))
+
+	timer.Simple(1, function()
+
+		for k, v in pairs(player.GetAll()) do
+			v:ScreenFade( SCREENFADE.OUT, Color( 0, 0, 0, 255), 3, 7)
+		end
+
+		net.Start("SendGameOverAudio")
+		net.WriteFloat(winningTeam)
+		net.Broadcast()
+
+	end)
 
 	-- Start a simple timer of seven seconds to give the logo time to display (not yet implemented)
-	timer.Simple(7, function()
+	timer.Simple(8, function()
 
 		game.CleanUpMap() -- Restore the map to its default state
-
-		-- This is needed as a direct reference
-		team.SetScore(1, 0)
-		team.SetScore(2, 0)
 
 		-- Reset team stats
 		for teamKey, teamData in pairs(GAMEMODE.Teams) do
 			GAMEMODE.Teams[teamKey].basePos = Vector(0,0,0)
 			GAMEMODE.Teams[teamKey].baseSet = false
+			team.SetScore(teamkey, 0)
 		end
 
 		for k,ply in pairs(player.GetAll()) do
 
 			-- Reset player stats, unlock the player positions and respawn everyone to a base state
 			ply:SetPlayerCarrierStatus(false)
-			ply:UnLock()
+			--ply:UnLock()
 			ply:Spawn()
 			player_manager.RunClass(ply, "Loadout")
 			--ply:SetNWInt("playerMoney", 0)

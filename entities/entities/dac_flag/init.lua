@@ -22,18 +22,9 @@ function ENT:Initialize()
 	self:SetAngles(Angle(0,90,0))
 	self.Entity.IsFlag = true
 
-	-- Check the spawning player's team and set the value of the flag to the player's team. This will change later to coordinate from a SWEP rather than the spawn menu
-	--self:SetTeam(1)
-
 end
 
 function ENT:StartTouch(entity)
-
-	-- Debugging network vars
-	if (entity:IsPlayer()) then
-		--print("[DAC DEBUG]: " .. entity:Nick() .. " touched a flag!")
-		--print("[DAC DEBUG]: " .. entity:Nick() .. "'s team ID is " .. entity:Team() .. " and the flag's team ID is " .. self:GetTeam() .. ".")
-	end
 
 	if entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() != self:GetTeam() then -- Consider adding a condition to check against spectators, come back to this later
 		
@@ -45,6 +36,8 @@ function ENT:StartTouch(entity)
 		net.Start("SendTakenAudio")
 		net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
 		net.Broadcast() -- This sends to all players, not just the flag carrier
+		-- We could have this also play "Action is coming" to the player who picked up the flag on a low chance modifier... Good easter egg suggestion made by Steiner.
+		-- https://www.youtube.com/watch?v=-yhgV5_8mMA
 		
 		-- Broadcast flag pickup
 		self:SetOnBase(false)
@@ -72,7 +65,7 @@ function ENT:StartTouch(entity)
 		if(entity:GetPlayerCarrierStatus() == true) then
 			
 			--print("[DAC DEBUG]: Score condition tripped.")
-			self:ScoreFlag(entity) -- Passing in the player for use elsewhere
+			self:ScoreFlag(self.Entity:GetTeam())
 			
 			for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
 				if (child:GetClass() == "dac_flag") then

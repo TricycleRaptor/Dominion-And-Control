@@ -1,13 +1,25 @@
-local meta = FindMetaTable( "Entity" ) -- Call the lookup table of the game's entire entity list
+local meta = FindMetaTable( "Player" ) -- Call the lookup table for player data
 
 function meta:SetPlayerCarrierStatus(boolean)
-    if(self:IsValid() and self:IsPlayer()) then -- Only add this to the player entity
-        self.isFlagCarrier = boolean
-    end
+    self.isFlagCarrier = boolean
 end    
 
 function meta:GetPlayerCarrierStatus()
-    if(self:IsValid() and self:IsPlayer()) then
-        return self.isFlagCarrier
-    end
+    return self.isFlagCarrier
+end
+
+function meta:SetPlayerWeapon(weaponString)
+    self.primaryWeapon = weaponString
+end    
+
+function meta:GetPlayerWeapon()
+    return self.primaryWeapon
+end
+
+function meta:SetPlayerSpecial(specialString)
+    self.specialWeapon = specialString
+end    
+
+function meta:GetPlayerSpecial()
+    return self.specialWeapon
 end

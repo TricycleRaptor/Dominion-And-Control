@@ -71,6 +71,13 @@ function GM:PlayerCanJoinTeam( ply, teamid )
 
 end
 
+function GM:PlayerHurt(victim, attacker, healthRemaining, damageTaken)
+	local maxVictimHealth = victim:GetMaxHealth()
+	if damageTaken > (maxVictimHealth * 0.25) then -- Trigger if the damage taken is above 25% of the player's max health
+		victim:ScreenFade( SCREENFADE.IN, Color( 255, 0, 0, 128 ), 0.3, 0 ) -- Flash the victim's screen red to nothing over the course of 0.3 seconds
+	end
+end
+
 function GM:PlayerRequestTeam( ply, teamid )
 
 	-- This team isn't joinable

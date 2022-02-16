@@ -37,7 +37,7 @@ function ENT:SetupDataTables()
         Edit = {
             type = "Int",
             min = 0,
-            max = 3 -- We should change this to a CVAR value but for now we're hardcoding it to be three.
+            max = GetConVar("dac_capture_target"):GetFloat()
         }
     })
 
