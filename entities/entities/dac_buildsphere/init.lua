@@ -45,15 +45,15 @@ function ENT:WarpToValidSpot(ply)
 end
 
 function ENT:Think()
-	local sphericalents = {}
 
 	for k,ent in pairs(ents.FindInSphere(self.Entity:GetPos(),1000 * GetConVar("dac_zone_scale"):GetFloat())) do
-		if ent:IsValid() and ent:IsPlayer() and ent:Alive() and ent:Team() == self:GetTeam() then
-			--RestoreTools(ent)
-		elseif ent:IsValid() and ent:IsPlayer() and ent:Team() != self:GetTeam() and ent:Team() != 3 then
-			self.Entity:WarpToValidSpot(ent)
+		if ent:IsValid() then
+			if ent:IsPlayer() and ent:Team() != self:GetTeam() and ent:Team() != 3 then
+				self.Entity:WarpToValidSpot(ent)
+			elseif (ent.IsFlagBase or ent.IsSpawnRegion) and ent:GetTeam() != self:GetTeam() then
+				self.Entity:WarpToValidSpot(ent)
+			end
 		end
-		table.insert(sphericalents, ent)
 	end
 
 	for k,ent in pairs(ents.GetAll()) do
@@ -62,7 +62,9 @@ function ENT:Think()
 			entTeam = ent:Team()
 		end
 
-		if ent:IsValid() and entTeam == self:GetTeam() and table.HasValue(sphericalents,ent) == false then
+		-- Perform vector mathematics to check entities within the radius of the flag sphere without iterating over tables like previously
+		-- EAT SHIT YOU BAD CODE, NOW YOU'RE NOT /AS/ BAD
+		if ent:IsValid() and entTeam == self:GetTeam() and ent:GetPos():Distance(self.Entity:GetPos()) > GetConVar("dac_zone_scale"):GetFloat() * 1000 then 
 			if ent:IsPlayer() then
 				ent:ExitVehicle()
 				ent:Spawn()
