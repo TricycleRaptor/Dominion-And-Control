@@ -1,14 +1,18 @@
 concommand.Add( "dac_changeteam", function( pl, cmd, args )
 	
-	local teamNum = tonumber( args[ 1 ] ) -- Pass in the team index
+	if tonumber( args[ 1 ] ) ~= nil then
+		local teamNum = tonumber( args[ 1 ] ) -- Pass in the team index
 
-	if team.NumPlayers(teamNum) < 1 and GAMEMODE.Teams[teamNum].baseSet == false then
-		pl:ChatPrint( "[DAC]: Please select a location for your base." )
-		pl.IsCaptain = true
-	elseif team.NumPlayers(teamNum) >= 1 and GAMEMODE.Teams[teamNum].baseSet == false then
-		pl:ChatPrint( "[DAC]: Please wait for your team captain to pick a base location." )
-		pl.IsCaptain = false
-	end
+		if pl:Team() ~= teamNum then
+			if team.NumPlayers(teamNum) < 1 and GAMEMODE.Teams[teamNum].baseSet == false then
+				pl:ChatPrint( "[DAC]: Please select a location for your base." )
+				pl.IsCaptain = true
+			elseif team.NumPlayers(teamNum) >= 1 and GAMEMODE.Teams[teamNum].baseSet == false then
+				pl:ChatPrint( "[DAC]: Please wait for your team captain to pick a base location." )
+				pl.IsCaptain = false
+			end
+		end
+	else return end
 
 	hook.Call( "PlayerRequestTeam", GAMEMODE, pl, tonumber( args[ 1 ] ) ) 
 end )

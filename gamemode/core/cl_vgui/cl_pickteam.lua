@@ -80,7 +80,7 @@ function GM:ShowTeam()
 	for teamKey, teamData in pairs(GAMEMODE.Teams) do
 		local teamPanel = vgui.Create("DPanel", TEAM_FRAME)
 
-		local opacity = 0.1
+		local opacity = 0.75
 		teamPanel.Paint = function(p, w, h)
 			surface.SetAlphaMultiplier(opacity)
 			surface.SetDrawColor(teamData.color)

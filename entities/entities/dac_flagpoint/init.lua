@@ -38,7 +38,7 @@ function ENT:OnScoreChanged(_, oldValue, newValue) -- _ makes these unimportant
 			-- Maybe consider adding a win condition here as well, though it's not really necessary since this was more for testing purposes with the edit variables
 
 		end
-		if team.GetScore(k) == GetConVar("dac_capture_target"):GetFloat() then
+		if team.GetScore(k) >= GetConVar("dac_capture_target"):GetFloat() then
 			EndMatch(k)
 		end
 	end

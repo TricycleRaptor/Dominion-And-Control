@@ -6,7 +6,7 @@ local HEALTH_PANE_LENGTH = SW * 0.20 -- % of screen width
 local HEALTH_PANE_HEIGHT = 60
 
 local AMMO_PANE_POS = {x = SW - 30, y = (SH - 100)}
-local AMMO_PANE_LENGTH = SW * 0.1 -- % of screen width
+local AMMO_PANE_LENGTH = SW * 0.115 -- % of screen width
 local AMMO_PANE_HEIGHT = 60
 
 local PANE_COLOR = Color(0, 0, 0, 235)

@@ -82,6 +82,8 @@ function ENT:Think()
 		end
 		
 	end
+
+	self.Entity:SetModelScale(GetConVar("dac_zone_scale"):GetFloat()) -- Auto-adjust perimeter in tandem with changes to cVars
 end
 
 function ENT:OnTeamChanged(_, _, newValue) -- _ makes these unimportant
