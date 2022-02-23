@@ -9,6 +9,8 @@ ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.Editable = true
 
+local ringModel = NULL
+
 function ENT:SetupDataTables()
 
     local teamList = {}
@@ -44,6 +46,28 @@ function ENT:Think()
 
     if CLIENT then
         self:AnimateFlag() -- Call animation function
+
+        if self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() < 20 then -- The flag is dropped, we can render objects on client here
+            if ringModel == NULL  then
+                ringModel = ents.CreateClientProp()
+                ringModel:SetPos(self.Entity:GetPos())
+                ringModel:SetModel("models/hunter/tubes/tube4x4x025.mdl")
+                ringModel:SetMaterial("models/wireframe")
+                ringModel:SetColor(team.GetColor(self.Entity:GetTeam()))
+                ringModel:SetParent(self.Entity)
+                ringModel:DrawShadow(false)
+                ringModel:Spawn()
+                
+            elseif ringModel ~= NULL then
+                ringModelAngles = ringModel:GetAngles()
+                ringModelAngles:Add(Angle(0,0.02,0))
+                ringModel:SetAngles(ringModelAngles)
+            end
+        else
+            if ringModel ~= NULL then
+                ringModel:Remove()
+            end
+        end
     end
 
     if SERVER then -- Don't bother the client with this part
@@ -53,6 +77,30 @@ function ENT:Think()
             net.Start("SendDroppedAudio")
 			net.WriteFloat(self:GetCarrier():Team()) -- Pass in the flag carrier's team for networking behavior
 			net.Broadcast() -- This sends to all players, not just the flag carrier
+
+            self.Entity:SetAngles(Angle(0,0,0)) -- Set angles to zero
+            local tr = util.TraceLine( {
+                start = self.Entity:GetPos(),
+                endpos = self.Entity:GetPos() + self.Entity:GetAngles():Up() * -200000, -- Perform a trace downward on a long single Y vector
+                filter = function( ent ) return ( ent:GetClass() == "prop_physics" ) end -- Only hit the world and physics props
+            } )
+            self.Entity:SetPos(tr.HitPos) -- Set the flag's position to that trace result
+
+            --- TIMED RECOVERY TIMER FUNCTION ---
+            if not timer.Exists("FlagPerimeterCheck") then
+                timer.Create("FlagPerimeterCheck", 5, 1, function()
+                    self.Entity:ReturnFlag()
+
+                    net.Start("SendReturnedAudio")
+                    net.WriteFloat(self.Entity:GetTeam()) -- Pass team's flag into net message
+                    net.Broadcast() -- This sends to all players, not just the flag carrier
+
+                    timer.Remove("FlagPerimeterCheck")
+                    print("[DAC DEBUG]: Drop timer removed!")
+                end)
+                timer.Pause("FlagPerimeterCheck")
+                print("[DAC DEBUG]: Drop timer created and paused!")
+            end
 
             self.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
             --print("[DAC DEBUG]: A flag was dropped!")
@@ -67,15 +115,51 @@ function ENT:Think()
             self.Entity:SetAngles(Angle(0,90,0))
             self.Entity:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 
-        elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 15 then -- Return the flag after 15 seconds of inactivity
+        elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 20 then -- Return the flag after 20 seconds of inactivity
 
             self.Entity:ReturnFlag()
+
+            if timer.Exists("FlagPerimeterCheck") then
+                timer.Remove("FlagPerimeterCheck")
+                print("[DAC DEBUG]: Drop timer removed!")
+            end
 
             net.Start("SendReturnedAudio")
             net.WriteFloat(self.Entity:GetTeam()) -- Pass team's flag into net message
             net.Broadcast() -- This sends to all players, not just the flag carrier
 
         end
+
+        ----- BEGIN EXPERIMENTAL TIMED RECOVERY -----
+        if self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() < 20 then -- Count down for when the flag was dropped
+
+            local sphericalents = {} -- Empty list table
+            for _, entInSphere in pairs(ents.FindInSphere(self.Entity:GetPos(),100)) do
+                if entInSphere:IsValid() and entInSphere:IsPlayer() and entInSphere:Alive() and !entInSphere:InVehicle() and timer.Exists("FlagPerimeterCheck") then
+                    if entInSphere:Team() == self.Entity:GetTeam() and entInSphere:Team() != 3 then
+                        timer.UnPause("FlagPerimeterCheck")
+                        print("[DAC DEBUG]: Drop timer unpaused!")
+                    end
+                    table.insert(sphericalents, entInSphere) -- Auto-populate that table with entities
+                end
+            end
+        
+            for _, playerEnt in pairs(player.GetAll()) do
+
+                if playerEnt:IsPlayer() then
+                    teamNum = playerEnt:Team()
+                end
+        
+                if playerEnt:IsValid() and teamNum == self.Entity:GetTeam() and table.HasValue(sphericalents, playerEnt) == false then
+                    if playerEnt:IsPlayer() then
+                        timer.Pause("FlagPerimeterCheck")
+                        print("[DAC DEBUG]: Drop timer paused!")
+                    end
+                end
+            end
+
+        end
+        ----- END EXPERIMENTAL TIMED RECOVERY -----
 
         if self.Entity:GetCarrier() == NULL or self.Entity:GetCarrier() == nil then -- Covering bases here, probably isn't necessary
             self.Entity:SetHeld(false)

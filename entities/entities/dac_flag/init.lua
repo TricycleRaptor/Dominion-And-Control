@@ -51,14 +51,17 @@ function ENT:StartTouch(entity)
 		self.Entity:SetParent(entity)
 		self.Entity:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
 
-	elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == false then -- Team member touched the flag
+	----- BEGIN INSTANT FLAG RECOVERY CONDITION -----
+	--elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == false then -- Team member touched the flag
 		
 		-- Network that the flag has been returned
 		--print("[DAC]: " .. entity:Nick() .. " returned the flag.")
-		self.Entity:ReturnFlag()
-		net.Start("SendReturnedAudio")
-		net.WriteFloat(self.Entity:GetTeam()) -- Pass in the flag carrier's team for networking behavior
-		net.Broadcast() -- This sends to all players, not just the flag carrier
+		--self.Entity:ReturnFlag()
+		--net.Start("SendReturnedAudio")
+		--net.WriteFloat(self.Entity:GetTeam()) -- Pass in the flag carrier's team for networking behavior
+		--net.Broadcast() -- This sends to all players, not just the flag carrier
+
+	----- END INSTANT FLAG RECOVERY CONDITION -----
 		
 	elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == true then -- Flag is on base and the player is on the same team
 

@@ -18,3 +18,10 @@ function ENT:Draw()
     end
 
 end
+
+hook.Add("HUDPaint", "DAC.FlagRenderReclaim", function()
+    local w, h = ScrW(), ScrH()
+    local hudX = w * 0.45
+    local hudY = h * 0.85
+    --draw.RoundedBox(10, hudX, hudY, w * 0.10, h * 0.040, Color( 0, 0, 0, 150 ) )
+end)

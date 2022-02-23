@@ -44,6 +44,10 @@ function GM:PlayerSpawnSENT(ply, class)
 	return true
 end
 
+function GM:ShowSpare1(ply) -- Override F3 keypress
+	ply:ConCommand("dac_multimenu")
+end
+
 function GM:Think()
 
 end
