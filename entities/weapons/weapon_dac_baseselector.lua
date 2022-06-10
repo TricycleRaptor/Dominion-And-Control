@@ -37,8 +37,6 @@ local userTeam = nil
 
 local spawnPos = nil
 local flagPos = nil
-local spawnEnt = NULL
-local flagEnt = NULL
 local validSpace = false
 local wireColor = Color(255,255,255,255)
 
@@ -61,33 +59,33 @@ function SWEP:Think()
     
         if Dist <= 350 then -- Maximum base place range, to prevent weirdness
     
-            if spawnEnt == NULL and flagEnt == NULL then
+            if !IsValid(self.flagEnt) and !IsValid(self.flagEnt) then --Isn't valid, so let's go ahead and make it work
 
-                spawnEnt = ents.Create("prop_physics")
-                spawnEnt:SetModel("models/ctf_spawnarea/ctf_spawnarea.mdl")
-                spawnEnt:Spawn()
-                spawnEnt:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE) -- Don't collide with anything, bitch
-                spawnEnt:DrawShadow(false)
-                spawnEnt:SetMaterial("models/wireframe")
+                self.spawnEnt = ents.Create("prop_physics")
+                self.spawnEnt:SetModel("models/ctf_spawnarea/ctf_spawnarea.mdl")
+                self.spawnEnt:Spawn()
+                self.spawnEnt:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE) -- Don't collide with anything, bitch
+                self.spawnEnt:DrawShadow(false)
+                self.spawnEnt:SetMaterial("models/wireframe")
 
-                flagEnt = ents.Create("prop_physics")
-                flagEnt:SetModel("models/ctf_flagbase/ctf_flagbase.mdl")
-                flagEnt:Spawn()
-                flagEnt:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
-                flagEnt:DrawShadow(false)
-                flagEnt:SetMaterial("models/wireframe")
+                self.flagEnt = ents.Create("prop_physics")
+                self.flagEnt:SetModel("models/ctf_flagbase/ctf_flagbase.mdl")
+                self.flagEnt:Spawn()
+                self.flagEnt:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
+                self.flagEnt:DrawShadow(false)
+                self.flagEnt:SetMaterial("models/wireframe")
 
             else
 
                 spawnPos = Trace.HitPos + Trace.HitNormal * 3
                 flagPos = spawnPos + Vector(0,0,100)
 
-                spawnEnt:SetPos(spawnPos)
-                flagEnt:SetPos(flagPos)
-                spawnEnt:SetColor(wireColor)
-                flagEnt:SetColor(wireColor)
+                self.spawnEnt:SetPos(spawnPos)
+                self.flagEnt:SetPos(flagPos)
+                self.spawnEnt:SetColor(wireColor)
+                self.flagEnt:SetColor(wireColor)
 
-                self:TraceCheck(spawnEnt, flagEnt)
+                self:TraceCheck(self.spawnEnt, self.flagEnt)
 
                 --if (TeamLocations[otherTeam] != nil && (spawnPos - TeamLocations[otherTeam]):Length() < GetConVar("dac_zone_scale"):GetFloat() * 2000) then
                     --wireColor = Color( 255, 0, 0, 255 )
@@ -98,9 +96,9 @@ function SWEP:Think()
     
         else
     
-            if spawnEnt ~= NULL and flagEnt ~= NULL then
-                spawnEnt:Remove()
-                flagEnt:Remove()
+            if IsValid(self.flagEnt) and IsValid(self.flagEnt) then
+                self.spawnEnt:Remove()
+                self.flagEnt:Remove()
             end
 
         end
@@ -145,20 +143,20 @@ end
 
 function SWEP:Holster()
 
-    if spawnEnt ~= NULL and flagEnt ~= NULL then
-        validSpace = false
-        spawnEnt:Remove()
-        flagEnt:Remove()
+    if IsValid(self.flagEnt) and IsValid(self.flagEnt) then
+        self.spawnEnt:Remove()
+        self.flagEnt:Remove()
     end
-    
+
+    validSpace = false
     return true
 
 end
 
 function SWEP:TraceCheck(spawnEnt, flagEnt)
 
-    local ent1 = spawnEnt
-    local ent2 = flagEnt
+    local ent1 = self.spawnEnt
+    local ent2 = self.flagEnt
 	
 	local mins1 = ent1:OBBMins()
 	local maxs1 = ent1:OBBMaxs()

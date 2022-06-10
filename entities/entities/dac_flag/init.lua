@@ -2,10 +2,13 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+util.AddNetworkString("SendFlagHUDNotify")
+
 function ENT:Initialize()
 
 	local ScoreCount = nil
 	self:SetName("dac_flag")
+	self:AddEFlags( EFL_FORCE_CHECK_TRANSMIT ) -- Force check of transmission state
 
 	self:SetModel("models/ctf_flag/ctf_flag.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
@@ -26,7 +29,7 @@ end
 
 function ENT:StartTouch(entity)
 
-	if entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() != self:GetTeam() then -- Consider adding a condition to check against spectators, come back to this later
+	if entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() != self:GetTeam() and not entity:InVehicle() then -- Consider adding a condition to check against spectators, come back to this later
 		
 		-- Can't set this in the entity initialization hook for some reason, so I have to fucking do it here
 		if(self:GetOnBase() == true and self:GetHeld() == false) then
@@ -38,6 +41,11 @@ function ENT:StartTouch(entity)
 		net.Broadcast() -- This sends to all players, not just the flag carrier
 		-- We could have this also play "Action is coming" to the player who picked up the flag on a low chance modifier... Good easter egg suggestion made by Steiner.
 		-- https://www.youtube.com/watch?v=-yhgV5_8mMA
+
+		net.Start("SendFlagHUDNotify")
+		net.WriteEntity(self.Entity) -- Pass in the flag for parsing on client
+		net.WriteBool(true)
+		net.Send(entity)
 		
 		-- Broadcast flag pickup
 		self:SetOnBase(false)
@@ -84,6 +92,11 @@ function ENT:StartTouch(entity)
 			net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
 			net.Broadcast() -- This sends to all players, not just the flag carrier
 
+			net.Start("SendFlagHUDNotify") -- Notify the carrying player's HUD
+			net.WriteEntity(self.Entity)
+			net.WriteBool(false)
+			net.Send(entity)
+
 		end
 
 	end
@@ -94,4 +107,8 @@ function ENT:OnTeamChanged(_, _, newValue) -- _ makes these unimportant
 
 	self:SetSkin(newValue)
 
+end
+
+function ENT:UpdateTransmitState()
+	return TRANSMIT_ALWAYS -- Always network the flag entity, to ensure the position is always known to the player (this also allows flag icons always update their position)
 end

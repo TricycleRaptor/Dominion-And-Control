@@ -1,31 +1,3 @@
--- Melee weapons
-
-local V = {
-
-	Name = "Crowbar",
-	Model = "models/weapons/w_crowbar.mdl",
-	Class = "weapon_crowbar",
-	Category = "Melee",
-	Damage = 20,
-	Speed = 120,
-	Description = "A fulcrum tool for leveraging nails and boards, doubles as a weapon in a pinch. Legendary token of Gordon Freeman.",
-
-}
-list.Set( "weapons_melee", "weapon_crowbar", V )
-
-local V = {
-
-	Name = "Stun Baton",
-	Model = "models/weapons/w_stunbaton.mdl",
-	Class = "weapon_stunstick",
-	Category = "Melee",
-	Damage = 40,
-	Speed = 74,
-	Description = "An electrified stun baton used by the Cbomine to coerce insubordinates into submission.",
-
-}
-list.Set( "weapons_melee", "weapon_stunstick", V )
-
 -- Primary weapons
 
 local V = {
@@ -37,7 +9,8 @@ local V = {
 	Damage = 8,
 	RPM = 600,
 	Capacity = 30,
-	Accuracy = "Medium-low",
+	AmmoType = "AR2",
+	Accuracy = "Medium",
 	Projectile = "Hitscan",
 	Description = "The Overwatch Standard Issue Pulse Rifle (OSIPR), is an automatic Dark Fusion assault rifle manufactured by the Combine.",
 
@@ -53,6 +26,7 @@ local V = {
 	Damage = 4,
 	RPM = 800,
 	Capacity = 45,
+	AmmoType = "SMG1",
 	Accuracy = "Low",
 	Projectile = "Hitscan",
 	Description = "The MP7, better known as the SMG-1, is a fully automatic compact submachine gun manufactured by Heckler & Koch.",
@@ -69,6 +43,7 @@ local V = {
 	Damage = 56,
 	RPM = 68,
 	Capacity = 6,
+	AmmoType = "Buckshot",
 	Accuracy = "Low",
 	Projectile = "Hitscan",
 	Description = "Chambered in 12-gauge, 7-pellet buckshot, the SPAS-12 is a pump-action shotgun manufactured by Luigi Franchi S.p.A.",
@@ -85,6 +60,7 @@ local V = {
 	Damage = 100,
 	RPM = 31,
 	Capacity = 1,
+	AmmoType = "XBowBolt",
 	Accuracy = "High",
 	Projectile = "Projectile",
 	Description = "A scoped, long-range crossbow built by the Human Resistance. Fires low-velocity, superheated rebar bolts in single action.",
@@ -100,6 +76,8 @@ local V = {
 	Model = "models/weapons/w_grenade.mdl",
 	Class = "weapon_frag",
 	Category = "Equipment",
+	Capacity = 1,
+	AmmoType = "Grenade",
 	Description = "A standard fragmentation grenade with a laser diode countdown timer.",
 
 }
@@ -111,6 +89,8 @@ local V = {
 	Model = "models/weapons/w_rocket_launcher.mdl",
 	Class = "weapon_lfsmissilelauncher",
 	Category = "Equipment",
+	Capacity = 6,
+	AmmoType = "RPG_Round",
 	Description = "A powerful missile launcher with onboard radar for detecting and locking onto aircraft.",
 
 }
@@ -122,6 +102,8 @@ local V = {
 	Model = "models/Items/HealthKit.mdl",
 	Class = "weapon_medkit",
 	Category = "Equipment",
+	Capacity = 1,
+	AmmoType = "None",
 	Description = "A handheld medkit used for healing other players as well as the user.",
 
 }
