@@ -5,8 +5,8 @@ ENT.Author = "Arrin Bevers"
 ENT.Purpose = "Primary gamemode objective"
 ENT.Category = "DAC"
 
-ENT.Spawnable = false
-ENT.AdminSpawnable = false
+ENT.Spawnable = true
+ENT.AdminSpawnable = true
 ENT.Editable = true
 
 function ENT:SetupDataTables()
@@ -27,7 +27,7 @@ function ENT:SetupDataTables()
             values = teamList -- Get team data from sh_teams.lua
         }
     })
-    self:NetworkVar("Int", 1, "DropTime")
+    self:NetworkVar("Float", 1, "DropTime")
     self:NetworkVar("Bool", 0, "Held")
     self:NetworkVar("Bool", 1, "OnBase")
     self:NetworkVar("Entity", 0, "Carrier")
@@ -42,10 +42,6 @@ end
 
 function ENT:Think()
 
-    if CLIENT then
-        self:AnimateFlag() -- Call animation function
-    end
-
     if SERVER then -- Don't bother the client with this part
 
         if self.Entity:GetHeld() == true and self:GetCarrier():IsPlayer() and not self.Entity:GetCarrier():Alive() then -- This will trigger when the flag carrier dies
@@ -53,6 +49,19 @@ function ENT:Think()
             net.Start("SendDroppedAudio")
 			net.WriteFloat(self:GetCarrier():Team()) -- Pass in the flag carrier's team for networking behavior
 			net.Broadcast() -- This sends to all players, not just the flag carrier
+
+            net.Start("SendFlagHUDNotify") -- Notify the carrying player's HUD
+            net.WriteEntity(self.Entity)
+            net.WriteBool(false)
+            net.Send(self:GetCarrier())
+
+            self.Entity:SetAngles(Angle(0,0,0)) -- Set angles to zero
+            local tr = util.TraceLine( {
+                start = self.Entity:GetPos(),
+                endpos = self.Entity:GetPos() + self.Entity:GetAngles():Up() * -1000, -- Perform a trace downward on a long single Y vector
+                filter = function( ent ) return ( ent:GetClass() == "prop_physics" ) end -- Only hit the world and physics props
+            } )
+            self.Entity:SetPos(tr.HitPos) -- Set the flag's position to that trace result, kinda buggy
 
             self.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
             --print("[DAC DEBUG]: A flag was dropped!")
@@ -67,7 +76,7 @@ function ENT:Think()
             self.Entity:SetAngles(Angle(0,90,0))
             self.Entity:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 
-        elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 15 then -- Return the flag after 15 seconds of inactivity
+        elseif self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() > 20 then -- Return the flag after 20 seconds of inactivity
 
             self.Entity:ReturnFlag()
 
@@ -76,6 +85,18 @@ function ENT:Think()
             net.Broadcast() -- This sends to all players, not just the flag carrier
 
         end
+
+        ----- BEGIN EXPERIMENTAL TIMED RECOVERY -----
+        if self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() < 20 then -- Count down for when the flag was dropped
+        
+            for k,ent in pairs(player.GetAll()) do
+                if ent:IsValid() and ent:IsPlayer() and ent:Team() == self:GetTeam() and ent:GetPos():Distance(self.Entity:GetPos()) < 100 then
+                    self.Entity:SetDropTime(self.Entity:GetDropTime() - 0.25)
+                end
+            end
+
+        end
+        ----- END EXPERIMENTAL TIMED RECOVERY -----
 
         if self.Entity:GetCarrier() == NULL or self.Entity:GetCarrier() == nil then -- Covering bases here, probably isn't necessary
             self.Entity:SetHeld(false)
@@ -100,6 +121,7 @@ function ENT:ReturnFlag()
 	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 
 	self.ParentBase:SetHasFlag(true)
+    self.Entity:SetDropTime(0)
 
 end
 
@@ -125,38 +147,5 @@ function ENT:ResetFlagScore()
     end
     
     --print("[DAC DEBUG]: Local flagpoint " .. tostring(self.ParentBase) .. "'s flag score has been reset.")
-
-end
-
-function ENT:AnimateFlag()
-
-    local numFrames = self.Entity:GetFlexNum()
-
-	if numFrames == 0 then return end
-
-	local totalTime = 2
-	local frameTime = totalTime / numFrames
-
-	local animTime = CurTime() % totalTime
-
-	for i=0,(numFrames-1) do
-
-		local progress = animTime / frameTime - i
-		if progress <= 0 or progress > 1 then
-			progress = 0
-		end
-
-		local prev = i - 1
-		if prev < 0 then
-			prev = numFrames - 1
-		end
-
-		self.Entity:SetFlexWeight(i, progress)
-
-		if (progress > 0) then
-			self.Entity:SetFlexWeight(prev, 1 - progress)
-			return
-		end
-	end
 
 end

@@ -2,12 +2,14 @@ local SH = ScrH()
 local SW = ScrW()
 
 local BLUE_PANE_POS = {x = SW * 0.45, y = (10)}
-local BLUE_PANE_LENGTH = SW * 0.06 -- % of screen width
+local BLUE_PANE_LENGTH = SW * 0.055 -- % of screen width
 local BLUE_PANE_HEIGHT = 50
 
 local RED_PANE_POS = {x = SW * 0.55, y = (10)}
-local RED_PANE_LENGTH = SW * 0.06 -- % of screen width
+local RED_PANE_LENGTH = SW * 0.055 -- % of screen width
 local RED_PANE_HEIGHT = 50
+
+local FLAG_PANE_POS = {x = 30, y = (SH - 100)}
 
 local PANE_COLOR = Color(0, 0, 0, 235)
 local GROUP_INDICATOR_WIDTH = 10
@@ -32,6 +34,8 @@ local blue_group_indicator_coordinates = {
     {x = BLUE_PANE_POS.x - BLUE_PANE_LENGTH + BLUE_PANE_HEIGHT * ANGLE, y = BLUE_PANE_POS.y + BLUE_PANE_HEIGHT},
     {x = BLUE_PANE_POS.x - BLUE_PANE_LENGTH + BLUE_PANE_HEIGHT * ANGLE - GROUP_INDICATOR_WIDTH, y = BLUE_PANE_POS.y + BLUE_PANE_HEIGHT}
 }
+
+local flagMat = Material("dominion/ui/flag.png")
 
 -- HUD Elements
 local function drawTrapezium(position, height, length, color)

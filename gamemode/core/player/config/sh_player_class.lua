@@ -14,17 +14,24 @@ function PLAYER:Loadout()
         self.Player:Give("weapon_dac_baseselector")
     end
 
-    -- Give players their guaranteed weapons
+    -- Give players their gear
     self.Player:Give("weapon_physcannon")
     self.Player:Give("weapon_crowbar")
     self.Player:Give("weapon_pistol")
-    self.Player:StripWeapon("gmod_camera")
+    self.Player:Give(self.Player.primaryWeapon)
+    self.Player:Give(self.Player.specialWeapon)
 
-    -- We remove all ammo from the player and give them the pistol and ammo reserves with it because it is the guaranteed sidearm
     -- Giving ammo doesn't account the current mag in the weapon by default, so this is purely reserve
-    -- This will change later
     self.Player:RemoveAllAmmo()
     self.Player:GiveAmmo(72, "Pistol", true)  -- 72/18 = 4! 4 mags! Ah-ah-ah! https://www.youtube.com/watch?v=B-Wd-Q3F8KM
+    self.Player:GiveAmmo(180, "SMG1", true)
+    self.Player:GiveAmmo(120, "AR2", true)
+    self.Player:GiveAmmo(24, "Buckshot", true)
+    self.Player:GiveAmmo(4, "XBowBolt", true)
+    self.Player:GiveAmmo(1, "Grenade", true)
+    -- This will change later, hard coded for now
+
+    self.Player:StripWeapon("gmod_camera")
 
 end
 

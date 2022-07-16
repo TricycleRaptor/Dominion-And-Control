@@ -1,4 +1,11 @@
+hook.Add("PlayerInitialSpawn", "DAC.AssignDefaultWeapons", function(ply, transition) 
+	ply:SetDefaultWeapons()
+end)
+
 function GM:PlayerSpawn(ply)
+
+	--print("[DAC DEBUG]: " .. ply:Nick() .. "'s primary weapon is a " .. tostring(ply:GetPlayerWeapon()))
+	--print("[DAC DEBUG]: " .. ply:Nick() .. "'s special item is a " .. tostring(ply:GetPlayerSpecial()))
 
 	local gameStage = DAC:GetGameStage()
 	local stageData = gameStage:GetData()
@@ -145,14 +152,16 @@ function GM:PlayerDisconnected(ply)
 
 	local teamNum = ply:Team()
 
-	if (ply.IsCaptain and GAMEMODE.Teams[teamNum].baseSet == false) then
+	if ply.IsCaptain then
 		for _, v in pairs (team.GetPlayers(teamNum)) do
 			if v != ply then
 				v.IsCaptain = true
-				v:Give("weapon_dac_baseselector")
-				v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
+				if GAMEMODE.Teams[teamNum].baseSet == false then
+					v:Give("weapon_dac_baseselector")
+					v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
+				end
 			end
 		end
 	end
-
+	
 end

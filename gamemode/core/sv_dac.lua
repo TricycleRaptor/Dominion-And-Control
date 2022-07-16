@@ -27,7 +27,7 @@ hook.Add("EntityTakeDamage", "DAC.GameStage.Damage", function(ent, dmginfo)
 	elseif data.pvp and attacker:IsPlayer() and ent:IsPlayer() then
 		if attacker:Team() == ent:Team() then
 			if attacker:Nick() ~= ent:Nick() then
-				if GetConVar("dac_friendlyfire"):GetInt() == 1 then
+				if GetConVar("dac_friendlyfire"):GetBool() == true then
 					dmginfo:ScaleDamage(0.75) -- 25% friendly fire reduction
 					return false
 				else
@@ -163,12 +163,7 @@ hook.Add("PlayerNoClip", "DAC.NoclipPolicy", function( ply, desiredState )
 			return true 
 		end
 	else
-		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot use noclip during the " .. data.name .. " stage.")
-			return false 
-		else 
-			return true 
-		end
+		return true
 	end
 end )
 
