@@ -68,9 +68,15 @@ function GM:PlayerCanJoinTeam( ply, teamid )
 		return false
 	end
 
-	-- Already on this team!
+	-- Already on this team
 	if ( ply:Team() == teamid ) then
 		ply:ChatPrint( "[DAC]: You're already on that team." )
+		return false
+	end
+
+	-- Carrying a flag
+	if ( ply:GetPlayerCarrierStatus() == true ) then
+		ply:ChatPrint( "[DAC]: You cannot change teams while carrying a flag." )
 		return false
 	end
 
@@ -88,13 +94,25 @@ end
 function GM:PlayerRequestTeam( ply, teamid )
 
 	-- This team isn't joinable
-	if ( !team.Joinable( teamid ) ) then
-		ply:ChatPrint( "[DAC]: You can't join that team." )
+	if ( !GAMEMODE:PlayerCanJoinTeam( ply, teamid ) ) then
+		--ply:ChatPrint( "[DAC]: You can't join that team." )
 	return end
 
-	-- This team isn't joinable
-	if ( !GAMEMODE:PlayerCanJoinTeam( ply, teamid ) ) then
-		-- Messages here should be outputted by this function
+	if teamid ~= nil then
+		local teamNum = teamid -- Pass in the team index
+
+		if ply:Team() ~= teamNum then
+			if team.NumPlayers(teamNum) < 1 and GAMEMODE.Teams[teamNum].baseSet == false then
+				ply:ChatPrint( "[DAC]: Please select a location for your base." )
+				ply.IsCaptain = true
+			elseif team.NumPlayers(teamNum) >= 1 and GAMEMODE.Teams[teamNum].baseSet == false then
+				ply:ChatPrint( "[DAC]: Please wait for your team captain to pick a base location." )
+				ply.IsCaptain = false
+			end
+		end
+
+	else 
+		print("[DAC DEBUG]: Guard code triggered.")
 	return end
 
 	GAMEMODE:PlayerJoinTeam( ply, teamid )
@@ -121,6 +139,19 @@ function GM:PlayerJoinTeam( ply, teamid )
 end
 
 function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
+
+	if ply.IsCaptain == true then
+		ply.IsCaptain = false
+		for _, v in pairs (team.GetPlayers(oldteam)) do
+			if v != ply and team.NumPlayers(teamNum) < 1 then
+				v.IsCaptain = true
+				if GAMEMODE.Teams[teamNum].baseSet == false then
+					v:Give("weapon_dac_baseselector")
+					v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
+				end
+			end
+		end
+	end
 
 	if ( newteam == TEAM_SPECTATOR ) then
 
@@ -152,7 +183,8 @@ function GM:PlayerDisconnected(ply)
 
 	local teamNum = ply:Team()
 
-	if ply.IsCaptain then
+	if ply.IsCaptain == true then
+		ply.IsCaptain = false
 		for _, v in pairs (team.GetPlayers(teamNum)) do
 			if v != ply then
 				v.IsCaptain = true
