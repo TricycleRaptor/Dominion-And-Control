@@ -140,18 +140,18 @@ end
 
 function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 
-	if ply.IsCaptain == true then
+--[[ 	if ply.IsCaptain == true and oldteam ~= nil then
 		ply.IsCaptain = false
 		for _, v in pairs (team.GetPlayers(oldteam)) do
-			if v != ply and team.NumPlayers(teamNum) < 1 then
+			if v != ply and team.NumPlayers(oldteam) < 1 then
 				v.IsCaptain = true
-				if GAMEMODE.Teams[teamNum].baseSet == false then
+				if GAMEMODE.Teams[oldteam].baseSet == false then
 					v:Give("weapon_dac_baseselector")
 					v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
 				end
 			end
 		end
-	end
+	end ]]
 
 	if ( newteam == TEAM_SPECTATOR ) then
 
