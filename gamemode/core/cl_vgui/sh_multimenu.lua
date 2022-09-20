@@ -9,29 +9,46 @@ if CLIENT then
     local SH = ScrH()
     local SW = ScrW()
 
-    local PANEL = {
-        Init = function(self)
+    MENU_FRAME = MENU_FRAME or nil
+    function multiMenu()     
 
-            self:SetSize(SW * 0.75, SH * 0.70)
-            self:Center()
-            self:SetVisible(true)
-            local panelX, panelY = self:GetSize()
+        -- Menu button was pushed and the frame isn't valid, so we'll create it
+        if !IsValid(MENU_FRAME) then
 
-            --- MAIN PANEL SETUP ---
+            LocalPlayer():EmitSound(OpenNoise)
+            gui.EnableScreenClicker(true)
 
-            local titleLabel = vgui.Create("DLabel", self)
+            -- MAIN FRAME SETUP --
+            
+            MENU_FRAME = vgui.Create( "DFrame" )
+            MENU_FRAME:SetSize(SW * 0.70, SH * 0.70)
+            MENU_FRAME:Center()
+            MENU_FRAME:ShowCloseButton(false)
+            MENU_FRAME:SetDraggable(false)
+            MENU_FRAME:SetTitle("")
+            MENU_FRAME.Paint = function( self, w, h )
+                draw.RoundedBox(3, 0, 0, MENU_FRAME:GetWide(), MENU_FRAME:GetTall(), Color(0, 0, 0, 240))
+                surface.SetDrawColor(255,255,255)
+                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+            end
+
+            local panelX, panelY = MENU_FRAME:GetSize()
+
+            --- MAIN PANELS SETUP ---
+
+            local titleLabel = vgui.Create("DLabel", MENU_FRAME)
             titleLabel:SetFont("DAC.PickTeam") -- Size 32px
             titleLabel:SetText("GAMEMODE MENU PROTOTYPE")
             titleLabel:SetPos(panelX * 0.01,6)
             titleLabel:SizeToContents()
 
-            local creditsLabel = vgui.Create("DLabel", self)
+            local creditsLabel = vgui.Create("DLabel", MENU_FRAME)
             creditsLabel:SetFont("DAC.ScoreboardTitle") -- Size 22px
             creditsLabel:SetText( LocalPlayer():GetNWInt("storeCredits") .. " cR")
             creditsLabel:SetPos(panelX * 0.935, 12)
             creditsLabel:SizeToContents()
 
-            local mainPanel = vgui.Create("DPanel", self)
+            local mainPanel = vgui.Create("DPanel", MENU_FRAME)
             mainPanel:SetPos(4, 38)
             mainPanel:SetSize(panelX - 8, panelY - 38 - 4)
             mainPanel.Paint = function(self, w, h)
@@ -40,15 +57,36 @@ if CLIENT then
 
             local mainColumnSheet = vgui.Create("DColumnSheet", mainPanel)
             mainColumnSheet:Dock(FILL)
+            mainColumnSheet:InvalidateParent(true)
 
             --- ITEMS TAB ---
 
             local shopSheet_Items = vgui.Create("DPanel", mainColumnSheet)
             shopSheet_Items:Dock(FILL)
+            --shopSheet_Items:DockPadding(10,10,10,10)
+            shopSheet_Items:InvalidateParent(true)
             shopSheet_Items.Paint = function(self, w, h)
                 draw.RoundedBox(0,0,0, w, h, Color(10,10,10,100))
             end
             mainColumnSheet:AddSheet("Entities", shopSheet_Items, "icon16/bricks.png")
+
+                local shopSheet_Primary = vgui.Create("DPanel", shopSheet_Items)
+                shopSheet_Primary:SetWide(shopSheet_Items:GetWide() / 2)
+                --shopSheet_Primary:DockMargin(10,10,10,10)
+                shopSheet_Primary:Dock(LEFT)
+                shopSheet_Primary:InvalidateParent(true)
+                shopSheet_Primary.Paint = function(self, w, h)
+                    draw.RoundedBox(0,0,0, w, h, Color(107,0,0,0)) -- Red for visualizing positioning
+                end
+
+                local shopSheet_Secondary = vgui.Create("DPanel", shopSheet_Items)
+                shopSheet_Secondary:SetWide(shopSheet_Items:GetWide() / 2)
+                --shopSheet_Secondary:DockMargin(10,10,10,10)
+                shopSheet_Secondary:Dock(RIGHT)
+                shopSheet_Secondary:InvalidateParent(true)
+                shopSheet_Secondary.Paint = function(self, w, h)
+                    draw.RoundedBox(0,0,0, w, h, Color(0,35,131,0)) -- Blue for visualizing positioning
+                end
 
             --- VEHICLE TAB ---
 
@@ -77,42 +115,15 @@ if CLIENT then
             end
             mainColumnSheet:AddSheet("Loadout", shopSheet_Loadout, "icon16/briefcase.png")
 
-                local loadoutSheet_Primary = vgui.Create("DPanel", shopSheet_Loadout)
-                loadoutSheet_Primary:SetWide(shopSheet_Loadout:GetWide())
-                loadoutSheet_Primary:Dock(LEFT)
-                loadoutSheet_Primary.Paint = function(self, w, h)
-                    draw.RoundedBox(0,0,0, w, h, Color(255,255,255))
-                end
-        
-        end,
+        else
 
-        Paint = function( self, w, h )
-            draw.RoundedBox(3, 0, 0, self:GetWide(), self:GetTall(), Color(0, 0, 0, 240) )
-            surface.SetDrawColor(255,255,255)
-            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-        end
-
-    }
-    vgui.Register("dac_multimenu", PANEL)
-
-    -- [PANEL ELEMENTS END] --
-
-    function multiMenu()
-
-        if !IsValid(MainMenu) then
-            MainMenu = vgui.Create("dac_multimenu")
-            MainMenu:SetVisible(false)
-        end
-
-        if MainMenu:IsVisible() then
-            MainMenu:SetVisible(false)
+            -- Menu button was pushed, and the frame is already open, so now we'll close it
             LocalPlayer():EmitSound(CloseNoise)
             gui.EnableScreenClicker(false)
-        else
-            MainMenu:SetVisible(true)
-            LocalPlayer():EmitSound(OpenNoise)
-            gui.EnableScreenClicker(true)
-        end     
+            MENU_FRAME:Remove()
+            MENU_FRAME = nil
+
+        end
     
     end
     concommand.Add("dac_multimenu", multiMenu)
