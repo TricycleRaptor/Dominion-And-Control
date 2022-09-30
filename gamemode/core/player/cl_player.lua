@@ -18,7 +18,7 @@ local function UpdateDeathInfo()
             
             deathText = "Respawn in " .. deathText -- Funny recursion
             if (CurTime() > nextRespawnTick) then
-                deathText = "Click to respawn"
+                deathText = "Respawn ready"
             end
         
             -- Draw function

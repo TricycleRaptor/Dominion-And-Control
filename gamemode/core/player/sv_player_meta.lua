@@ -25,6 +25,20 @@ function meta:GetPlayerSpecial()
 end
 
 function meta:SetDefaultWeapons()
-    self.primaryWeapon = "weapon_smg1"
-    self.specialWeapon = "weapon_frag"
+
+    local firstPrimaryWeapon = nil
+    for weaponIndex, weaponValue in pairs(list.Get("weapons_primary")) do
+        firstPrimaryWeapon = weaponValue.Class
+        break
+    end
+
+    local firstSpecialWeapon = nil
+    for weaponIndex, weaponValue in pairs(list.Get("weapons_equipment")) do
+        firstSpecialWeapon = weaponValue.Class
+        break
+    end
+
+    self.primaryWeapon = firstPrimaryWeapon
+    self.specialWeapon = firstSpecialWeapon
+
 end
