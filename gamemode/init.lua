@@ -6,7 +6,8 @@ GM.CurrentGameStage = nil
 
 function GM:Initialize()
 	GetConVar("sbox_weapons"):SetBool(false)
-	RunConsoleCommand("mp_falldamage", "1")
+	RunConsoleCommand("mp_falldamage", "1") -- Realistic fall damage
+	RunConsoleCommand("sv_alltalk", "2") -- Proximity voice chat
 
 	for teamKey, teamData in pairs(GAMEMODE.Teams) do -- Sort through team indexes (There are only two)
 		teamData.basePos = Vector(0,0,0)

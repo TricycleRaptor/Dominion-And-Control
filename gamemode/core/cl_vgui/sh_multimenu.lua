@@ -73,6 +73,7 @@ if CLIENT then
 
             local creditsLabel = vgui.Create("DLabel", MENU_FRAME)
             creditsLabel:SetFont("DAC.ScoreboardTitle") -- Size 22px
+            creditsLabel:SetColor(Color(255,217,0))
             creditsLabel:SetText( LocalPlayer():GetNWInt("storeCredits") .. " cR") -- This will probably need to be moved to a think or paint function, just a placeholder for now
             creditsLabel:SetPos(panelX * 0.935, 12)
             creditsLabel:SizeToContents()
@@ -218,6 +219,117 @@ if CLIENT then
                 shopSheet_Loadout_Primary.Paint = function(self, w, h)
                     draw.RoundedBox(0,0,0, w, h, Color(107,0,0,0)) -- Red for visualizing positioning
                 end
+
+                    -- Build a panel within the second portion of the layout screen to build a list
+                    local shopSheet_Loadout_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Loadout_Primary)
+                    --shopSheet_Loadout_Primary_PreviewPanel:SetTall(shopSheet_Loadout_Primary:GetTall() / 1.5)
+                    shopSheet_Loadout_Primary_PreviewPanel:DockPadding(4,4,4,4)
+                    shopSheet_Loadout_Primary_PreviewPanel:Dock(FILL)
+                    shopSheet_Loadout_Primary_PreviewPanel:InvalidateParent(true)
+                    shopSheet_Loadout_Primary_PreviewPanel.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                        surface.SetDrawColor(255,255,255)
+                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    end
+
+                        -- Assign a scroll panel in the event that the weapon list exceeds the total height of the parent panel
+                        local shopSheet_Loadout_Primary_ScrollPanel = vgui.Create("DScrollPanel", shopSheet_Loadout_Primary_PreviewPanel)
+                        shopSheet_Loadout_Primary_ScrollPanel:Dock(FILL)
+                        shopSheet_Loadout_Primary_ScrollPanel:InvalidateParent(true)
+
+                            -- Create a list within the scroll panel
+                            local shopSheet_Loadout_Primary_List = vgui.Create("DListLayout", shopSheet_Loadout_Primary_ScrollPanel)
+                            shopSheet_Loadout_Primary_List:SetPaintBackground(true)
+                            shopSheet_Loadout_Primary_List:SetBackgroundColor(Color(0, 0, 0, 0))
+                            shopSheet_Loadout_Primary_List:DockPadding(4,4,4,4)
+                            shopSheet_Loadout_Primary_List:Dock(FILL)
+                            shopSheet_Loadout_Primary_List:InvalidateParent(true)
+
+                            -- Local arrays for indexing panel rows with list data outside of the loop scope
+                            -- I know they're technically tables because Lua doesn't have arrays, fuck you
+                            local primaryWeaponClasses = {}
+
+                            -- The main loop for building the weapon panels in the list
+                            for weaponIndex, weaponValue in pairs (list.Get("weapons_primary")) do
+
+                                -- Make a panel first, this will be used for actual design
+                                local shopSheet_Loadout_Primary_ListItem_Panel = shopSheet_Loadout_Primary_List:Add("DPanel")
+                                shopSheet_Loadout_Primary_ListItem_Panel:SetTall(shopSheet_Loadout_Primary_PreviewPanel:GetTall() / 5)
+                                shopSheet_Loadout_Primary_ListItem_Panel:DockMargin(4,4,4,4)
+                                shopSheet_Loadout_Primary_ListItem_Panel:Dock(TOP)
+                                shopSheet_Loadout_Primary_ListItem_Panel:InvalidateParent(true)
+
+                                -- If the panel's weapon class is equivalent to the selected weapon, we should highlight it
+                                -- Otherwise we'll paint it with a regular gray color
+                                shopSheet_Loadout_Primary_ListItem_Panel.Paint = function (self, w, h)
+                                    if weaponValue.Class == selectedPrimary then
+                                        draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
+                                    else
+                                        draw.RoundedBox(3,0,0, w, h, Color(218,218,218))
+                                    end
+                                end
+
+                                    -- Make a slot on the left side of the panel second, to hold the weapon's icon
+                                    local shopSheet_Loadout_Primary_ListItem_Panel_IconSlot = vgui.Create("DPanel", shopSheet_Loadout_Primary_ListItem_Panel)
+                                    shopSheet_Loadout_Primary_ListItem_Panel_IconSlot:SetWide(shopSheet_Loadout_Primary_ListItem_Panel:GetTall())
+                                    shopSheet_Loadout_Primary_ListItem_Panel_IconSlot:DockMargin(4,4,4,4)
+                                    shopSheet_Loadout_Primary_ListItem_Panel_IconSlot:Dock(LEFT)
+                                    shopSheet_Loadout_Primary_ListItem_Panel_IconSlot:InvalidateParent(true)
+
+                                    -- Here, we are going to parse the weapon class to each panel as the weapon list is iterated
+                                    -- We can then use this later to call the panel's class in the click function
+                                    primaryWeaponClasses[weaponIndex] = weaponValue.Class
+
+                                    -- Manually draw the icon slot so it looks nice
+                                    shopSheet_Loadout_Primary_ListItem_Panel_IconSlot.Paint = function(self, w, h)
+                                        draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                                        surface.SetDrawColor(255,255,255)
+                                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                    end
+
+                                    -- Make the actual icon for the weapon itself and parent it to the slot we built previously
+                                    local shopSheet_Loadout_Primary_ListItem_Panel_Icon = vgui.Create("DImage", shopSheet_Loadout_Primary_ListItem_Panel_IconSlot)
+                                    shopSheet_Loadout_Primary_ListItem_Panel_Icon:DockMargin(4,4,4,4)
+                                    shopSheet_Loadout_Primary_ListItem_Panel_Icon:Dock(FILL)
+                                    shopSheet_Loadout_Primary_ListItem_Panel_Icon:InvalidateParent(true)
+                                    shopSheet_Loadout_Primary_ListItem_Panel_Icon:SetImage(weaponValue.Icon)
+
+                                -- Make a button to go over each panel, which will serve as the click functionality and also drive the appearance of the parent panel
+                                local shopSheet_Loadout_Primary_ListItem_Button = vgui.Create("DButton", shopSheet_Loadout_Primary_ListItem_Panel)
+                                shopSheet_Loadout_Primary_ListItem_Button:SetText(weaponValue.Name) -- For visual purposes only during the WIP stage
+                                shopSheet_Loadout_Primary_ListItem_Button:Dock(FILL)
+                                shopSheet_Loadout_Primary_ListItem_Button:InvalidateParent(true)
+
+                                -- Override the paint function of the actual button. This will return nothing when the menu is complete, to keep it invisible.
+                                shopSheet_Loadout_Primary_ListItem_Button.Paint = function (self, w, h)
+                                    --draw.RoundedBox(0,0,0, w, h, Color(172,98,98,100)) -- For visual purposes only during the WIP stage
+                                end
+
+                                -- We return the class (I.E. "weapon_smg1") assigned from the loop below, into a local variable to drive loadout functionality.
+                                -- If this variable is not equivalent to the local player's current weapon, we'll send a net message to the server so that it can be updated.
+                                -- In that net message, we want to send the weapon class, derived here, and the player it came from, so their weapon can be updated serverside.
+                                -- When that message is received, it is important to loop through the table that the weapons are being pulled from. The weapon should not be changed if the (cont.)
+                                -- weapon class doesn't match any values in the table, as that means the player is attempting to send weapon data that should not be available to them.
+                                shopSheet_Loadout_Primary_ListItem_Button.DoClick = function (self)
+
+                                    LocalPlayer():EmitSound(SelectLoadoutOption)
+                                    selectedPrimary = shopSheet_Loadout_Primary_ListItem_Panel.Class
+
+                                    if selectedPrimary ~= LocalPlayer().primaryWeapon then
+                                        net.Start("UpdatePlayerPrimaryWeapon")
+                                            net.WriteString(selectedPrimary)
+                                        net.SendToServer()
+                                    end
+
+                                end
+
+                            end
+
+                            -- When we first build the buttons for the list, we ran a loop on an external array(s) that let us retrieve values from each weapon in the loadout table
+                            -- That value is then assigned to each panel in the same index order, so we can call that value externally when the panel's reference button is clicked
+                            for panelIndex, rowValue in pairs (shopSheet_Loadout_Primary_List:GetChildren()) do -- We're getting the list's children since that's where the weapon panels reside
+                                rowValue.Class = primaryWeaponClasses[panelIndex]
+                            end
             
             -- [RIGHT LOADOUT PANEL] --
             -- Divide the loadout panel into two pieces, dock this child panel to the right
@@ -260,7 +372,7 @@ if CLIENT then
                             local secondaryWeaponClasses = {}
 
                             -- The main loop for building the weapon panels in the list
-                            for weaponIndex, weaponValue in pairs (list.Get("weapons_primary")) do
+                            for weaponIndex, weaponValue in pairs (list.Get("weapons_equipment")) do
 
                                 -- Make a panel first, this will be used for actual design
                                 local shopSheet_Loadout_Secondary_ListItem_Panel = shopSheet_Loadout_Secondary_List:Add("DPanel")
@@ -272,7 +384,7 @@ if CLIENT then
                                 -- If the panel's weapon class is equivalent to the selected weapon, we should highlight it
                                 -- Otherwise we'll paint it with a regular gray color
                                 shopSheet_Loadout_Secondary_ListItem_Panel.Paint = function (self, w, h)
-                                    if weaponValue.Class == selectedPrimary then
+                                    if weaponValue.Class == selectedSpecial then
                                         draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
                                     else
                                         draw.RoundedBox(3,0,0, w, h, Color(218,218,218))
@@ -323,11 +435,11 @@ if CLIENT then
                                 shopSheet_Loadout_Secondary_ListItem_Button.DoClick = function (self)
 
                                     LocalPlayer():EmitSound(SelectLoadoutOption)
-                                    selectedPrimary = shopSheet_Loadout_Secondary_ListItem_Panel.Class
+                                    selectedSpecial = shopSheet_Loadout_Secondary_ListItem_Panel.Class
 
-                                    if selectedPrimary ~= LocalPlayer().primaryWeapon then
-                                        net.Start("UpdatePlayerPrimaryWeapon")
-                                            net.WriteString(selectedPrimary)
+                                    if selectedSpecial ~= LocalPlayer().specialWeapon then
+                                        net.Start("UpdatePlayerSecondaryWeapon")
+                                            net.WriteString(selectedSpecial)
                                         net.SendToServer()
                                     end
 
