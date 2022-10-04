@@ -35,13 +35,13 @@ if CLIENT then
                 -- Because those lists are populated by the same table in ascending order, the first value in the table should be highlighted on the UI
                 for weaponIndex, weaponValue in pairs(list.Get("weapons_primary")) do
                     selectedPrimary = weaponValue.Class -- We're just getting the first value and breaking after that
-                    print("Assigned selectedPrimary as: " .. selectedPrimary)
+                    --print("Assigned selectedPrimary as: " .. selectedPrimary)
                     break
                 end
                     
                 for weaponIndex, weaponValue in pairs(list.Get("weapons_equipment")) do
                     selectedSpecial = weaponValue.Class -- We're just getting the first value and breaking after that
-                    print("Assigned selectedSpecial as: " .. selectedSpecial)
+                    --print("Assigned selectedSpecial as: " .. selectedSpecial)
                     break
                 end
 
@@ -75,7 +75,7 @@ if CLIENT then
             creditsLabel:SetFont("DAC.ScoreboardTitle") -- Size 22px
             creditsLabel:SetColor(Color(255,217,0))
             creditsLabel:SetText( LocalPlayer():GetNWInt("storeCredits") .. " cR") -- This will probably need to be moved to a think or paint function, just a placeholder for now
-            creditsLabel:SetPos(panelX * 0.935, 12)
+            creditsLabel:SetPos(panelX * 0.91, 12)
             creditsLabel:SizeToContents()
 
             local mainPanel = vgui.Create("DPanel", MENU_FRAME)
@@ -186,7 +186,7 @@ if CLIENT then
                 shopSheet_Vehicles_Secondary:Dock(RIGHT)
                 shopSheet_Vehicles_Secondary:InvalidateParent(true)
                     shopSheet_Vehicles_Secondary.Paint = function(self, w, h)
-                        draw.RoundedBox(0,0,0, w, h, Color(0,35,131,100)) -- Blue for visualizing positioning
+                        draw.RoundedBox(0,0,0, w, h, Color(0,35,131,0)) -- Blue for visualizing positioning
                 end
 
             --- UPGRADE TAB ---
@@ -211,6 +211,7 @@ if CLIENT then
 
             -- [LEFT LOADOUT PANEL] --
             -- Divide the loadout panel into two pieces, dock this child panel to the left
+
                 local shopSheet_Loadout_Primary = vgui.Create("DPanel", shopSheet_Loadout)
                 shopSheet_Loadout_Primary:SetWide(shopSheet_Loadout:GetWide() / 2)
                 shopSheet_Loadout_Primary:DockPadding(20,20,20,20)
@@ -220,6 +221,17 @@ if CLIENT then
                     draw.RoundedBox(0,0,0, w, h, Color(107,0,0,0)) -- Red for visualizing positioning
                 end
 
+                local shopSheet_Loadout_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Loadout_Primary)
+                shopSheet_Loadout_Primary_TitlePanel:SetTall(shopSheet_Loadout:GetTall() / 12)
+                shopSheet_Loadout_Primary_TitlePanel:Dock(TOP)
+                shopSheet_Loadout_Primary_TitlePanel:InvalidateParent(true)
+                shopSheet_Loadout_Primary_TitlePanel.Paint = function(self, w, h)
+                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                    surface.SetDrawColor(255,255,255)
+                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("PRIMARY WEAPON", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end
+
                     -- Build a panel within the second portion of the layout screen to build a list
                     local shopSheet_Loadout_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Loadout_Primary)
                     --shopSheet_Loadout_Primary_PreviewPanel:SetTall(shopSheet_Loadout_Primary:GetTall() / 1.5)
@@ -227,7 +239,7 @@ if CLIENT then
                     shopSheet_Loadout_Primary_PreviewPanel:Dock(FILL)
                     shopSheet_Loadout_Primary_PreviewPanel:InvalidateParent(true)
                     shopSheet_Loadout_Primary_PreviewPanel.Paint = function(self, w, h)
-                        draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                        draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
                         surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
@@ -294,8 +306,37 @@ if CLIENT then
                                     shopSheet_Loadout_Primary_ListItem_Panel_Icon:InvalidateParent(true)
                                     shopSheet_Loadout_Primary_ListItem_Panel_Icon:SetImage(weaponValue.Icon)
 
+                                --[[local shopSheet_Loadout_Primary_ListItem_Name = vgui.Create("DLabel", shopSheet_Loadout_Primary_ListItem_Panel)
+                                shopSheet_Loadout_Primary_ListItem_Name:SetFont("DAC.PickTeam") -- Size 32px
+                                shopSheet_Loadout_Primary_ListItem_Name:SetText(weaponValue.Name)
+                                shopSheet_Loadout_Primary_ListItem_Name:SetColor(Color(0,0,0))
+                                shopSheet_Loadout_Primary_ListItem_Name:SetPos(panelX * 0.11,6)
+                                shopSheet_Loadout_Primary_ListItem_Name:SizeToContents()
+
+                                local shopSheet_Loadout_Primary_ListItem_Accuracy = vgui.Create("DLabel", shopSheet_Loadout_Primary_ListItem_Panel)
+                                shopSheet_Loadout_Primary_ListItem_Accuracy:SetFont("DAC.ScoreboardTitle") -- Size 32px
+                                shopSheet_Loadout_Primary_ListItem_Accuracy:SetText("Accuracy: " .. weaponValue.Accuracy)
+                                shopSheet_Loadout_Primary_ListItem_Accuracy:SetColor(Color(54,54,54))
+                                shopSheet_Loadout_Primary_ListItem_Accuracy:SetPos(panelX * 0.11,48)
+                                shopSheet_Loadout_Primary_ListItem_Accuracy:SizeToContents()
+
+                                local shopSheet_Loadout_Primary_ListItem_Damage = vgui.Create("DLabel", shopSheet_Loadout_Primary_ListItem_Panel)
+                                shopSheet_Loadout_Primary_ListItem_Damage:SetFont("DAC.ScoreboardTitle") -- Size 32px
+                                shopSheet_Loadout_Primary_ListItem_Damage:SetText("Damage: " .. weaponValue.Damage .. " HP")
+                                shopSheet_Loadout_Primary_ListItem_Damage:SetColor(Color(54,54,54))
+                                shopSheet_Loadout_Primary_ListItem_Damage:SetPos(panelX * 0.11,68)
+                                shopSheet_Loadout_Primary_ListItem_Damage:SizeToContents()
+
+                                local shopSheet_Loadout_Primary_ListItem_Capacity = vgui.Create("DLabel", shopSheet_Loadout_Primary_ListItem_Panel)
+                                shopSheet_Loadout_Primary_ListItem_Capacity:SetFont("DAC.ScoreboardTitle") -- Size 32px
+                                shopSheet_Loadout_Primary_ListItem_Capacity:SetText("Capacity: " .. weaponValue.Capacity .. " total")
+                                shopSheet_Loadout_Primary_ListItem_Capacity:SetColor(Color(54,54,54))
+                                shopSheet_Loadout_Primary_ListItem_Capacity:SetPos(panelX * 0.11,88)
+                                shopSheet_Loadout_Primary_ListItem_Capacity:SizeToContents()]]
+
                                 -- Make a button to go over each panel, which will serve as the click functionality and also drive the appearance of the parent panel
                                 local shopSheet_Loadout_Primary_ListItem_Button = vgui.Create("DButton", shopSheet_Loadout_Primary_ListItem_Panel)
+                                shopSheet_Loadout_Primary_ListItem_Button:SetFont("DAC.PickTeam")
                                 shopSheet_Loadout_Primary_ListItem_Button:SetText(weaponValue.Name) -- For visual purposes only during the WIP stage
                                 shopSheet_Loadout_Primary_ListItem_Button:Dock(FILL)
                                 shopSheet_Loadout_Primary_ListItem_Button:InvalidateParent(true)
@@ -333,6 +374,7 @@ if CLIENT then
             
             -- [RIGHT LOADOUT PANEL] --
             -- Divide the loadout panel into two pieces, dock this child panel to the right
+
                 local shopSheet_Loadout_Secondary = vgui.Create("DPanel", shopSheet_Loadout)
                 shopSheet_Loadout_Secondary:SetWide(shopSheet_Loadout:GetWide() / 2)
                 shopSheet_Loadout_Secondary:DockPadding(20,20,20,20)
@@ -342,6 +384,18 @@ if CLIENT then
                     draw.RoundedBox(0,0,0, w, h, Color(0,35,131,0)) -- Blue for visualizing positioning
                 end
 
+                local shopSheet_Loadout_Secondary_TitlePanel = vgui.Create("DPanel", shopSheet_Loadout_Secondary)
+                shopSheet_Loadout_Secondary_TitlePanel:SetTall(shopSheet_Loadout:GetTall() / 12)
+                shopSheet_Loadout_Secondary_TitlePanel:DockPadding(20,20,20,20)
+                shopSheet_Loadout_Secondary_TitlePanel:Dock(TOP)
+                shopSheet_Loadout_Secondary_TitlePanel:InvalidateParent(true)
+                shopSheet_Loadout_Secondary_TitlePanel.Paint = function(self, w, h)
+                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                    surface.SetDrawColor(255,255,255)
+                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("SECONDARY WEAPON", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end
+
                     -- Build a panel within the second portion of the layout screen to build a list
                     local shopSheet_Loadout_Secondary_PreviewPanel = vgui.Create("DPanel", shopSheet_Loadout_Secondary)
                     --shopSheet_Loadout_Secondary_PreviewPanel:SetTall(shopSheet_Loadout_Secondary:GetTall() / 1.5)
@@ -349,7 +403,7 @@ if CLIENT then
                     shopSheet_Loadout_Secondary_PreviewPanel:Dock(FILL)
                     shopSheet_Loadout_Secondary_PreviewPanel:InvalidateParent(true)
                     shopSheet_Loadout_Secondary_PreviewPanel.Paint = function(self, w, h)
-                        draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                        draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
                         surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
@@ -416,9 +470,17 @@ if CLIENT then
                                     shopSheet_Loadout_Secondary_ListItem_Panel_Icon:InvalidateParent(true)
                                     shopSheet_Loadout_Secondary_ListItem_Panel_Icon:SetImage(weaponValue.Icon)
 
+                                    --[[local shopSheet_Loadout_Secondary_ListItem_Name = vgui.Create("DLabel", shopSheet_Loadout_Secondary_ListItem_Panel)
+                                    shopSheet_Loadout_Secondary_ListItem_Name:SetFont("DAC.PickTeam") -- Size 32px
+                                    shopSheet_Loadout_Secondary_ListItem_Name:SetText(weaponValue.Name)
+                                    shopSheet_Loadout_Secondary_ListItem_Name:SetColor(Color(0,0,0))
+                                    shopSheet_Loadout_Secondary_ListItem_Name:SetPos(shopSheet_Loadout_Secondary_ListItem_Panel:GetX() * 28,50)
+                                    shopSheet_Loadout_Secondary_ListItem_Name:SizeToContents()]]
+
                                 -- Make a button to go over each panel, which will serve as the click functionality and also drive the appearance of the parent panel
                                 local shopSheet_Loadout_Secondary_ListItem_Button = vgui.Create("DButton", shopSheet_Loadout_Secondary_ListItem_Panel)
                                 shopSheet_Loadout_Secondary_ListItem_Button:SetText(weaponValue.Name) -- For visual purposes only during the WIP stage
+                                shopSheet_Loadout_Secondary_ListItem_Button:SetFont("DAC.PickTeam")
                                 shopSheet_Loadout_Secondary_ListItem_Button:Dock(FILL)
                                 shopSheet_Loadout_Secondary_ListItem_Button:InvalidateParent(true)
 
@@ -452,6 +514,25 @@ if CLIENT then
                             for panelIndex, rowValue in pairs (shopSheet_Loadout_Secondary_List:GetChildren()) do -- We're getting the list's children since that's where the weapon panels reside
                                 rowValue.Class = secondaryWeaponClasses[panelIndex]
                             end
+
+            --[[local shopSheet_Tip = vgui.Create("DHTML", mainColumnSheet)
+            shopSheet_Tip:Dock(FILL)
+            shopSheet_Tip:InvalidateParent(true)
+            mainColumnSheet:AddSheet("Tip Me?", shopSheet_Tip, "icon16/star.png")
+
+                local shopSheet_Tip_Panel = vgui.Create("DPanel", shopSheet_Tip)
+                --shopSheet_Tip_Panel:SetWide(shopSheet_Loadout:GetWide() / 2)
+                --shopSheet_Tip_Panel:DockPadding(20,20,20,20)
+                shopSheet_Tip_Panel:Dock(FILL)
+                shopSheet_Tip_Panel:InvalidateParent(true)
+                shopSheet_Tip_Panel.Paint = function(self, w, h)
+                    draw.RoundedBox(0,0,0, w, h, Color(100,100,100,100))
+                    draw.SimpleText("Loading...", "DAC.PickTeam", w * 0.5, h * 0.5, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end
+
+                local shopSheet_Tip_Window = vgui.Create( "DHTML", shopSheet_Tip_Panel )
+                shopSheet_Tip_Window:Dock(FILL)
+                shopSheet_Tip_Window:OpenURL("ko-fi.com/dragonbyte1546")]]
 
         else
 

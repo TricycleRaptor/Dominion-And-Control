@@ -123,7 +123,7 @@ list.Set( "weapons_equipment", 2, V )
 
 local V = {
 
-	Name = "Medkit",
+	Name = "Handheld Medkit",
 	Model = "models/Items/HealthKit.mdl",
 	Icon = "entities/weapon_medkit.png",
 	Class = "weapon_medkit",

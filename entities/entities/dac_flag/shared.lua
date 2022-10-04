@@ -90,8 +90,8 @@ function ENT:Think()
         if self.Entity:GetHeld() == false and self.Entity:GetOnBase() == false and CurTime() - self.Entity:GetDropTime() < 20 then -- Count down for when the flag was dropped
         
             for k,ent in pairs(player.GetAll()) do
-                if ent:IsValid() and ent:IsPlayer() and ent:Team() == self:GetTeam() and ent:GetPos():Distance(self.Entity:GetPos()) < 100 then
-                    self.Entity:SetDropTime(self.Entity:GetDropTime() - 0.25)
+                if ent:IsValid() and ent:IsPlayer() and ent:Alive() and ent:Team() == self:GetTeam() and ent:GetPos():Distance(self.Entity:GetPos()) < 100 then
+                    self.Entity:SetDropTime(self.Entity:GetDropTime() - 0.10)
                 end
             end
 

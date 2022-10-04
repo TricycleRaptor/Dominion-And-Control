@@ -55,7 +55,7 @@ hook.Add("HUDPaint", "DAC.RenderFlagClaim", function()
 		end
 
 		-- Only draw countdown visuals for players that are on the team that the flag belongs to (Halo 3 Style)
-		if LocalPlayer():GetPos():Distance(ent:GetPos()) <= 300 and ent:GetHeld() == false and ent:GetOnBase() == false and ent:GetTeam() == LocalPlayer():Team() then 
+		if LocalPlayer():GetPos():Distance(ent:GetPos()) <= 1200 and ent:GetHeld() == false and ent:GetOnBase() == false and ent:GetTeam() == LocalPlayer():Team() then 
 			
 			surface.SetDrawColor(0,0,0,235)
 			surface.DrawRect( hudX, hudY, 200, 30)
