@@ -288,6 +288,7 @@ function EndMatch(winningTeam) -- Pass in the winning team
 			--ply:UnLock()
 			ply:Spawn()
 			player_manager.RunClass(ply, "Loadout")
+			ply:SetNWInt("storeCredits", GetConVar("dac_income_balance"):GetInt())
 			--ply:SetNWInt("playerMoney", 0)
 			--ply:SetNWInt("playerMoney", ply:GetNWInt("playerMoney") + (GetConVar("ctf_startingbalance"):GetFloat()))
 

@@ -88,6 +88,11 @@ function ENT:StartTouch(entity)
 
 			entity:SetPlayerCarrierStatus(false)
 
+			local curMoney = entity:GetNWInt("storeCredits")
+			local newMoney = curMoney + GetConVar("dac_income_amount"):GetInt() * 2
+			entity:SetNWInt("storeCredits", newMoney)
+			entity:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_income_amount"):GetInt() * 2 .. "cR for capturing a flag!")
+
 			net.Start("SendScoreAudio")
 			net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
 			net.Broadcast() -- This sends to all players, not just the flag carrier

@@ -90,6 +90,15 @@
 			"type"		"Numeric"
 			"default"	"50"
 		}
+
+		10
+		{
+			"name"		"dac_eastereggs"
+			"text"		"Easter Eggs"
+			"help"		"Whether or not to enable Easter eggs."
+			"type"		"CheckBox"
+			"default"	"0"
+		}
 			
 	}
 }

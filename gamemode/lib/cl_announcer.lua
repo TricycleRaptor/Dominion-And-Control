@@ -11,6 +11,7 @@ DropNoise = Sound("announcer/dropped.wav")
 DropNoise2 = Sound("ambient/alarms/warningbell1.wav")
 ReturnNoise = Sound("announcer/recovered.wav")
 OverNoise = Sound("announcer/over.wav")
+ActionComing = Sound("memes/actioncoming.wav")
 
 -- We'll need to update the HUD as well, but we can do it elsewhere. For now this is just audio.
 
@@ -32,6 +33,13 @@ local function BroadcastTakenAudio(len, ply)
     local team = net.ReadFloat() -- The capturing player's team is passed in here
     LocalPlayer():EmitSound(PickupNoise)
     LocalPlayer():EmitSound(PickupNoise2)
+
+    local randomInt = math.Round(math.Rand(1,100), 0)
+    if GetConVar("dac_eastereggs"):GetBool() == true and randomInt == 1 then -- 1% chance
+        timer.Simple( 3, function() 
+            LocalPlayer():EmitSound(ActionComing)
+        end )
+    end
 
 end
 net.Receive("SendTakenAudio", BroadcastTakenAudio)

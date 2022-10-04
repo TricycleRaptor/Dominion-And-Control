@@ -55,10 +55,12 @@ function ENT:Think()
             net.WriteBool(false)
             net.Send(self:GetCarrier())
 
+            self.Entity:SetPos(self.Entity:GetPos() + Vector(0, 0, 100)) -- Set the vector above the ground first
+
             self.Entity:SetAngles(Angle(0,0,0)) -- Set angles to zero
             local tr = util.TraceLine( {
                 start = self.Entity:GetPos(),
-                endpos = self.Entity:GetPos() + self.Entity:GetAngles():Up() * -1000, -- Perform a trace downward on a long single Y vector
+                endpos = self.Entity:GetPos() + self.Entity:GetAngles():Up() * -10000, -- Perform a trace downward on a long single Y vector
                 filter = function( ent ) return ( ent:GetClass() == "prop_physics" ) end -- Only hit the world and physics props
             } )
             self.Entity:SetPos(tr.HitPos) -- Set the flag's position to that trace result, kinda buggy
