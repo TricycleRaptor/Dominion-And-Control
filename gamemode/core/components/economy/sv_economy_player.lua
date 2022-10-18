@@ -41,6 +41,7 @@ hook.Add("PlayerDeath", "DAC.RewardPlayerKill", function( victim, inflictor, att
         if attacker:IsPlayer() then
             if victim:Team() ~= attacker:Team() then
                 attacker:SetNWInt("storeCredits", attacker:GetNWInt("storeCredits" + GetConVar("dac_kill_reward"):GetInt())) -- Get the kill reward value from cVars
+                attacker:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_income_amount"):GetInt() .. "cR for killing " .. victim:Nick() .."!")
             end
         end
     end

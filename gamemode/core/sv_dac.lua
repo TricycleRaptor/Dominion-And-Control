@@ -169,7 +169,7 @@ end )
 
 hook.Add("CanPlayerEnterVehicle", "DAC.VehicleRestrictions", function(ply, vehicleEnt, seatNum) 
 	if(ply:GetPlayerCarrierStatus() == true and IsValid(vehicleEnt)) then
-		if (vehicleEnt.IsFlagTransport) then -- We should make this a property for each vehicle that is permitted to transport a flag carrier
+		if (vehicleEnt.IsFlagTransport == true) then -- We should make this a property for each vehicle that is permitted to transport a flag carrier
 			return true
 		else
 			ply:ChatPrint("[DAC]: You cannot enter this vehicle while carrying a flag.")

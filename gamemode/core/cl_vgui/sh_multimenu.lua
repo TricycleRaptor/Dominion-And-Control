@@ -13,8 +13,17 @@ if CLIENT then
 
     local SH = ScrH()
     local SW = ScrW()
+
+    -- Dynamic weapon vars
     local selectedPrimary = nil
     local selectedSpecial = nil
+
+    -- Dynamic vehicle vars
+    local selectedVehicle = nil
+    local selectedVehicleModel = nil
+    local selectedVehicleCategory = nil 
+    local selectedVehicleTransportStatus = nil
+    local selectedVehicleCost = nil
 
     MENU_FRAME = MENU_FRAME or nil
 
@@ -29,7 +38,13 @@ if CLIENT then
             -- Before we do anything else, we should get the first index of the weapon lists. This allows us to retrieve the first class value regardless of what the list contains
             -- This should only be done once as not to override weapon selections once they've been picked, so we check for nil and then assign internally
             -- That way it'll never trip again beyond first opening the menu
-            if selectedPrimary == nil or selectedSpecial == nil then
+            if selectedPrimary == nil or 
+                selectedSpecial == nil or 
+                selectedVehicle == nil or 
+                selectedVehicleModel == nil or 
+                selectedVehicleCategory == nil or
+                selectedVehicleTransportStatus == nil or
+                selectedVehicleCost == nil then
 
                 -- We assign the first class value to a variable that is used to drive the paint function on the selection buttons later
                 -- Because those lists are populated by the same table in ascending order, the first value in the table should be highlighted on the UI
@@ -42,6 +57,15 @@ if CLIENT then
                 for weaponIndex, weaponValue in pairs(list.Get("weapons_equipment")) do
                     selectedSpecial = weaponValue.Class -- We're just getting the first value and breaking after that
                     --print("Assigned selectedSpecial as: " .. selectedSpecial)
+                    break
+                end
+
+                for vehicleIndex, vehicleValue in pairs(list.Get("dac_simfphys_armed")) do
+                    selectedVehicle = vehicleValue.Name -- We're just getting the first value and breaking after that
+                    selectedVehicleModel = vehicleValue.Model
+                    selectedVehicleCategory = vehicleValue.Category
+                    selectedVehicleTransportStatus = vehicleValue.IsFlagTransport
+                    selectedVehicleCost = vehicleValue.Cost
                     break
                 end
 
@@ -110,84 +134,409 @@ if CLIENT then
             end
             mainColumnSheet:AddSheet("Vehicles", shopSheet_Vehicles, "icon16/car.png")
 
-                -- [LEFT VEHICLES PANEL] --
                 -- Divide the vehicles panel into two pieces, dock this child panel to the left
                 local shopSheet_Vehicles_Primary = vgui.Create("DPanel", shopSheet_Vehicles)
-                shopSheet_Vehicles_Primary:SetWide(shopSheet_Vehicles:GetWide() / 2)
+                shopSheet_Vehicles_Primary:SetWide(shopSheet_Vehicles:GetWide() / 1.5)
                 shopSheet_Vehicles_Primary:DockPadding(20,20,20,20)
                 shopSheet_Vehicles_Primary:Dock(LEFT)
                 shopSheet_Vehicles_Primary:InvalidateParent(true)
                 shopSheet_Vehicles_Primary.Paint = function(self, w, h)
-                    draw.RoundedBox(0,0,0, w, h, Color(107,0,0,100)) -- Red for visualizing positioning
+                    draw.RoundedBox(0,0,0, w, h, Color(107,0,0,0)) -- Red for visualizing positioning
                 end
 
-                    local shopSheet_Vehicles_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary)
-                    shopSheet_Vehicles_Primary_PreviewPanel:SetTall(shopSheet_Vehicles_Primary:GetTall() / 1.5)
-                    shopSheet_Vehicles_Primary_PreviewPanel:DockPadding(4,4,4,4)
-                    shopSheet_Vehicles_Primary_PreviewPanel:Dock(TOP)
-                    shopSheet_Vehicles_Primary_PreviewPanel:InvalidateParent(true)
-                    shopSheet_Vehicles_Primary_PreviewPanel.Paint = function(self, w, h)
-                        draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                local shopSheet_Vehicles_Secondary = vgui.Create("DPanel", shopSheet_Vehicles)
+                shopSheet_Vehicles_Secondary:SetWide(shopSheet_Vehicles:GetWide() / 3)
+                shopSheet_Vehicles_Secondary:DockPadding(20,20,20,20)
+                shopSheet_Vehicles_Secondary:Dock(RIGHT)
+                shopSheet_Vehicles_Secondary:InvalidateParent(true)
+                shopSheet_Vehicles_Secondary.Paint = function(self, w, h)
+                        draw.RoundedBox(0,0,0, w, h, Color(0,35,131,0)) -- Blue for visualizing positioning
+                end
+
+                local shopSheet_Vehicles_Secondary_TitlePanel = vgui.Create("DPanel", shopSheet_Vehicles_Secondary)
+                shopSheet_Vehicles_Secondary_TitlePanel:SetTall(shopSheet_Vehicles:GetTall() / 12)
+                shopSheet_Vehicles_Secondary_TitlePanel:DockPadding(20,20,20,20)
+                shopSheet_Vehicles_Secondary_TitlePanel:Dock(TOP)
+                shopSheet_Vehicles_Secondary_TitlePanel:InvalidateParent(true)
+                shopSheet_Vehicles_Secondary_TitlePanel.Paint = function(self, w, h)
+                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                    surface.SetDrawColor(255,255,255)
+                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("PREVIEW", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end
+
+                local shopSheet_Vehicles_Secondary_PreviewPanel = vgui.Create("DPanel", shopSheet_Vehicles_Secondary)
+                shopSheet_Vehicles_Secondary_PreviewPanel:SetTall(shopSheet_Vehicles_Secondary:GetTall() / 2.5)
+                shopSheet_Vehicles_Secondary_PreviewPanel:DockPadding(4,4,4,4)
+                shopSheet_Vehicles_Secondary_PreviewPanel:Dock(TOP)
+                shopSheet_Vehicles_Secondary_PreviewPanel:InvalidateParent(true)
+                shopSheet_Vehicles_Secondary_PreviewPanel.Paint = function(self, w, h)
+                    draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
+                    surface.SetDrawColor(255,255,255)
+                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                end
+
+                    local shopSheet_Vehicles_Secondary_PreviewPanel_Model = vgui.Create("DModelPanel", shopSheet_Vehicles_Secondary_PreviewPanel)
+                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:Dock(FILL)
+                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:DockPadding(4,4,4,4)
+                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:InvalidateParent(true)
+                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
+                    shopSheet_Vehicles_Secondary_PreviewPanel_Model.LayoutEntity = function(entity)	
+                        return
+                    end
+
+                    local mn, mx = shopSheet_Vehicles_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                    local size = 0
+                    size = math.max( size, math.abs(mn.x) + math.abs(mx.x) )
+                    size = math.max( size, math.abs(mn.y) + math.abs(mx.y) )
+                    size = math.max( size, math.abs(mn.z) + math.abs(mx.z) )
+    
+                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetCamPos( Vector( size, size + 105, size) )
+                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetLookAt( (mn + mx) * 0.3 )
+
+                    local shopSheet_Vehicles_Secondary_StatsTitle = vgui.Create("DPanel", shopSheet_Vehicles_Secondary)
+                    shopSheet_Vehicles_Secondary_StatsTitle:SetTall(shopSheet_Vehicles:GetTall() / 12)
+                    shopSheet_Vehicles_Secondary_StatsTitle:DockPadding(20,20,20,20)
+                    shopSheet_Vehicles_Secondary_StatsTitle:Dock(TOP)
+                    shopSheet_Vehicles_Secondary_StatsTitle:InvalidateParent(true)
+                    shopSheet_Vehicles_Secondary_StatsTitle.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                        surface.SetDrawColor(255,255,255)
+                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        draw.SimpleText("STATISTICS", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                    end
+
+                    local shopSheet_Vehicles_Secondary_StatsFrame = vgui.Create("DPanel", shopSheet_Vehicles_Secondary)
+                    shopSheet_Vehicles_Secondary_StatsFrame:SetTall(shopSheet_Vehicles_Secondary:GetTall() / 5)
+                    shopSheet_Vehicles_Secondary_StatsFrame:DockPadding(4,4,4,4)
+                    shopSheet_Vehicles_Secondary_StatsFrame:Dock(TOP)
+                    shopSheet_Vehicles_Secondary_StatsFrame:InvalidateParent(true)
+                    shopSheet_Vehicles_Secondary_StatsFrame.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(71,71,71,100))
                         surface.SetDrawColor(255,255,255)
                         surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
-                    -- Local arrays for indexing list rows
-                    -- I know they're technically tables because Lua doesn't have arrays, fuck you
-                    local primaryWeaponClasses = {}
-                    local primaryWeaponIcons = {}
+                        local shopSheet_Vehicles_Secondary_StatsPanel_NameLabel = vgui.Create("DLabel", shopSheet_Vehicles_Secondary_StatsFrame)
+                        shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:Dock(TOP)
+                        shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:DockMargin(6,8,4,4)
+                        shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:InvalidateParent(true)
+                        shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetFont("DAC.ScoreboardTitle")
+                        shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetText(selectedVehicle)
+                        shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetTextColor(Color(255,255,255))
+                        shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetContentAlignment(5) -- https://wiki.facepunch.com/gmod/Panel:SetContentAlignment
 
-                    local shopSheet_Vehicles_Primary_List = vgui.Create("DListView", shopSheet_Vehicles_Primary)
-                    shopSheet_Vehicles_Primary_List:SetTall(shopSheet_Vehicles_Primary:GetTall() / 4)
-                    shopSheet_Vehicles_Primary_List:Dock(BOTTOM)
-                    shopSheet_Vehicles_Primary_List:InvalidateParent(true)
-                        
-                    shopSheet_Vehicles_Primary_List:SetMultiSelect(false)
-                    shopSheet_Vehicles_Primary_List:SetSortable(false)
-                    shopSheet_Vehicles_Primary_List:AddColumn("Weapon")
-                    shopSheet_Vehicles_Primary_List:AddColumn("Type")
-                    shopSheet_Vehicles_Primary_List:AddColumn("Accuracy")
-                    shopSheet_Vehicles_Primary_List:AddColumn("Damage")
-                    shopSheet_Vehicles_Primary_List:AddColumn("Capacity")
+                        local shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel = vgui.Create("DLabel", shopSheet_Vehicles_Secondary_StatsFrame)
+                        shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:Dock(TOP)
+                        shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:DockMargin(6,0,0,0)
+                        shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:InvalidateParent(true)
+                        shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetFont("DermaDefaultBold")
+                        shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetText("Primary Role: " .. selectedVehicleCategory)
+                        shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetTextColor(Color(255,255,255))
+                        shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetContentAlignment(5)
 
-                    -- Populate available primary weapons from the "Weapons_primary" list 
-                    -- PATH: (player/config/sh_player_equipment.lua)
-                    for weaponIndex, weaponValue in pairs (list.Get("weapons_primary")) do
-                        shopSheet_Vehicles_Primary_List:AddLine(weaponValue.Name, weaponValue.Projectile, weaponValue.Accuracy, weaponValue.Damage, weaponValue.Capacity)
-                        shopSheet_Vehicles_Primary_List:GetLine()
-                        primaryWeaponClasses[weaponIndex] = weaponValue.Class
-                        primaryWeaponIcons[weaponIndex] = weaponValue.Icon
+                        local shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel = vgui.Create("DLabel", shopSheet_Vehicles_Secondary_StatsFrame)
+                        shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:Dock(TOP)
+                        shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:DockMargin(6,0,0,0)
+                        shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:InvalidateParent(true)
+                        shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetFont("DermaDefaultBold")
+                        shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetText("Flag Transport: " .. string.upper(tostring(selectedVehicleTransportStatus)))
+                        shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetTextColor(Color(255,255,255))
+                        shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetContentAlignment(5)
+
+                    local shopSheet_Vehicles_Secondary_BuyButton = vgui.Create("DButton", shopSheet_Vehicles_Secondary)
+                    --shopSheet_Vehicles_Secondary_BuyButton:SetTall(shopSheet_Vehicles_Secondary:GetTall() / 5)
+                    shopSheet_Vehicles_Secondary_BuyButton:DockMargin(24,24,24,24)
+                    shopSheet_Vehicles_Secondary_BuyButton:Dock(FILL)
+                    shopSheet_Vehicles_Secondary_BuyButton:SetFont("DAC.PickTeam")
+                    shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                    shopSheet_Vehicles_Secondary_BuyButton:InvalidateParent(true)
+                    shopSheet_Vehicles_Secondary_BuyButton.Paint = function(self, w, h)
+                        if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost then
+                            shopSheet_Vehicles_Secondary_BuyButton:SetEnabled(true)
+                            draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
+                            surface.SetDrawColor(109,255,73)
+                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                        else
+                            shopSheet_Vehicles_Secondary_BuyButton:SetEnabled(false)
+                            draw.RoundedBox(3,0,0, w, h, Color(179,179,179,255))
+                            surface.SetDrawColor(255,126,126)
+                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                        end
+                    end
+                    shopSheet_Vehicles_Secondary_BuyButton.DoClick = function(self, w, h)
+                        if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost then
+                            LocalPlayer():EmitSound(ConfirmNoise)
+                        else
+                            LocalPlayer():EmitSound(DenyNoise)
+                        end
                     end
 
-                    -- Assign each line in the list a class and model for external references. Used to change the player's weapon internally and set the preview model
-                    for lineIndex, rowValue in pairs (shopSheet_Vehicles_Primary_List:GetLines()) do
-                        rowValue.Class = primaryWeaponClasses[lineIndex]
-                        rowValue.Icon = primaryWeaponIcons[lineIndex]
-                    end
-
-                    shopSheet_Vehicles_Primary_List:SortByColumn(5, true)
-                    shopSheet_Vehicles_Primary_List:SelectFirstItem() -- Because the SMG1 is the first index in the "weapons_primary" list, we set the model to the SMG earlier for this reason
-
-                    local shopSheet_Vehicles_Primary_PreviewPanel_Icon = vgui.Create("DImage", shopSheet_Vehicles_Primary_PreviewPanel)	-- Add image to Frame
-                    shopSheet_Vehicles_Primary_PreviewPanel_Icon:SetImage("entities/weapon_smg1.png")
-                    shopSheet_Vehicles_Primary_PreviewPanel_Icon:Dock(FILL)
-                    --shopSheet_Vehicles_Primary_PreviewPanel_Icon:SetSize(150, 150)	-- Size it to 150x150
-
-                    shopSheet_Vehicles_Primary_List.OnRowSelected = function( panel, index, row )
-                        LocalPlayer():EmitSound(SelectLoadoutOption)
-                        shopSheet_Vehicles_Primary_PreviewPanel_Icon:SetImage(row.Icon) -- Calling the row model set earlier
-                    end
-
-                -- [RIGHT VEHICLES PANEL] --
-                -- Divide the loadout panel into two pieces, dock this child panel to the right
-                local shopSheet_Vehicles_Secondary = vgui.Create("DPanel", shopSheet_Vehicles)
-                shopSheet_Vehicles_Secondary:SetWide(shopSheet_Vehicles:GetWide() / 2)
-                shopSheet_Vehicles_Secondary:DockPadding(20,20,20,20)
-                shopSheet_Vehicles_Secondary:Dock(RIGHT)
-                shopSheet_Vehicles_Secondary:InvalidateParent(true)
-                    shopSheet_Vehicles_Secondary.Paint = function(self, w, h)
-                        draw.RoundedBox(0,0,0, w, h, Color(0,35,131,0)) -- Blue for visualizing positioning
+                local shopSheet_Vehicles_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary)
+                shopSheet_Vehicles_Primary_TitlePanel:SetTall(shopSheet_Vehicles:GetTall() / 12)
+                shopSheet_Vehicles_Primary_TitlePanel:DockPadding(20,20,20,20)
+                shopSheet_Vehicles_Primary_TitlePanel:Dock(TOP)
+                shopSheet_Vehicles_Primary_TitlePanel:InvalidateParent(true)
+                shopSheet_Vehicles_Primary_TitlePanel.Paint = function(self, w, h)
+                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                    surface.SetDrawColor(255,255,255)
+                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("VEHICLE CATALOG", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                 end
+
+                    local shopSheet_Vehicles_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary)
+                    --shopSheet_Vehicles_Primary_PreviewPanel:SetTall(shopSheet_Vehicles_Primary:GetTall() / 1.5)
+                    shopSheet_Vehicles_Primary_PreviewPanel:DockPadding(5,5,5,5)
+                    shopSheet_Vehicles_Primary_PreviewPanel:Dock(FILL)
+                    shopSheet_Vehicles_Primary_PreviewPanel:InvalidateParent(true)
+                    shopSheet_Vehicles_Primary_PreviewPanel.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
+                        surface.SetDrawColor(255,255,255)
+                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    end
+
+                        local shopSheet_Vehicles_Primary_ScrollPanel = vgui.Create("DScrollPanel", shopSheet_Vehicles_Primary_PreviewPanel)
+                        shopSheet_Vehicles_Primary_ScrollPanel:Dock(FILL)
+                        shopSheet_Vehicles_Primary_ScrollPanel:InvalidateParent(true)
+                        shopSheet_Vehicles_Primary_ScrollPanel:GetCanvas():DockPadding(5,5,5,5)
+                        shopSheet_Vehicles_Primary_ScrollPanel.Paint = function(self, w, h)
+                            draw.RoundedBox(0,0,0, w, h, Color(255,0,179,0))
+                        end
+
+                            local shopSheet_Vehicles_ArmedVehicles_TitlePanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary_ScrollPanel)
+                            shopSheet_Vehicles_ArmedVehicles_TitlePanel:SetTall(shopSheet_Vehicles_Primary_PreviewPanel:GetTall() / 12)
+                            shopSheet_Vehicles_ArmedVehicles_TitlePanel:DockMargin(5,5,5,5)
+                            shopSheet_Vehicles_ArmedVehicles_TitlePanel:Dock(TOP)
+                            shopSheet_Vehicles_ArmedVehicles_TitlePanel:InvalidateParent(true)
+                            shopSheet_Vehicles_ArmedVehicles_TitlePanel.Paint = function(self, w, h)
+                                draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
+                                surface.SetDrawColor(255,255,255)
+                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                draw.SimpleText("MILITARY", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                            end
+
+                                local shopSheet_Vehicles_ArmedVehicles_IconLayout = vgui.Create( "DIconLayout", shopSheet_Vehicles_Primary_ScrollPanel )
+                                shopSheet_Vehicles_ArmedVehicles_IconLayout:Dock(TOP)
+                                shopSheet_Vehicles_ArmedVehicles_IconLayout:SetBorder(10)
+                                shopSheet_Vehicles_ArmedVehicles_IconLayout:SetSpaceY(5)
+                                shopSheet_Vehicles_ArmedVehicles_IconLayout:SetSpaceX(5)
+                                
+                                    for vehicleIndex, vehicleValue in pairs (list.Get("dac_simfphys_armed")) do
+
+                                        local shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame = shopSheet_Vehicles_ArmedVehicles_IconLayout:Add( "DPanel" )
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame:SetSize( shopSheet_Vehicles_Primary_PreviewPanel:GetWide() / 6, shopSheet_Vehicles_Primary_PreviewPanel:GetWide() / 6 )
+                                        
+                                        -- Assign contextual values to each panel as it is created for later use
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Name = vehicleValue.Name
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.ListName = vehicleValue.ListName
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.VehicleType = vehicleValue.VehicleType
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Model = vehicleValue.Model
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Category = vehicleValue.Category
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.IsFlagTransport = vehicleValue.IsFlagTransport
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Cost = vehicleValue.Cost
+
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Paint = function (self, w, h)
+                                            if vehicleValue.Name == selectedVehicle then
+                                                draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
+                                            else
+                                                draw.RoundedBox(3,0,0, w, h, Color(218,218,218))
+                                            end
+                                        end
+
+                                        local shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot:SetWide(shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame:GetTall() * 0.95)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot:DockMargin(4,4,4,4)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot:Dock(LEFT)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot:InvalidateParent(true)
+
+                                        -- Manually draw the icon slot so it looks nice
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot.Paint = function(self, w, h)
+                                            draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                                            surface.SetDrawColor(255,255,255)
+                                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                        end
+
+                                        local shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Image:Dock(FILL)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Image:InvalidateParent(true)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Image:SetImage(vehicleValue.Icon)
+
+                                        local shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Image)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Label:SetTall(shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame:GetTall() * 0.15)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Label:Dock(BOTTOM)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Label:InvalidateParent(true)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Label.Paint = function(self, w, h)
+                                            draw.RoundedBox(3,0,0, w, h, Color(0,0,0,192))
+                                            draw.SimpleText(vehicleValue.Name, "DermaDefault", w * 0.5, 3, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                        end
+
+                                        local shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame)
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame_Button:SetWide(shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame:GetWide())
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame_Button:SetTall(shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame:GetTall())
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
+                                            -- Return nothing for the ultimate prank, haha ghehgeegr
+                                        end
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame_Button:SetText("")
+
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame_Button.DoClick = function()
+
+                                            LocalPlayer():EmitSound(ButtonNoise)
+
+                                            selectedVehicle = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Name
+                                            selectedVehicleModel = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Model
+                                            selectedVehicleCategory = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Category
+                                            selectedVehicleTransportStatus = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.IsFlagTransport
+                                            selectedVehicleCost = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Cost
+
+                                            shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
+                                            shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                                            shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetText(selectedVehicle)
+                                            shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetText("Flag Transport: " .. string.upper(tostring(selectedVehicleTransportStatus)))
+                                            shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetText("Primary Role: " .. selectedVehicleCategory)
+                
+                                            mn, mx = shopSheet_Vehicles_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                                            size = 0
+                                            size = math.max( size, math.abs(mn.x) + math.abs(mx.x) )
+                                            size = math.max( size, math.abs(mn.y) + math.abs(mx.y) )
+                                            size = math.max( size, math.abs(mn.z) + math.abs(mx.z) )
+                            
+                                            shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                                            shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetCamPos( Vector( size, size + 105, size) )
+                                            shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetLookAt( (mn + mx) * 0.3 )
+
+                                            -- For debugging help
+                                            print("\n-- SELECTED VEHICLE --\n" 
+                                            .. "Name: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Name .. "\n" 
+                                            .. "Type: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.VehicleType .. "\n"
+                                            .. "Category: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Category .. "\n"
+                                            .. "Cost: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Cost .. "\n"
+                                            .. "FlagTransport: " .. tostring(shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.IsFlagTransport) .. "\n"
+                                            .. "Model: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Model .. "\n"
+                                            )
+
+                                        end
+
+                                    end
+
+                            local shopSheet_Vehicles_CivilianVehicles_TitlePanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary_ScrollPanel)
+                            shopSheet_Vehicles_CivilianVehicles_TitlePanel:SetTall(shopSheet_Vehicles_Primary_PreviewPanel:GetTall() / 12)
+                            shopSheet_Vehicles_CivilianVehicles_TitlePanel:DockMargin(5,15,5,5) -- Any subsequent title panels should have a top margin parameter of 15 for following iconlayouts
+                            shopSheet_Vehicles_CivilianVehicles_TitlePanel:Dock(TOP)
+                            shopSheet_Vehicles_CivilianVehicles_TitlePanel:InvalidateParent(true)
+                            shopSheet_Vehicles_CivilianVehicles_TitlePanel.Paint = function(self, w, h)
+                                draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
+                                surface.SetDrawColor(255,255,255)
+                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                draw.SimpleText("CIVILIAN", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                            end
+
+                            local shopSheet_Vehicles_CivilianVehicles_IconLayout = vgui.Create( "DIconLayout", shopSheet_Vehicles_Primary_ScrollPanel )
+                            shopSheet_Vehicles_CivilianVehicles_IconLayout:Dock(TOP)
+                            shopSheet_Vehicles_CivilianVehicles_IconLayout:SetBorder(10)
+                            shopSheet_Vehicles_CivilianVehicles_IconLayout:SetSpaceY(5)
+                            shopSheet_Vehicles_CivilianVehicles_IconLayout:SetSpaceX(5)
+
+                            for vehicleIndex, vehicleValue in pairs (list.Get("dac_simfphys_civilian")) do
+
+                                local shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame = shopSheet_Vehicles_CivilianVehicles_IconLayout:Add( "DPanel" )
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame:SetSize( shopSheet_Vehicles_Primary_PreviewPanel:GetWide() / 6, shopSheet_Vehicles_Primary_PreviewPanel:GetWide() / 6 )
+                                
+                                -- Assign contextual values to each panel as it is created for later use
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Name = vehicleValue.Name
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.ListName = vehicleValue.ListName
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.VehicleType = vehicleValue.VehicleType
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Model = vehicleValue.Model
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Category = vehicleValue.Category
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.IsFlagTransport = vehicleValue.IsFlagTransport
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost = vehicleValue.Cost
+
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Paint = function (self, w, h)
+                                    if vehicleValue.Name == selectedVehicle then
+                                        draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
+                                    else
+                                        draw.RoundedBox(3,0,0, w, h, Color(218,218,218))
+                                    end
+                                end
+
+                                local shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot:SetWide(shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame:GetTall() * 0.95)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot:DockMargin(4,4,4,4)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot:Dock(LEFT)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot:InvalidateParent(true)
+
+                                -- Manually draw the icon slot so it looks nice
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot.Paint = function(self, w, h)
+                                    draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                                    surface.SetDrawColor(255,255,255)
+                                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                end
+
+                                local shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Image:Dock(FILL)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Image:InvalidateParent(true)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Image:SetImage(vehicleValue.Icon)
+
+                                local shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Image)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Label:SetTall(shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame:GetTall() * 0.15)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Label:Dock(BOTTOM)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Label:InvalidateParent(true)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Label.Paint = function(self, w, h)
+                                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,192))
+                                    draw.SimpleText(vehicleValue.Name, "DermaDefault", w * 0.5, 3, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                end
+
+                                local shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame)
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame_Button:SetWide(shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame:GetWide())
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame_Button:SetTall(shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame:GetTall())
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
+                                    -- Return nothing for the ultimate prank, haha ghehgeegr
+                                end
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame_Button:SetText("")
+
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame_Button.DoClick = function()
+
+                                    LocalPlayer():EmitSound(ButtonNoise)
+
+                                    selectedVehicle = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Name
+                                    selectedVehicleModel = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Model
+                                    selectedVehicleCategory = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Category
+                                    selectedVehicleTransportStatus = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.IsFlagTransport
+                                    selectedVehicleCost = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost
+
+                                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
+                                    shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                                    shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetText(selectedVehicle)
+                                    shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetText("Flag Transport: " .. string.upper(tostring(selectedVehicleTransportStatus)))
+                                    shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetText("Primary Role: " .. selectedVehicleCategory)
+        
+                                    mn, mx = shopSheet_Vehicles_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                                    size = 0
+                                    size = math.max( size, math.abs(mn.x) + math.abs(mx.x) )
+                                    size = math.max( size, math.abs(mn.y) + math.abs(mx.y) )
+                                    size = math.max( size, math.abs(mn.z) + math.abs(mx.z) )
+                    
+                                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetCamPos( Vector( size, size + 105, size) )
+                                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetLookAt( (mn + mx) * 0.3 )
+
+                                    -- For debugging help
+                                    print("\n-- SELECTED VEHICLE --\n" 
+                                    .. "Name: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Name .. "\n" 
+                                    .. "Type: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.VehicleType .. "\n"
+                                    .. "Category: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Category .. "\n"
+                                    .. "Cost: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost .. "\n"
+                                    .. "FlagTransport: " .. tostring(shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.IsFlagTransport) .. "\n"
+                                    .. "Model: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Model .. "\n"
+                                    )
+
+                                end
+
+                            end
 
             --- UPGRADE TAB ---
 
@@ -305,34 +654,6 @@ if CLIENT then
                                     shopSheet_Loadout_Primary_ListItem_Panel_Icon:Dock(FILL)
                                     shopSheet_Loadout_Primary_ListItem_Panel_Icon:InvalidateParent(true)
                                     shopSheet_Loadout_Primary_ListItem_Panel_Icon:SetImage(weaponValue.Icon)
-
-                                --[[local shopSheet_Loadout_Primary_ListItem_Name = vgui.Create("DLabel", shopSheet_Loadout_Primary_ListItem_Panel)
-                                shopSheet_Loadout_Primary_ListItem_Name:SetFont("DAC.PickTeam") -- Size 32px
-                                shopSheet_Loadout_Primary_ListItem_Name:SetText(weaponValue.Name)
-                                shopSheet_Loadout_Primary_ListItem_Name:SetColor(Color(0,0,0))
-                                shopSheet_Loadout_Primary_ListItem_Name:SetPos(panelX * 0.11,6)
-                                shopSheet_Loadout_Primary_ListItem_Name:SizeToContents()
-
-                                local shopSheet_Loadout_Primary_ListItem_Accuracy = vgui.Create("DLabel", shopSheet_Loadout_Primary_ListItem_Panel)
-                                shopSheet_Loadout_Primary_ListItem_Accuracy:SetFont("DAC.ScoreboardTitle") -- Size 32px
-                                shopSheet_Loadout_Primary_ListItem_Accuracy:SetText("Accuracy: " .. weaponValue.Accuracy)
-                                shopSheet_Loadout_Primary_ListItem_Accuracy:SetColor(Color(54,54,54))
-                                shopSheet_Loadout_Primary_ListItem_Accuracy:SetPos(panelX * 0.11,48)
-                                shopSheet_Loadout_Primary_ListItem_Accuracy:SizeToContents()
-
-                                local shopSheet_Loadout_Primary_ListItem_Damage = vgui.Create("DLabel", shopSheet_Loadout_Primary_ListItem_Panel)
-                                shopSheet_Loadout_Primary_ListItem_Damage:SetFont("DAC.ScoreboardTitle") -- Size 32px
-                                shopSheet_Loadout_Primary_ListItem_Damage:SetText("Damage: " .. weaponValue.Damage .. " HP")
-                                shopSheet_Loadout_Primary_ListItem_Damage:SetColor(Color(54,54,54))
-                                shopSheet_Loadout_Primary_ListItem_Damage:SetPos(panelX * 0.11,68)
-                                shopSheet_Loadout_Primary_ListItem_Damage:SizeToContents()
-
-                                local shopSheet_Loadout_Primary_ListItem_Capacity = vgui.Create("DLabel", shopSheet_Loadout_Primary_ListItem_Panel)
-                                shopSheet_Loadout_Primary_ListItem_Capacity:SetFont("DAC.ScoreboardTitle") -- Size 32px
-                                shopSheet_Loadout_Primary_ListItem_Capacity:SetText("Capacity: " .. weaponValue.Capacity .. " total")
-                                shopSheet_Loadout_Primary_ListItem_Capacity:SetColor(Color(54,54,54))
-                                shopSheet_Loadout_Primary_ListItem_Capacity:SetPos(panelX * 0.11,88)
-                                shopSheet_Loadout_Primary_ListItem_Capacity:SizeToContents()]]
 
                                 -- Make a button to go over each panel, which will serve as the click functionality and also drive the appearance of the parent panel
                                 local shopSheet_Loadout_Primary_ListItem_Button = vgui.Create("DButton", shopSheet_Loadout_Primary_ListItem_Panel)
@@ -469,13 +790,6 @@ if CLIENT then
                                     shopSheet_Loadout_Secondary_ListItem_Panel_Icon:Dock(FILL)
                                     shopSheet_Loadout_Secondary_ListItem_Panel_Icon:InvalidateParent(true)
                                     shopSheet_Loadout_Secondary_ListItem_Panel_Icon:SetImage(weaponValue.Icon)
-
-                                    --[[local shopSheet_Loadout_Secondary_ListItem_Name = vgui.Create("DLabel", shopSheet_Loadout_Secondary_ListItem_Panel)
-                                    shopSheet_Loadout_Secondary_ListItem_Name:SetFont("DAC.PickTeam") -- Size 32px
-                                    shopSheet_Loadout_Secondary_ListItem_Name:SetText(weaponValue.Name)
-                                    shopSheet_Loadout_Secondary_ListItem_Name:SetColor(Color(0,0,0))
-                                    shopSheet_Loadout_Secondary_ListItem_Name:SetPos(shopSheet_Loadout_Secondary_ListItem_Panel:GetX() * 28,50)
-                                    shopSheet_Loadout_Secondary_ListItem_Name:SizeToContents()]]
 
                                 -- Make a button to go over each panel, which will serve as the click functionality and also drive the appearance of the parent panel
                                 local shopSheet_Loadout_Secondary_ListItem_Button = vgui.Create("DButton", shopSheet_Loadout_Secondary_ListItem_Panel)
