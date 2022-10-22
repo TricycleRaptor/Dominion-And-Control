@@ -4,9 +4,10 @@ local V = {
 	Name = "Dune Buggy",
 	Model = "models/buggy.mdl",
 	ListName = "dac_simfphys_civilian",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_jeep",
     Icon = "entities/sim_fphys_jeep.png",
-	Category = "Transportation",
+	Category = "TRANSPORTATION",
     VehicleType = "simfphys",
     IsFlagTransport = true,
 	Cost = 100,
@@ -103,15 +104,16 @@ local V = {
 		Gears = {-0.15,0,0.15,0.25,0.35,0.45}
 	}
 }
-list.Set("dac_simfphys_civilian", 1, V )
+list.Set("dac_simfphys_civilian", "sim_fphys_jeep", V )
 
 local V = {
 	Name = "Resistance Van",
 	Model = "models/vehicles/7seatvan.mdl",
 	ListName = "dac_simfphys_civilian",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_van",
     Icon = "entities/sim_fphys_van.png",
-	Category = "Transportation",
+	Category = "TRANSPORTATION",
     VehicleType = "simfphys",
     IsFlagTransport = true,
 	Cost = 150,
@@ -202,15 +204,16 @@ local V = {
 		Gears = {-0.1,0,0.1,0.2,0.3,0.4}
 	}
 }
-list.Set("dac_simfphys_civilian", 2, V )
+list.Set("dac_simfphys_civilian", "sim_fphys_van", V )
 
 local V = {
 	Name = "Pickup Truck",
 	Model = "models/blu/avia/avia.mdl",
 	ListName = "dac_simfphys_civilian",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_pwavia",
     Icon = "entities/sim_fphys_pwavia.png",
-	Category = "Transportation",
+	Category = "TRANSPORTATION",
     VehicleType = "simfphys",
     IsFlagTransport = true,
 	Cost = 200,
@@ -300,6 +303,6 @@ local V = {
 		Gears = {-0.15,0,0.15,0.25,0.35,0.45,0.52}
 	}
 }
-list.Set("dac_simfphys_civilian", 3, V )
+list.Set("dac_simfphys_civilian", "sim_fphys_pwavia", V )
 
 --- [ Civilian Vehicles End ] ---

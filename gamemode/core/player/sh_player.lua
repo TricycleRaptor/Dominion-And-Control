@@ -176,12 +176,14 @@ function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 	end
 
 	PrintMessage( HUD_PRINTTALK, Format( "[DAC]: %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
+	ply:SetNWBool("IsPreviewingVehicle", false)
 
 end
 
 function GM:PlayerDisconnected(ply)
 
 	local teamNum = ply:Team()
+	ply:SetNWBool("IsPreviewingVehicle", false)
 
 	if ply.IsCaptain == true then
 		ply.IsCaptain = false

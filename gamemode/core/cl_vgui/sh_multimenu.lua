@@ -21,9 +21,12 @@ if CLIENT then
     -- Dynamic vehicle vars
     local selectedVehicle = nil
     local selectedVehicleModel = nil
+    local selectedVehicleType = nil
     local selectedVehicleCategory = nil 
     local selectedVehicleTransportStatus = nil
     local selectedVehicleCost = nil
+    local selectedVehicleClass = nil
+    local selectedVehicleList = nil
 
     MENU_FRAME = MENU_FRAME or nil
 
@@ -41,10 +44,12 @@ if CLIENT then
             if selectedPrimary == nil or 
                 selectedSpecial == nil or 
                 selectedVehicle == nil or 
-                selectedVehicleModel == nil or 
+                selectedVehicleModel == nil or
+                selectedVehicleType == nil or
                 selectedVehicleCategory == nil or
                 selectedVehicleTransportStatus == nil or
-                selectedVehicleCost == nil then
+                selectedVehicleClass == nil or
+                selectedVehicleList == nil then
 
                 -- We assign the first class value to a variable that is used to drive the paint function on the selection buttons later
                 -- Because those lists are populated by the same table in ascending order, the first value in the table should be highlighted on the UI
@@ -63,9 +68,12 @@ if CLIENT then
                 for vehicleIndex, vehicleValue in pairs(list.Get("dac_simfphys_armed")) do
                     selectedVehicle = vehicleValue.Name -- We're just getting the first value and breaking after that
                     selectedVehicleModel = vehicleValue.Model
+                    selectedVehicleType = vehicleValue.VehicleType
                     selectedVehicleCategory = vehicleValue.Category
                     selectedVehicleTransportStatus = vehicleValue.IsFlagTransport
                     selectedVehicleCost = vehicleValue.Cost
+                    selectedVehicleClass = vehicleValue.Class
+                    selectedVehicleList = vehicleValue.ListName
                     break
                 end
 
@@ -253,7 +261,7 @@ if CLIENT then
                     shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
                     shopSheet_Vehicles_Secondary_BuyButton:InvalidateParent(true)
                     shopSheet_Vehicles_Secondary_BuyButton.Paint = function(self, w, h)
-                        if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost then
+                        if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost and LocalPlayer():Alive() then
                             shopSheet_Vehicles_Secondary_BuyButton:SetEnabled(true)
                             draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
                             surface.SetDrawColor(109,255,73)
@@ -267,7 +275,39 @@ if CLIENT then
                     end
                     shopSheet_Vehicles_Secondary_BuyButton.DoClick = function(self, w, h)
                         if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost then
+
                             LocalPlayer():EmitSound(ConfirmNoise)
+
+                            net.Start("dac_givevehicle_preview")
+                                net.WriteString("weapon_dac_vehiclepreviewer")
+                            net.SendToServer()
+
+                            --[[print("\n[DAC DEBUG]: Sending vehicle data to server...\n" 
+                            .. "Name: " .. selectedVehicle .. "\n" 
+                            .. "Type: " .. selectedVehicleType .. "\n" 
+                            .. "Category: " .. selectedVehicleCategory .. "\n"
+                            .. "Cost: " .. selectedVehicleCost .. "\n"
+                            .. "FlagTransport: " .. tostring(selectedVehicleTransportStatus) .. "\n"
+                            .. "Model: " .. selectedVehicleModel .. "\n"
+                            .. "List: " .. selectedVehicleList .. "\n"
+                            .. "Class: " .. selectedVehicleClass .. "\n"
+                            )]]
+                            
+                            -- Stagger the vehicle data being sent to the client by the next tick. This allows the client to obtain and intiailize the selector tool
+                            timer.Simple(0.5, function() 
+                                net.Start("dac_sendvehicledata")
+                                    net.WriteString(selectedVehicle)
+                                    net.WriteString(selectedVehicleType)
+                                    net.WriteString(selectedVehicleCategory)
+                                    net.WriteString(selectedVehicleCost)
+                                    net.WriteBool(selectedVehicleTransportStatus)
+                                    net.WriteString(selectedVehicleModel)
+                                    net.WriteString(selectedVehicleList)
+                                    net.WriteString(selectedVehicleClass)
+                                net.SendToServer()
+                                --print("[DAC DEBUG]: Sent.")
+                            end)
+
                         else
                             LocalPlayer():EmitSound(DenyNoise)
                         end
@@ -335,6 +375,7 @@ if CLIENT then
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Category = vehicleValue.Category
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.IsFlagTransport = vehicleValue.IsFlagTransport
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Cost = vehicleValue.Cost
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Class = vehicleValue.Class
 
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Paint = function (self, w, h)
                                             if vehicleValue.Name == selectedVehicle then
@@ -387,9 +428,12 @@ if CLIENT then
 
                                             selectedVehicle = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Name
                                             selectedVehicleModel = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Model
+                                            selectedVehicleType = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.VehicleType
                                             selectedVehicleCategory = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Category
                                             selectedVehicleTransportStatus = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.IsFlagTransport
                                             selectedVehicleCost = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Cost
+                                            selectedVehicleClass = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Class
+                                            selectedVehicleList = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.ListName
 
                                             shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
                                             shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
@@ -408,14 +452,16 @@ if CLIENT then
                                             shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetLookAt( (mn + mx) * 0.3 )
 
                                             -- For debugging help
-                                            print("\n-- SELECTED VEHICLE --\n" 
+                                            --[[print("\n-- SELECTED VEHICLE --\n" 
                                             .. "Name: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Name .. "\n" 
                                             .. "Type: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.VehicleType .. "\n"
                                             .. "Category: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Category .. "\n"
                                             .. "Cost: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Cost .. "\n"
                                             .. "FlagTransport: " .. tostring(shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.IsFlagTransport) .. "\n"
                                             .. "Model: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Model .. "\n"
-                                            )
+                                            .. "List: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.ListName .. "\n"
+                                            .. "Class: " .. shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Class .. "\n"
+                                            )]]
 
                                         end
 
@@ -452,6 +498,7 @@ if CLIENT then
                                 shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Category = vehicleValue.Category
                                 shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.IsFlagTransport = vehicleValue.IsFlagTransport
                                 shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost = vehicleValue.Cost
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Class = vehicleValue.Class
 
                                 shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Paint = function (self, w, h)
                                     if vehicleValue.Name == selectedVehicle then
@@ -504,9 +551,135 @@ if CLIENT then
 
                                     selectedVehicle = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Name
                                     selectedVehicleModel = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Model
+                                    selectedVehicleType = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.VehicleType
                                     selectedVehicleCategory = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Category
                                     selectedVehicleTransportStatus = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.IsFlagTransport
                                     selectedVehicleCost = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost
+                                    selectedVehicleClass = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Class
+                                    selectedVehicleList = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.ListName
+
+                                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
+                                    shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                                    shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetText(selectedVehicle)
+                                    shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetText("Flag Transport: " .. string.upper(tostring(selectedVehicleTransportStatus)))
+                                    shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetText("Primary Role: " .. selectedVehicleCategory)
+        
+                                    mn, mx = shopSheet_Vehicles_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                                    size = 0
+                                    size = math.max( size, math.abs(mn.x) + math.abs(mx.x) )
+                                    size = math.max( size, math.abs(mn.y) + math.abs(mx.y) )
+                                    size = math.max( size, math.abs(mn.z) + math.abs(mx.z) )
+                    
+                                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetCamPos( Vector( size, size + 105, size) )
+                                    shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetLookAt( (mn + mx) * 0.3 )
+
+                                    -- For debugging help
+                                    --[[print("\n-- SELECTED VEHICLE --\n" 
+                                    .. "Name: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Name .. "\n" 
+                                    .. "Type: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.VehicleType .. "\n"
+                                    .. "Category: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Category .. "\n"
+                                    .. "Cost: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost .. "\n"
+                                    .. "FlagTransport: " .. tostring(shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.IsFlagTransport) .. "\n"
+                                    .. "Model: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Model .. "\n"
+                                    .. "List: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.ListName .. "\n"
+                                    .. "Class: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Class .. "\n"
+                                    )]]
+
+                                end
+
+                            end
+
+                            local shopSheet_Vehicles_AirVehicles_TitlePanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary_ScrollPanel)
+                            shopSheet_Vehicles_AirVehicles_TitlePanel:SetTall(shopSheet_Vehicles_Primary_PreviewPanel:GetTall() / 12)
+                            shopSheet_Vehicles_AirVehicles_TitlePanel:DockMargin(5,15,5,5) -- Any subsequent title panels should have a top margin parameter of 15 for following iconlayouts
+                            shopSheet_Vehicles_AirVehicles_TitlePanel:Dock(TOP)
+                            shopSheet_Vehicles_AirVehicles_TitlePanel:InvalidateParent(true)
+                            shopSheet_Vehicles_AirVehicles_TitlePanel.Paint = function(self, w, h)
+                                draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
+                                surface.SetDrawColor(255,255,255)
+                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                draw.SimpleText("AIRCRAFT", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                            end
+
+                            local shopSheet_Vehicles_AirVehicles_IconLayout = vgui.Create( "DIconLayout", shopSheet_Vehicles_Primary_ScrollPanel )
+                            shopSheet_Vehicles_AirVehicles_IconLayout:Dock(TOP)
+                            shopSheet_Vehicles_AirVehicles_IconLayout:SetBorder(10)
+                            shopSheet_Vehicles_AirVehicles_IconLayout:SetSpaceY(5)
+                            shopSheet_Vehicles_AirVehicles_IconLayout:SetSpaceX(5)
+
+                            for vehicleIndex, vehicleValue in pairs (list.Get("dac_lfs_military")) do
+
+                                local shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame = shopSheet_Vehicles_AirVehicles_IconLayout:Add( "DPanel" )
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame:SetSize( shopSheet_Vehicles_Primary_PreviewPanel:GetWide() / 6, shopSheet_Vehicles_Primary_PreviewPanel:GetWide() / 6 )
+                                
+                                -- Assign contextual values to each panel as it is created for later use
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Name = vehicleValue.Name
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.ListName = vehicleValue.ListName
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.VehicleType = vehicleValue.VehicleType
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Model = vehicleValue.Model
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Category = vehicleValue.Category
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.IsFlagTransport = vehicleValue.IsFlagTransport
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Cost = vehicleValue.Cost
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Class = vehicleValue.Class
+
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Paint = function (self, w, h)
+                                    if vehicleValue.Name == selectedVehicle then
+                                        draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
+                                    else
+                                        draw.RoundedBox(3,0,0, w, h, Color(218,218,218))
+                                    end
+                                end
+
+                                local shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot:SetWide(shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame:GetTall() * 0.95)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot:DockMargin(4,4,4,4)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot:Dock(LEFT)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot:InvalidateParent(true)
+
+                                -- Manually draw the icon slot so it looks nice
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot.Paint = function(self, w, h)
+                                    draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                                    surface.SetDrawColor(255,255,255)
+                                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                end
+
+                                local shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Image:Dock(FILL)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Image:InvalidateParent(true)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Image:SetImage(vehicleValue.Icon)
+
+                                local shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Image)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Label:SetTall(shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame:GetTall() * 0.15)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Label:Dock(BOTTOM)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Label:InvalidateParent(true)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Label.Paint = function(self, w, h)
+                                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,192))
+                                    draw.SimpleText(vehicleValue.Name, "DermaDefault", w * 0.5, 3, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                end
+
+                                local shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame)
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame_Button:SetWide(shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame:GetWide())
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame_Button:SetTall(shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame:GetTall())
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
+                                    -- Return nothing for the ultimate prank, haha ghehgeegr
+                                end
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame_Button:SetText("")
+
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame_Button.DoClick = function()
+
+                                    LocalPlayer():EmitSound(ButtonNoise)
+
+                                    selectedVehicle = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Name
+                                    selectedVehicleModel = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Model
+                                    selectedVehicleType = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.VehicleType
+                                    selectedVehicleCategory = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Category
+                                    selectedVehicleTransportStatus = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.IsFlagTransport
+                                    selectedVehicleCost = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Cost
+                                    selectedVehicleClass = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Class
+                                    selectedVehicleList = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.ListName
 
                                     shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
                                     shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
@@ -526,12 +699,14 @@ if CLIENT then
 
                                     -- For debugging help
                                     print("\n-- SELECTED VEHICLE --\n" 
-                                    .. "Name: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Name .. "\n" 
-                                    .. "Type: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.VehicleType .. "\n"
-                                    .. "Category: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Category .. "\n"
-                                    .. "Cost: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost .. "\n"
-                                    .. "FlagTransport: " .. tostring(shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.IsFlagTransport) .. "\n"
-                                    .. "Model: " .. shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Model .. "\n"
+                                    .. "Name: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Name .. "\n" 
+                                    .. "Type: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.VehicleType .. "\n"
+                                    .. "Category: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Category .. "\n"
+                                    .. "Cost: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Cost .. "\n"
+                                    .. "FlagTransport: " .. tostring(shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.IsFlagTransport) .. "\n"
+                                    .. "Model: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Model .. "\n"
+                                    .. "List: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.ListName .. "\n"
+                                    .. "Class: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Class.. "\n"
                                     )
 
                                 end

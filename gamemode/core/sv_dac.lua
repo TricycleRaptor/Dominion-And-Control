@@ -3,6 +3,10 @@
 util.AddNetworkString("dac_gamestage_sync")
 util.AddNetworkString("dac_validspace_sync")
 util.AddNetworkString("dac_sendbase_confirmation") -- This message is caught in the weapon_dac_baseselector
+util.AddNetworkString("dac_givevehicle_preview") -- Cached at the server to give the player a vehicle preview tool
+util.AddNetworkString("dac_vehicle_confirmation") -- This message is caught in the weapon_dac_vehiclepreviewer
+util.AddNetworkString("dac_sendvehicledata") -- This message is caught in the weapon_dac_vehiclepreviewer
+util.AddNetworkString("dac_validspace_vehiclesync")
 
 function DAC:SyncGameStage(ply)
 	net.Start("dac_gamestage_sync")
@@ -13,6 +17,14 @@ function DAC:SyncGameStage(ply)
 		net.Broadcast()
 	end
 end
+
+net.Receive("dac_givevehicle_preview", function(len, ply)
+
+	local previewWeaponClass = net.ReadString()
+	ply:Give(previewWeaponClass)
+	ply:SelectWeapon(previewWeaponClass)
+
+end)
 
 -- Servside Net end
 
@@ -168,8 +180,14 @@ hook.Add("PlayerNoClip", "DAC.NoclipPolicy", function( ply, desiredState )
 end )
 
 hook.Add("CanPlayerEnterVehicle", "DAC.VehicleRestrictions", function(ply, vehicleEnt, seatNum) 
+
+	--[[if IsValid(vehicleEnt) then
+		print("[DAC Debug]: " .. tostring(vehicleEnt) .. "'s transport status is " .. tostring(vehicleEnt:GetNWBool('FlagTransport')))
+	end]]
+
 	if(ply:GetPlayerCarrierStatus() == true and IsValid(vehicleEnt)) then
-		if (vehicleEnt.IsFlagTransport == true) then -- We should make this a property for each vehicle that is permitted to transport a flag carrier
+		
+		if (vehicleEnt:GetNWBool('FlagTransport') == true) then -- We should make this a property for each vehicle that is permitted to transport a flag carrier
 			return true
 		else
 			ply:ChatPrint("[DAC]: You cannot enter this vehicle while carrying a flag.")
