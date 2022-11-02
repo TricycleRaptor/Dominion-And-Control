@@ -10,6 +10,8 @@ function GM:PlayerSpawn(ply)
 	local gameStage = DAC:GetGameStage()
 	local stageData = gameStage:GetData()
 	local teamNum = ply:Team()
+	ply:SetNWBool("IsSpawningVehicle", false)
+	ply:SetNWBool("IsInBase", false)
 
 	self.BaseClass:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)

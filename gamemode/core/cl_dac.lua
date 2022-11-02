@@ -25,3 +25,11 @@ net.Receive("dac_validspace_vehiclesync", function()
     DrawVehicleConfirmationBox()
 
 end )
+
+net.Receive("dac_cancelvehiclepurchase", function()
+
+    local bool = net.ReadBool()
+    if bool == false then return end
+    DrawVehicleCancellationBox()
+
+end )

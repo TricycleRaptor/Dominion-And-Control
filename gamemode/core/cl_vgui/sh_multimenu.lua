@@ -106,9 +106,32 @@ if CLIENT then
             local creditsLabel = vgui.Create("DLabel", MENU_FRAME)
             creditsLabel:SetFont("DAC.ScoreboardTitle") -- Size 22px
             creditsLabel:SetColor(Color(255,217,0))
-            creditsLabel:SetText( LocalPlayer():GetNWInt("storeCredits") .. " cR") -- This will probably need to be moved to a think or paint function, just a placeholder for now
             creditsLabel:SetPos(panelX * 0.91, 12)
-            creditsLabel:SizeToContents()
+            creditsLabel.Paint = function(self, w, h)
+                creditsLabel:SetText(LocalPlayer():GetNWInt("storeCredits") .. " cR")
+                creditsLabel:SetColor(Color(255,217,0))
+                creditsLabel:SizeToContents()
+            end
+
+            local inBaseLabel = vgui.Create("DLabel", MENU_FRAME)
+            inBaseLabel:SetFont("DAC.ScoreboardTitle") -- Size 22px
+            inBaseLabel:Dock(BOTTOM)
+            inBaseLabel:DockMargin(25, 15, 15, 15)
+            inBaseLabel.Paint = function(self, w, h)
+                if LocalPlayer():Alive() == true then
+                    if LocalPlayer():GetNWBool("IsInBase") == true then
+                        inBaseLabel:SetText("HOME")
+                        inBaseLabel:SetColor(Color(0,255,0))
+                    else
+                        inBaseLabel:SetText("AWAY")
+                        inBaseLabel:SetColor(Color(255,0,0))
+                    end
+                else
+                    inBaseLabel:SetText("DEAD")
+                    inBaseLabel:SetColor(Color(172,172,172))
+                end
+                inBaseLabel:SizeToContents()
+            end
 
             local mainPanel = vgui.Create("DPanel", MENU_FRAME)
             mainPanel:SetPos(4, 38)
@@ -261,7 +284,7 @@ if CLIENT then
                     shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
                     shopSheet_Vehicles_Secondary_BuyButton:InvalidateParent(true)
                     shopSheet_Vehicles_Secondary_BuyButton.Paint = function(self, w, h)
-                        if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost and LocalPlayer():Alive() then
+                        if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost and LocalPlayer():Alive() and LocalPlayer():GetNWBool("IsInBase") == true then
                             shopSheet_Vehicles_Secondary_BuyButton:SetEnabled(true)
                             draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
                             surface.SetDrawColor(109,255,73)

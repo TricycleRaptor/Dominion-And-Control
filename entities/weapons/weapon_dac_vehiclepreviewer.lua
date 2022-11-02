@@ -171,6 +171,16 @@ function SWEP:PrimaryAttack()
 
 end
 
+function SWEP:SecondaryAttack()
+
+    if SERVER then
+        net.Start("dac_cancelvehiclepurchase")
+            net.WriteBool(true)
+        net.Send(user)
+    end
+
+end
+
 function SWEP:Holster()
 
     if IsValid(self.vehicleModelPreview) then
@@ -178,7 +188,8 @@ function SWEP:Holster()
     end
 
     self.validVehicleSpace = false
-    return true
+
+    return false
 
 end
 
@@ -224,6 +235,9 @@ end)
 
 function SpawnShopVehicle(ply)
 
+    ply:SetNWInt("storeCredits", ply:GetNWInt("storeCredits") - vehicleCost)
+    ply:EmitSound("ambient/levels/labs/coinslot1.wav") -- We want this serverside so other players can hear if the player buys something
+
     -- Pass in all the necessary data here for spawning a vehicle, including deducting credits from the player's balance
     if vehicleType == "simfphys" then
         --print("[DAC DEBUG]: Spawning simfphys vehicle...")
@@ -244,6 +258,7 @@ function SpawnShopVehicle(ply)
                     if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then -- Specify that we only want the seats, rather than the simfphys attachments
                         --print(vehicleChildren)
                         vehicleChildren:SetNWBool('FlagTransport', simfphysSeatTransportBool) -- Set each seat to their respective flag transport status
+                        vehicleChildren:SetNWInt('OwningTeam', ply:Team())
                     end
                 end
                 --print("[DAC DEBUG]: Initialized.")
@@ -268,6 +283,7 @@ function SpawnShopVehicle(ply)
             for vehicleKey, vehicleChildren in pairs(initializedLFSVehicle:GetChildren()) do
                 if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then
                     vehicleChildren:SetNWBool('FlagTransport', vehicleIsFlagTransport)
+                    vehicleChildren:SetNWInt('OwningTeam', ply:Team())
                     --v:SetNWInt('lfsAITeam', ply:Team())
                 end
             end
@@ -291,4 +307,19 @@ function SpawnShopVehicle(ply)
     ply:SelectWeapon("weapon_physcannon")
     ply:StripWeapon("weapon_dac_vehiclepreviewer")
 
+end
+
+net.Receive("dac_vehicle_cancellation", function(len, ply)
+
+    local confirmationBool = net.ReadBool()
+    if confirmationBool == true then
+        CancelVehiclePurchase(ply)
+    end
+
+end)
+
+function CancelVehiclePurchase(ply)
+    ply:SetNWBool("IsSpawningVehicle", false)
+    ply:SelectWeapon("weapon_physcannon")
+    ply:StripWeapon("weapon_dac_vehiclepreviewer")
 end
