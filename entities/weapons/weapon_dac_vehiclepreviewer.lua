@@ -19,7 +19,7 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 
 SWEP.Weight	= 5
-SWEP.AutoSwitchTo = false
+SWEP.AutoSwitchTo = falseuser
 SWEP.AutoSwitchFrom = false
 
 SWEP.Slot = 5
@@ -31,13 +31,6 @@ SWEP.ViewModel = ""
 SWEP.WorldModel = ""
 SWEP.UseHands = true
 SWEP.HoldType = "normal"
-
-local user = nil
-local userTeam = nil
-
-local spawnPos = nil
-local spawnAng = nil
-local wireColor = Color(255,255,255,255)
 
 -- TO DO: Localize variables and wireframe preview object
 -- Maybe add SWEP: or SELF: to the end of the custom functions that use the variables
@@ -55,6 +48,11 @@ function SWEP:Initialize()
     self.vehicleClass = nil
     self.vehicleSpawnOffset = nil
     self.validVehicleSpace = false
+    self.user = nil
+    self.userTeam = nil
+    self.spawnPos = nil
+    self.spawnAng = nil
+    self.wireColor = Color(255,255,255,255)
 end
 
 function SWEP:TraceCheck()
@@ -75,10 +73,10 @@ function SWEP:TraceCheck()
 	} )
 
 	if ( tr.Hit ) then
-		wireColor = Color( 255, 0, 0, 255 )
+		self.wireColor = Color( 255, 0, 0, 255 )
         self.validVehicleSpace = false
     else
-        wireColor = Color( 0, 255, 0, 255)
+        self.wireColor = Color( 0, 255, 0, 255)
         self.validVehicleSpace = true
     end
 
@@ -86,8 +84,8 @@ end
 
 function SWEP:Think()
 
-    user = self:GetOwner()
-    userTeam = self:GetOwner():Team()
+    self.user = self:GetOwner()
+    self.userTeam = self:GetOwner():Team()
     
     if SERVER then
 
@@ -109,19 +107,19 @@ function SWEP:Think()
 
                 -- If we're previewing an LFS vehicle, we need to make the height higher for helicopters to have ample spawn room
                 if self.vehicleType == "lfs" then
-                    spawnPos = Trace.HitPos + Trace.HitNormal * self.vehicleSpawnOffset
-                    self.vehicleModelPreview:SetAngles(Angle(0, user:EyeAngles().Y - 180, _)) -- Set the prop angles to face the vehicle toward the player, but maintain the Z axis
+                    self.spawnPos = Trace.HitPos + Trace.HitNormal * self.vehicleSpawnOffset
+                    self.vehicleModelPreview:SetAngles(Angle(0, self.user:EyeAngles().Y - 180, _)) -- Set the prop angles to face the vehicle toward the player, but maintain the Z axis
                 else
                 -- Ground vehicles need less space and vertical height
-                    spawnPos = Trace.HitPos + Trace.HitNormal * self.vehicleSpawnOffset
-                    self.vehicleModelPreview:SetAngles(Angle(0, user:EyeAngles().Y - 90, _)) -- Set the prop angles to face the vehicle away from the player, but maintain the Z axis
+                    self.spawnPos = Trace.HitPos + Trace.HitNormal * self.vehicleSpawnOffset
+                    self.vehicleModelPreview:SetAngles(Angle(0, self.user:EyeAngles().Y - 90, _)) -- Set the prop angles to face the vehicle away from the player, but maintain the Z axis
                 end
 
                 self.vehicleModelPreview:SetModel(self.vehicleModel)
-                self.vehicleModelPreview:SetPos(spawnPos)
+                self.vehicleModelPreview:SetPos(self.spawnPos)
                 
-                self.vehicleModelPreview:SetColor(wireColor)
-                spawnAng = self.vehicleModelPreview:GetAngles()
+                self.vehicleModelPreview:SetColor(self.wireColor)
+                self.spawnAng = self.vehicleModelPreview:GetAngles()
 
                 self:TraceCheck(self.vehicleModelPreview)
 
@@ -139,7 +137,7 @@ function SWEP:Think()
 
         net.Receive("dac_sendvehicledata", function(len, ply)
 
-            if ply == user then -- This could override anyone previewing a vehicle in the server if we don't differentiate who sent it. We shouldn't parse it at all if they don't match.
+            if ply == self.user then -- This could override anyone previewing a vehicle in the server if we don't differentiate who sent it. We shouldn't parse it at all if they don't match.
                     
                 self.vehicleName = net.ReadString() -- Name
                 self.vehicleType = net.ReadString() -- VehicleType
@@ -181,7 +179,7 @@ function SWEP:Think()
                     --print("[DAC DEBUG]: Spawning simfphys vehicle...")
                     local initalizedSimfphysVehicleList = list.Get(self.vehicleListName)
                     local initializedSimfphysVehicle = initalizedSimfphysVehicleList[self.vehicleClass]
-                    local initializedSimfphysVehicleEntity = simfphys.SpawnVehicle_DAC(ply, self.vehicleIsFlagTransport, spawnPos, spawnAng, self.vehicleModel, self.vehicleClass, self.vehicleClass, initializedSimfphysVehicle)
+                    local initializedSimfphysVehicleEntity = simfphys.SpawnVehicle_DAC(ply, self.vehicleIsFlagTransport, self.spawnPos, self.spawnAng, self.vehicleModel, self.vehicleClass, self.vehicleClass, initializedSimfphysVehicle)
                     --print("[DAC DEBUG]: Spawned vehicle entity ID is " .. tostring(initializedSimfphysVehicleEntity))
                     --print("[DAC DEBUG]: Initializing vehicle seat data... ")
                     --print("[DAC DEBUG]: Transport boolean is " .. tostring(self.vehicleIsFlagTransport))
@@ -210,8 +208,8 @@ function SWEP:Think()
                 else 
                     --print("[DAC DEBUG]: Spawning LFS vehicle...")
                     local initializedLFSVehicle = ents.Create(self.vehicleClass)
-                    initializedLFSVehicle:SetPos(spawnPos)
-                    initializedLFSVehicle:SetAngles(spawnAng)
+                    initializedLFSVehicle:SetPos(self.spawnPos)
+                    initializedLFSVehicle:SetAngles(self.spawnAng)
                     initializedLFSVehicle:SetNWInt('OwningTeam', ply:Team())
                     initializedLFSVehicle:SetNWBool('IsLFSVehicle', true)
                     initializedLFSVehicle:Spawn()
@@ -260,7 +258,7 @@ function SWEP:PrimaryAttack()
 
             net.Start("dac_validspace_vehiclesync")
                 net.WriteBool(true)
-            net.Send(user)
+            net.Send(self.user)
 
         else
 
@@ -278,7 +276,7 @@ function SWEP:SecondaryAttack()
     if SERVER then
         net.Start("dac_cancelvehiclepurchase")
             net.WriteBool(true)
-        net.Send(user)
+        net.Send(self.user)
     end
 
 end
