@@ -2,7 +2,7 @@ hook.Add("HUDPaint", "DAC.RenderBaseIcon", function()
 
     local baseIcon = Material("dominion/ui/base_indicator.png")
 
-	for k, ent in pairs(ents.FindByClass("dac_flag")) do
+	for k, ent in pairs(ents.FindByClass("dac_flagpoint")) do
 
 		--if LocalPlayer():GetPos():DistToSqr(ent:GetPos()) > 100 ^ 2 then
 

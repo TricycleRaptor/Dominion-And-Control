@@ -1,8 +1,4 @@
 function simfphys.SpawnVehicle_DAC( Player, Transport, Pos, Ang, Model, Class, VName, VTable, bNoOwner )
-		
-    if not bNoOwner then
-        if not gamemode.Call( "PlayerSpawnVehicle", Player, Model, VName, VTable ) then return end
-    end
 
     if not file.Exists( Model, "GAME" ) then 
         Player:PrintMessage( HUD_PRINTTALK, "ERROR: \""..Model.."\" does not exist! (Class: "..VName..")")
@@ -137,11 +133,6 @@ function simfphys.SpawnVehicle_DAC( Player, Transport, Pos, Ang, Model, Class, V
         end
         
         duplicator.StoreEntityModifier( Ent, "VehicleMemDupe", VTable.Members )
-    end
-    
-    if IsValid( Player ) then
-        gamemode.Call( "PlayerSpawnedVehicle", Player, Ent )
-        return Ent
     end
     
     return Ent
