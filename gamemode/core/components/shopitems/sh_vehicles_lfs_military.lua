@@ -11,6 +11,7 @@ local V = {
     VehicleType = "lfs",
     IsFlagTransport = true,
 	Cost = 750,
+	SpawnOffset = 120,
 }
 list.Set("dac_lfs_military", 1, V )
 
@@ -25,6 +26,7 @@ local V = {
     VehicleType = "lfs",
     IsFlagTransport = false,
 	Cost = 1000,
+	SpawnOffset = 120,
 }
 list.Set("dac_lfs_military", 2, V )
 

@@ -12,6 +12,8 @@ local V = {
     IsFlagTransport = true,
 	Cost = 250,
 
+	SpawnOffset = 20,
+
 	Members = {
 		Mass = 1700,
 		
@@ -115,7 +117,8 @@ local V = {
     VehicleType = "simfphys",
     IsFlagTransport = false,
 	Cost = 500,
-	SpawnOffset = Vector(0,0,50),
+
+	SpawnOffset = 90,
 
 	Members = {
 		Mass = 4800,
@@ -359,6 +362,8 @@ local V = {
     IsFlagTransport = false,
 	Cost = 750,
 
+	SpawnOffset = 20,
+
 	Members = {
 		Mass = 3500,
 		MaxHealth = 6500,
@@ -445,7 +450,8 @@ local V = {
     VehicleType = "simfphys",
     IsFlagTransport = false,
 	Cost = 1500,
-	SpawnOffset = Vector(0,0,60),
+
+	SpawnOffset = 20,
 	SpawnAngleOffset = 90,
 
 	Members = {

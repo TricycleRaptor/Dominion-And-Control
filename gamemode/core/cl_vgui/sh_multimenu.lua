@@ -27,6 +27,7 @@ if CLIENT then
     local selectedVehicleCost = nil
     local selectedVehicleClass = nil
     local selectedVehicleList = nil
+    local selectedVehicleSpawnOffset = nil
 
     MENU_FRAME = MENU_FRAME or nil
 
@@ -49,6 +50,7 @@ if CLIENT then
                 selectedVehicleCategory == nil or
                 selectedVehicleTransportStatus == nil or
                 selectedVehicleClass == nil or
+                selectedVehicleSpawnOffset == nil or
                 selectedVehicleList == nil then
 
                 -- We assign the first class value to a variable that is used to drive the paint function on the selection buttons later
@@ -74,6 +76,7 @@ if CLIENT then
                     selectedVehicleCost = vehicleValue.Cost
                     selectedVehicleClass = vehicleValue.Class
                     selectedVehicleList = vehicleValue.ListName
+                    selectedVehicleSpawnOffset = vehicleValue.SpawnOffset
                     break
                 end
 
@@ -327,6 +330,7 @@ if CLIENT then
                                     net.WriteString(selectedVehicleModel)
                                     net.WriteString(selectedVehicleList)
                                     net.WriteString(selectedVehicleClass)
+                                    net.WriteString(selectedVehicleSpawnOffset)
                                 net.SendToServer()
                                 --print("[DAC DEBUG]: Sent.")
                             end)
@@ -399,6 +403,7 @@ if CLIENT then
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.IsFlagTransport = vehicleValue.IsFlagTransport
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Cost = vehicleValue.Cost
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Class = vehicleValue.Class
+                                        shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.SpawnOffset = vehicleValue.SpawnOffset
 
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Paint = function (self, w, h)
                                             if vehicleValue.Name == selectedVehicle then
@@ -457,6 +462,7 @@ if CLIENT then
                                             selectedVehicleCost = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Cost
                                             selectedVehicleClass = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Class
                                             selectedVehicleList = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.ListName
+                                            selectedVehicleSpawnOffset = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.SpawnOffset
 
                                             shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
                                             shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
@@ -522,6 +528,7 @@ if CLIENT then
                                 shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.IsFlagTransport = vehicleValue.IsFlagTransport
                                 shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost = vehicleValue.Cost
                                 shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Class = vehicleValue.Class
+                                shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.SpawnOffset = vehicleValue.SpawnOffset
 
                                 shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Paint = function (self, w, h)
                                     if vehicleValue.Name == selectedVehicle then
@@ -580,6 +587,7 @@ if CLIENT then
                                     selectedVehicleCost = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Cost
                                     selectedVehicleClass = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Class
                                     selectedVehicleList = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.ListName
+                                    selectedVehicleSpawnOffset = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.SpawnOffset
 
                                     shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
                                     shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
@@ -645,6 +653,7 @@ if CLIENT then
                                 shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.IsFlagTransport = vehicleValue.IsFlagTransport
                                 shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Cost = vehicleValue.Cost
                                 shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Class = vehicleValue.Class
+                                shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.SpawnOffset = vehicleValue.SpawnOffset
 
                                 shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Paint = function (self, w, h)
                                     if vehicleValue.Name == selectedVehicle then
@@ -703,6 +712,7 @@ if CLIENT then
                                     selectedVehicleCost = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Cost
                                     selectedVehicleClass = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Class
                                     selectedVehicleList = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.ListName
+                                    selectedVehicleSpawnOffset = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.SpawnOffset
 
                                     shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
                                     shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
@@ -721,7 +731,7 @@ if CLIENT then
                                     shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetLookAt( (mn + mx) * 0.3 )
 
                                     -- For debugging help
-                                    print("\n-- SELECTED VEHICLE --\n" 
+                                    --[[print("\n-- SELECTED VEHICLE --\n" 
                                     .. "Name: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Name .. "\n" 
                                     .. "Type: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.VehicleType .. "\n"
                                     .. "Category: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Category .. "\n"
@@ -730,7 +740,7 @@ if CLIENT then
                                     .. "Model: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Model .. "\n"
                                     .. "List: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.ListName .. "\n"
                                     .. "Class: " .. shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Class.. "\n"
-                                    )
+                                    )]]
 
                                 end
 

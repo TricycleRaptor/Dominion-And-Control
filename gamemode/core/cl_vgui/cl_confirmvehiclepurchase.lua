@@ -36,7 +36,7 @@ function DrawVehicleConfirmationBox()
                     net.WriteBool(true)
                 net.SendToServer()
                 Frame:Close()
-                LocalPlayer():EmitSound("buttons/lever7.wav")
+                LocalPlayer():EmitSound("buttons/button14.wav")
             end
 
             local NoButton = vgui.Create("DButton", Frame)
@@ -53,7 +53,13 @@ function DrawVehicleConfirmationBox()
                 Frame:Close()
                 LocalPlayer():EmitSound("buttons/button19.wav")
             end
-        
+
+            Frame.Think = function()
+                if LocalPlayer():GetNWBool("IsInBase") == false then
+                    Frame:Close()
+                    LocalPlayer():EmitSound("buttons/combine_button2.wav")
+                end
+            end
 
     end
 

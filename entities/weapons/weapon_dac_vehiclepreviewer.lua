@@ -48,6 +48,7 @@ local vehicleModel = nil
 local vehicleListName = nil
 local vehicleListKey = nil
 local vehicleClass = nil
+local vehicleSpawnOffset = nil
 
 function SWEP:Initialize()
     self:SetWeaponHoldType(self.HoldType)
@@ -60,6 +61,7 @@ function SWEP:Initialize()
     vehicleListName = nil
     vehicleListKey = nil
     vehicleClass = nil
+    vehicleSpawnOffset = nil
     self.validVehicleSpace = false
 end
 
@@ -77,7 +79,7 @@ function SWEP:TraceCheck(vehicleModelPreview)
 		endpos = startpos + dir * len,
 		maxs = maxs,
 		mins = mins,
-		filter = {ent, self.Owner}
+		filter = {ent}
 	} )
 
 	if ( tr.Hit ) then
@@ -87,9 +89,6 @@ function SWEP:TraceCheck(vehicleModelPreview)
         wireColor = Color( 0, 255, 0, 255)
         self.validVehicleSpace = true
     end
-
-    local Trace = self.Owner:GetEyeTrace()
-    local Dist = (Trace.HitPos - self.Owner:GetPos()):Length()
 
 end
 
@@ -118,11 +117,11 @@ function SWEP:Think()
 
                 -- If we're previewing an LFS vehicle, we need to make the height higher for helicopters to have ample spawn room
                 if vehicleType == "lfs" then
-                    spawnPos = Trace.HitPos + Trace.HitNormal * 120
+                    spawnPos = Trace.HitPos + Trace.HitNormal * vehicleSpawnOffset
                     self.vehicleModelPreview:SetAngles(Angle(0, user:EyeAngles().Y - 180, _)) -- Set the prop angles to face the vehicle toward the player, but maintain the Z axis
                 else
                 -- Ground vehicles need less space and vertical height
-                    spawnPos = Trace.HitPos + Trace.HitNormal * 70
+                    spawnPos = Trace.HitPos + Trace.HitNormal * vehicleSpawnOffset
                     self.vehicleModelPreview:SetAngles(Angle(0, user:EyeAngles().Y - 90, _)) -- Set the prop angles to face the vehicle away from the player, but maintain the Z axis
                 end
 
@@ -205,6 +204,7 @@ net.Receive("dac_sendvehicledata", function(len, ply)
         vehicleModel = net.ReadString() -- Model
         vehicleListName = net.ReadString() -- Listname
         vehicleClass = net.ReadString() -- Class
+        vehicleSpawnOffset = net.ReadString() -- Class
         
         --[[print("\n[DAC DEBUG]: Server received:\n" 
         .. "Name: " .. tostring(vehicleName) .. "\n" 
@@ -284,7 +284,7 @@ function SpawnShopVehicle(ply)
                 if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then
                     vehicleChildren:SetNWBool('FlagTransport', vehicleIsFlagTransport)
                     vehicleChildren:SetNWInt('OwningTeam', ply:Team())
-                    --v:SetNWInt('lfsAITeam', ply:Team())
+                    --v:SetNWInt("lfsAITeam", ply:Team())
                 end
             end
         else

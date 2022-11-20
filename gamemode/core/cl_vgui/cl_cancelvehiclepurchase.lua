@@ -47,6 +47,13 @@ function DrawVehicleCancellationBox()
             LocalPlayer():EmitSound("buttons/button19.wav")
 
         end
+
+        Frame.Think = function()
+            if LocalPlayer():GetNWBool("IsInBase") == false then
+                Frame:Close()
+                LocalPlayer():EmitSound("buttons/combine_button2.wav")
+            end
+        end
         
     end
 

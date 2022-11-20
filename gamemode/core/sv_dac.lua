@@ -23,9 +23,11 @@ end
 net.Receive("dac_givevehicle_preview", function(len, ply)
 
 	local previewWeaponClass = net.ReadString()
-	ply:Give(previewWeaponClass)
-	ply:SelectWeapon(previewWeaponClass)
-	ply:SetNWBool("IsSpawningVehicle", true)
+	if previewWeaponClass == 'weapon_dac_vehiclepreviewer' then -- Security to prevent someone from passing in whatever weapon they want
+		ply:Give(previewWeaponClass)
+		ply:SelectWeapon(previewWeaponClass)
+		ply:SetNWBool("IsSpawningVehicle", true)
+	else return end
 
 end)
 

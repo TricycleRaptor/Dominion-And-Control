@@ -55,3 +55,7 @@ function ENT:OnTeamChanged(_, _, newValue) -- _ makes these unimportant
 	self:SetSkin(newValue)
 
 end
+
+function ENT:UpdateTransmitState()
+	return TRANSMIT_ALWAYS
+end
