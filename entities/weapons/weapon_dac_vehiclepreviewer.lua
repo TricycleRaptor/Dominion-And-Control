@@ -39,33 +39,25 @@ local spawnPos = nil
 local spawnAng = nil
 local wireColor = Color(255,255,255,255)
 
-local vehicleName = nil
-local vehicleType = nil
-local vehicleCategory = nil
-local vehicleCost = nil
-local vehicleIsFlagTransport = nil
-local vehicleModel = nil
-local vehicleListName = nil
-local vehicleListKey = nil
-local vehicleClass = nil
-local vehicleSpawnOffset = nil
+-- TO DO: Localize variables and wireframe preview object
+-- Maybe add SWEP: or SELF: to the end of the custom functions that use the variables
 
 function SWEP:Initialize()
     self:SetWeaponHoldType(self.HoldType)
-    vehicleName = nil
-    vehicleType = nil
-    vehicleCategory = nil
-    vehicleCost = nil
-    vehicleIsFlagTransport = nil
-    vehicleModel = nil
-    vehicleListName = nil
-    vehicleListKey = nil
-    vehicleClass = nil
-    vehicleSpawnOffset = nil
+    self.vehicleName = nil
+    self.vehicleType = nil
+    self.vehicleCategory = nil
+    self.vehicleCost = nil
+    self.vehicleIsFlagTransport = nil
+    self.vehicleModel = nil
+    self.vehicleListName = nil
+    self.vehicleListKey = nil
+    self.vehicleClass = nil
+    self.vehicleSpawnOffset = nil
     self.validVehicleSpace = false
 end
 
-function SWEP:TraceCheck(vehicleModelPreview)
+function SWEP:TraceCheck()
 
     local ent = self.vehicleModelPreview
 	local mins = ent:OBBMins()
@@ -102,12 +94,12 @@ function SWEP:Think()
         local Trace = self.Owner:GetEyeTrace()
         local Dist = (Trace.HitPos - self.Owner:GetPos()):Length()
     
-        if Dist <= 650 and vehicleModel ~= nil then -- Maximum base place range, to prevent weirdness
+        if Dist <= 650 and self.vehicleModel ~= nil then -- Maximum base place range, to prevent weirdness
     
             if !IsValid(self.vehicleModelPreview) then
 
                 self.vehicleModelPreview = ents.Create("prop_physics")
-                self.vehicleModelPreview:SetModel(vehicleModel)
+                self.vehicleModelPreview:SetModel(self.vehicleModel)
                 self.vehicleModelPreview:Spawn()
                 self.vehicleModelPreview:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
                 self.vehicleModelPreview:DrawShadow(false)
@@ -116,16 +108,16 @@ function SWEP:Think()
             else
 
                 -- If we're previewing an LFS vehicle, we need to make the height higher for helicopters to have ample spawn room
-                if vehicleType == "lfs" then
-                    spawnPos = Trace.HitPos + Trace.HitNormal * vehicleSpawnOffset
+                if self.vehicleType == "lfs" then
+                    spawnPos = Trace.HitPos + Trace.HitNormal * self.vehicleSpawnOffset
                     self.vehicleModelPreview:SetAngles(Angle(0, user:EyeAngles().Y - 180, _)) -- Set the prop angles to face the vehicle toward the player, but maintain the Z axis
                 else
                 -- Ground vehicles need less space and vertical height
-                    spawnPos = Trace.HitPos + Trace.HitNormal * vehicleSpawnOffset
+                    spawnPos = Trace.HitPos + Trace.HitNormal * self.vehicleSpawnOffset
                     self.vehicleModelPreview:SetAngles(Angle(0, user:EyeAngles().Y - 90, _)) -- Set the prop angles to face the vehicle away from the player, but maintain the Z axis
                 end
 
-                self.vehicleModelPreview:SetModel(vehicleModel)
+                self.vehicleModelPreview:SetModel(self.vehicleModel)
                 self.vehicleModelPreview:SetPos(spawnPos)
                 
                 self.vehicleModelPreview:SetColor(wireColor)
@@ -144,6 +136,117 @@ function SWEP:Think()
             self.validVehicleSpace = false
 
         end
+
+        net.Receive("dac_sendvehicledata", function(len, ply)
+
+            if ply == user then -- This could override anyone previewing a vehicle in the server if we don't differentiate who sent it. We shouldn't parse it at all if they don't match.
+                    
+                self.vehicleName = net.ReadString() -- Name
+                self.vehicleType = net.ReadString() -- VehicleType
+                self.vehicleCategory = net.ReadString() -- Category
+                self.vehicleCost = net.ReadString() -- Cost
+                self.vehicleIsFlagTransport = net.ReadBool() -- IsFlagTransport
+                self.vehicleModel = net.ReadString() -- Model
+                self.vehicleListName = net.ReadString() -- Listname
+                self.vehicleClass = net.ReadString() -- Class
+                self.vehicleSpawnOffset = net.ReadString() -- Class
+                
+                --[[print("\n[DAC DEBUG]: Server received:\n" 
+                .. "Name: " .. tostring(self.vehicleName) .. "\n" 
+                .. "Type: " .. tostring(self.vehicleType) .. "\n"
+                .. "Category: " .. tostring(self.vehicleCategory) .. "\n"
+                .. "Cost: " .. tostring(self.vehicleCost) .. "\n"
+                .. "FlagTransport: " .. tostring(self.vehicleIsFlagTransport) .. "\n"
+                .. "Model: " .. tostring(self.vehicleModel) .. "\n"
+                .. "List: " .. tostring(self.vehicleListName) .. "\n"
+                .. "Class: " .. tostring(self.vehicleClass) .. "\n"
+                )]]
+        
+                ply:EmitSound("buttons/combine_button3.wav")
+        
+            end
+        
+        end)
+        
+        net.Receive("dac_vehicle_confirmation", function(len, ply)
+        
+            local confirmationBool = net.ReadBool()
+            if confirmationBool == true then
+                --print("[DAC DEBUG]: Server received confirmation message.")
+                ply:SetNWInt("storeCredits", ply:GetNWInt("storeCredits") - self.vehicleCost)
+                ply:EmitSound("ambient/levels/labs/coinslot1.wav") -- We want this serverside so other players can hear if the player buys something
+            
+                -- Pass in all the necessary data here for spawning a vehicle, including deducting credits from the player's balance
+                if self.vehicleType == "simfphys" then
+                    --print("[DAC DEBUG]: Spawning simfphys vehicle...")
+                    local initalizedSimfphysVehicleList = list.Get(self.vehicleListName)
+                    local initializedSimfphysVehicle = initalizedSimfphysVehicleList[self.vehicleClass]
+                    local initializedSimfphysVehicleEntity = simfphys.SpawnVehicle_DAC(ply, self.vehicleIsFlagTransport, spawnPos, spawnAng, self.vehicleModel, self.vehicleClass, self.vehicleClass, initializedSimfphysVehicle)
+                    --print("[DAC DEBUG]: Spawned vehicle entity ID is " .. tostring(initializedSimfphysVehicleEntity))
+                    --print("[DAC DEBUG]: Initializing vehicle seat data... ")
+                    --print("[DAC DEBUG]: Transport boolean is " .. tostring(self.vehicleIsFlagTransport))
+            
+                    local simfphysSeatTransportBool = self.vehicleIsFlagTransport
+            
+                    timer.Simple(0.5, function() -- This has to be staggered so the simfphys vehicle can fully initialize
+            
+                        if initializedSimfphysVehicleEntity:GetChildren() ~= nil then -- Check if the children are valid
+            
+                            for vehicleKey, vehicleChildren in pairs(initializedSimfphysVehicleEntity:GetChildren()) do -- Get the entity children first
+                                if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then -- Specify that we only want the seats, rather than the simfphys attachments
+                                    --print(vehicleChildren)
+                                    vehicleChildren:SetNWBool('FlagTransport', simfphysSeatTransportBool) -- Set each seat to their respective flag transport status
+                                    vehicleChildren:SetNWInt('OwningTeam', ply:Team())
+                                end
+                            end
+                            --print("[DAC DEBUG]: Initialized.")
+            
+                        else
+                            print("[DAC DEBUG]: ERROR, FOUND NO SEAT DATA ON SIMFPHYS VEHICLE: " .. tostring(initializedSimfphysVehicleEntity))
+                        end
+            
+                    end)
+            
+                else 
+                    --print("[DAC DEBUG]: Spawning LFS vehicle...")
+                    local initializedLFSVehicle = ents.Create(self.vehicleClass)
+                    initializedLFSVehicle:SetPos(spawnPos)
+                    initializedLFSVehicle:SetAngles(spawnAng)
+                    initializedLFSVehicle:SetNWInt('OwningTeam', ply:Team())
+                    initializedLFSVehicle:SetNWBool('IsLFSVehicle', true)
+                    initializedLFSVehicle:Spawn()
+                    initializedLFSVehicle:Activate()
+            
+                    if initializedLFSVehicle:GetChildren() ~= nil then
+                        for vehicleKey, vehicleChildren in pairs(initializedLFSVehicle:GetChildren()) do
+                            if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then
+                                vehicleChildren:SetNWBool('FlagTransport', self.vehicleIsFlagTransport)
+                                vehicleChildren:SetNWInt('OwningTeam', ply:Team())
+                                --v:SetNWInt("lfsAITeam", ply:Team())
+                            end
+                        end
+                    else
+                        print("[DAC DEBUG]: ERROR, FOUND NO SEAT DATA ON LFS VEHICLE: " .. tostring(initializedLFSVehicle))
+                    end
+            
+            
+                end
+            
+                self.vehicleName = nil
+                self.vehicleType = nil
+                self.vehicleCategory = nil
+                self.vehicleCost = nil
+                self.vehicleIsFlagTransport = nil
+                self.vehicleModel = nil
+                self.vehicleListName = nil
+                self.vehicleListKey = nil
+                self.vehicleClass = nil
+            
+                ply:SelectWeapon("weapon_physcannon")
+                ply:StripWeapon("weapon_dac_vehiclepreviewer")
+            end
+        
+        end)
 
     end
 
@@ -189,123 +292,6 @@ function SWEP:Holster()
     self.validVehicleSpace = false
 
     return false
-
-end
-
-net.Receive("dac_sendvehicledata", function(len, ply)
-
-    if ply == user then -- This could override anyone previewing a vehicle in the server if we don't differentiate who sent it. We shouldn't parse it at all if they don't match.
-            
-        vehicleName = net.ReadString() -- Name
-        vehicleType = net.ReadString() -- VehicleType
-        vehicleCategory = net.ReadString() -- Category
-        vehicleCost = net.ReadString() -- Cost
-        vehicleIsFlagTransport = net.ReadBool() -- IsFlagTransport
-        vehicleModel = net.ReadString() -- Model
-        vehicleListName = net.ReadString() -- Listname
-        vehicleClass = net.ReadString() -- Class
-        vehicleSpawnOffset = net.ReadString() -- Class
-        
-        --[[print("\n[DAC DEBUG]: Server received:\n" 
-        .. "Name: " .. tostring(vehicleName) .. "\n" 
-        .. "Type: " .. tostring(vehicleType) .. "\n"
-        .. "Category: " .. tostring(vehicleCategory) .. "\n"
-        .. "Cost: " .. tostring(vehicleCost) .. "\n"
-        .. "FlagTransport: " .. tostring(vehicleIsFlagTransport) .. "\n"
-        .. "Model: " .. tostring(vehicleModel) .. "\n"
-        .. "List: " .. tostring(vehicleListName) .. "\n"
-        .. "Class: " .. tostring(vehicleClass) .. "\n"
-        )]]
-
-        ply:EmitSound("buttons/combine_button3.wav")
-
-    end
-
-end)
-
-net.Receive("dac_vehicle_confirmation", function(len, ply)
-
-    local confirmationBool = net.ReadBool()
-    if confirmationBool == true then
-        --print("[DAC DEBUG]: Server received confirmation message.")
-        SpawnShopVehicle(ply)
-    end
-
-end)
-
-function SpawnShopVehicle(ply)
-
-    ply:SetNWInt("storeCredits", ply:GetNWInt("storeCredits") - vehicleCost)
-    ply:EmitSound("ambient/levels/labs/coinslot1.wav") -- We want this serverside so other players can hear if the player buys something
-
-    -- Pass in all the necessary data here for spawning a vehicle, including deducting credits from the player's balance
-    if vehicleType == "simfphys" then
-        --print("[DAC DEBUG]: Spawning simfphys vehicle...")
-        local initalizedSimfphysVehicleList = list.Get(vehicleListName)
-        local initializedSimfphysVehicle = initalizedSimfphysVehicleList[vehicleClass]
-        local initializedSimfphysVehicleEntity = simfphys.SpawnVehicle_DAC(ply, vehicleIsFlagTransport, spawnPos, spawnAng, vehicleModel, vehicleClass, vehicleClass, initializedSimfphysVehicle)
-        --print("[DAC DEBUG]: Spawned vehicle entity ID is " .. tostring(initializedSimfphysVehicleEntity))
-        --print("[DAC DEBUG]: Initializing vehicle seat data... ")
-        --print("[DAC DEBUG]: Transport boolean is " .. tostring(vehicleIsFlagTransport))
-
-        local simfphysSeatTransportBool = vehicleIsFlagTransport
-
-        timer.Simple(0.5, function() -- This has to be staggered so the simfphys vehicle can fully initialize
-
-            if initializedSimfphysVehicleEntity:GetChildren() ~= nil then -- Check if the children are valid
-
-                for vehicleKey, vehicleChildren in pairs(initializedSimfphysVehicleEntity:GetChildren()) do -- Get the entity children first
-                    if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then -- Specify that we only want the seats, rather than the simfphys attachments
-                        --print(vehicleChildren)
-                        vehicleChildren:SetNWBool('FlagTransport', simfphysSeatTransportBool) -- Set each seat to their respective flag transport status
-                        vehicleChildren:SetNWInt('OwningTeam', ply:Team())
-                    end
-                end
-                --print("[DAC DEBUG]: Initialized.")
-
-            else
-                print("[DAC DEBUG]: ERROR, FOUND NO SEAT DATA ON SIMFPHYS VEHICLE: " .. tostring(initializedSimfphysVehicleEntity))
-            end
-
-        end)
-
-    else 
-        --print("[DAC DEBUG]: Spawning LFS vehicle...")
-        local initializedLFSVehicle = ents.Create(vehicleClass)
-        initializedLFSVehicle:SetPos(spawnPos)
-        initializedLFSVehicle:SetAngles(spawnAng)
-        initializedLFSVehicle:SetNWInt('OwningTeam', ply:Team())
-        initializedLFSVehicle:SetNWBool('IsLFSVehicle', true)
-        initializedLFSVehicle:Spawn()
-        initializedLFSVehicle:Activate()
-
-        if initializedLFSVehicle:GetChildren() ~= nil then
-            for vehicleKey, vehicleChildren in pairs(initializedLFSVehicle:GetChildren()) do
-                if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then
-                    vehicleChildren:SetNWBool('FlagTransport', vehicleIsFlagTransport)
-                    vehicleChildren:SetNWInt('OwningTeam', ply:Team())
-                    --v:SetNWInt("lfsAITeam", ply:Team())
-                end
-            end
-        else
-            print("[DAC DEBUG]: ERROR, FOUND NO SEAT DATA ON LFS VEHICLE: " .. tostring(initializedLFSVehicle))
-        end
-
-
-    end
-
-    vehicleName = nil
-    vehicleType = nil
-    vehicleCategory = nil
-    vehicleCost = nil
-    vehicleIsFlagTransport = nil
-    vehicleModel = nil
-    vehicleListName = nil
-    vehicleListKey = nil
-    vehicleClass = nil
-
-    ply:SelectWeapon("weapon_physcannon")
-    ply:StripWeapon("weapon_dac_vehiclepreviewer")
 
 end
 
