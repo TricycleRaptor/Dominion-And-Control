@@ -137,8 +137,10 @@ function SWEP:Think()
 
         net.Receive("dac_sendvehicledata", function(len, ply)
 
-            if ply == self.user then -- This could override anyone previewing a vehicle in the server if we don't differentiate who sent it. We shouldn't parse it at all if they don't match.
-                    
+            if ply == self.user then
+
+                print("Players match, changing...")
+
                 self.vehicleName = net.ReadString() -- Name
                 self.vehicleType = net.ReadString() -- VehicleType
                 self.vehicleCategory = net.ReadString() -- Category
@@ -148,21 +150,35 @@ function SWEP:Think()
                 self.vehicleListName = net.ReadString() -- Listname
                 self.vehicleClass = net.ReadString() -- Class
                 self.vehicleSpawnOffset = net.ReadString() -- Class
-                
-                --[[print("\n[DAC DEBUG]: Server received:\n" 
-                .. "Name: " .. tostring(self.vehicleName) .. "\n" 
-                .. "Type: " .. tostring(self.vehicleType) .. "\n"
-                .. "Category: " .. tostring(self.vehicleCategory) .. "\n"
-                .. "Cost: " .. tostring(self.vehicleCost) .. "\n"
-                .. "FlagTransport: " .. tostring(self.vehicleIsFlagTransport) .. "\n"
-                .. "Model: " .. tostring(self.vehicleModel) .. "\n"
-                .. "List: " .. tostring(self.vehicleListName) .. "\n"
-                .. "Class: " .. tostring(self.vehicleClass) .. "\n"
-                )]]
-        
-                ply:EmitSound("buttons/combine_button3.wav")
-        
+
+            else
+
+                print("Players differ, not changing...")
+
+                self.vehicleName = self.vehicleName
+                self.vehicleType = self.vehicleType 
+                self.vehicleCategory = self.vehicleCategory
+                self.vehicleCost = self.vehicleCost
+                self.vehicleIsFlagTransport = self.vehicleIsFlagTransport
+                self.vehicleModel = self.vehicleModel 
+                self.vehicleListName = self.vehicleListName
+                self.vehicleClass = self.vehicleClass 
+                self.vehicleSpawnOffset = self.vehicleSpawnOffset
+
             end
+
+            print("\n[DAC DEBUG]: Server received:\n"
+            .. "Net Player: " ..tostring(ply) .. "\n" 
+            .. "Name: " .. tostring(self.vehicleName) .. "\n" 
+            .. "Type: " .. tostring(self.vehicleType) .. "\n"
+            .. "Category: " .. tostring(self.vehicleCategory) .. "\n"
+            .. "Cost: " .. tostring(self.vehicleCost) .. "\n"
+            .. "FlagTransport: " .. tostring(self.vehicleIsFlagTransport) .. "\n"
+            .. "Model: " .. tostring(self.vehicleModel) .. "\n"
+            .. "List: " .. tostring(self.vehicleListName) .. "\n"
+            .. "Class: " .. tostring(self.vehicleClass) .. "\n"
+            )
+            ply:EmitSound("buttons/combine_button3.wav")
         
         end)
         
