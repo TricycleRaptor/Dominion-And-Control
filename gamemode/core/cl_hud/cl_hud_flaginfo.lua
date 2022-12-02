@@ -9,9 +9,7 @@ local function DrawHUDFlagNotice(len, ply)
 	hook.Add("HUDPaint", "DAC.PlayerHoldingFlag", function()
 
 		if heldBool == true then
-			surface.SetDrawColor(team.GetColor(flagTeam))
-			surface.SetMaterial(flagMat)
-			surface.DrawTexturedRect(0, 0, 80, 80)
+			draw.SimpleTextOutlined("You have the flag!", "DAC.GameStage", ScrW() / 2, ScrH() / 1.25, Color(255,255,255,180+math.sin(RealTime()*5)*70), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, Color(0,0,0,255))
 		end
 
 	end)
@@ -42,7 +40,7 @@ end)
 hook.Add("HUDPaint", "DAC.RenderFlagClaim", function()
 
 	local w, h = ScrW(), ScrH()
-	local hudX = w * 0.465
+	local hudX = w * 0.45
 	local hudY = h * 0.85
 
 	for _, ent in pairs(ents.FindByClass("dac_flag")) do

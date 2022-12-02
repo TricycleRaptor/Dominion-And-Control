@@ -1,7 +1,7 @@
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
 ENT.PrintName = "AR2 Ammo Crate"
-ENT.Author = "Arrin Bevers"
+ENT.Author = "Tricycle Raptor"
 ENT.Purpose = "AR2 ammo crate for the buy menu"
 ENT.Category = "DAC"
 

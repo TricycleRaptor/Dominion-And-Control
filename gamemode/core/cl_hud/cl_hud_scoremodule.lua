@@ -35,8 +35,6 @@ local blue_group_indicator_coordinates = {
     {x = BLUE_PANE_POS.x - BLUE_PANE_LENGTH + BLUE_PANE_HEIGHT * ANGLE - GROUP_INDICATOR_WIDTH, y = BLUE_PANE_POS.y + BLUE_PANE_HEIGHT}
 }
 
-local flagMat = Material("dominion/ui/flag.png")
-
 -- HUD Elements
 local function drawTrapezium(position, height, length, color)
 	local trapezium_coordinates = {
