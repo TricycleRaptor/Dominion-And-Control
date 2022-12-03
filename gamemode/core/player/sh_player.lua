@@ -17,6 +17,18 @@ function GM:PlayerSpawn(ply)
 	self.BaseClass:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)
 
+	ply.vehicleName = nil
+	ply.vehicleType = nil
+	ply.vehicleCategory = nil
+	ply.vehicleCost = nil
+	ply.vehicleIsFlagTransport = nil
+	ply.vehicleModel = nil
+	ply.vehicleListName = nil
+	ply.vehicleClass = nil
+	ply.vehicleSpawnOffset = nil
+	ply.vehicleSpawnPos = nil
+	ply.vehicleSpawnAng = nil
+
 	-- Apply team colors after the base spawn function has been passed to override sandbox-defined player colors
 	-- Changes player model colors, if the model has any, as well as the physgun
 	ply:SetPlayerColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )

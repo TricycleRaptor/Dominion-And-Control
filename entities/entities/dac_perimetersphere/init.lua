@@ -41,6 +41,17 @@ function ENT:Think()
 					ent:SelectWeapon("weapon_physcannon")
 					ent:StripWeapon("weapon_dac_vehiclepreviewer")
 					ent:SetNWBool("IsSpawningVehicle", false)
+					ent.vehicleName = nil
+					ent.vehicleType = nil
+					ent.vehicleCategory = nil
+					ent.vehicleCost = nil
+					ent.vehicleIsFlagTransport = nil
+					ent.vehicleModel = nil
+					ent.vehicleListName = nil
+					ent.vehicleClass = nil
+					ent.vehicleSpawnOffset = nil
+					ent.vehicleSpawnPos = nil
+					ent.vehicleSpawnAng = nil
 				end
 			end
 		end
