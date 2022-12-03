@@ -10,9 +10,29 @@ function GM:PlayerSpawn(ply)
 	local gameStage = DAC:GetGameStage()
 	local stageData = gameStage:GetData()
 	local teamNum = ply:Team()
+	local teamColor = team.GetColor(teamNum)
+	ply:SetNWBool("IsSpawningVehicle", false)
+	ply:SetNWBool("IsInBase", false)
 
 	self.BaseClass:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)
+
+	ply.vehicleName = nil
+	ply.vehicleType = nil
+	ply.vehicleCategory = nil
+	ply.vehicleCost = nil
+	ply.vehicleIsFlagTransport = nil
+	ply.vehicleModel = nil
+	ply.vehicleListName = nil
+	ply.vehicleClass = nil
+	ply.vehicleSpawnOffset = nil
+	ply.vehicleSpawnPos = nil
+	ply.vehicleSpawnAng = nil
+
+	-- Apply team colors after the base spawn function has been passed to override sandbox-defined player colors
+	-- Changes player model colors, if the model has any, as well as the physgun
+	ply:SetPlayerColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )
+	ply:SetWeaponColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )
 
 	-- Set up player configurations
 	player_manager.SetPlayerClass(ply, "DAC_playerclass") -- Get the internal player settings from the DAC custom class
@@ -43,7 +63,7 @@ function GM:PlayerSpawn(ply)
 
 end
 
-function GM:PlayerFootstep(ply, pos, foot)
+--[[function GM:PlayerFootstep(ply, pos, foot)
 
 	if( ply:GetVelocity():Length2D() > 150 ) then
 		return false
@@ -53,7 +73,7 @@ function GM:PlayerFootstep(ply, pos, foot)
 
 	self.BaseClass:PlayerFootstep( ply, pos, foot, s, vol, rf );
 
-end
+end]]
 
 function GM:PlayerSetModel(ply)
 	self.BaseClass:PlayerSetModel(ply)
@@ -176,12 +196,14 @@ function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 	end
 
 	PrintMessage( HUD_PRINTTALK, Format( "[DAC]: %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
+	ply:SetNWBool("IsPreviewingVehicle", false)
 
 end
 
 function GM:PlayerDisconnected(ply)
 
 	local teamNum = ply:Team()
+	ply:SetNWBool("IsPreviewingVehicle", false)
 
 	if ply.IsCaptain == true then
 		ply.IsCaptain = false

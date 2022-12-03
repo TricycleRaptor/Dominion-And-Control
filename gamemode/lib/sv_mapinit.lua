@@ -28,6 +28,9 @@ hook.Add("PostCleanupMap", "DAC.MapCleaned", function(ply, cmd)
 		for _, ply in pairs(player.GetAll()) do
 
 			ply:SetPlayerCarrierStatus(false) -- Set each player's flag carrier status to false if the map is cleaned up.
+			ply:SetNWInt("storeCredits", GetConVar("dac_income_balance"):GetInt())
+			ply:SetNWBool("IsSpawningVehicle", false)
+			ply:SetNWBool("IsInBase", false)
 			player_manager.RunClass(ply, "Loadout") -- Get the player loadout
 
 			if ply.IsCaptain then

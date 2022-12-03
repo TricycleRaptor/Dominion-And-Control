@@ -4,12 +4,15 @@ local V = {
 	Name = "Dune Buggy",
 	Model = "models/buggy.mdl",
 	ListName = "dac_simfphys_civilian",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_jeep",
     Icon = "entities/sim_fphys_jeep.png",
-	Category = "Transportation",
+	Category = "TRANSPORTATION",
     VehicleType = "simfphys",
     IsFlagTransport = true,
 	Cost = 100,
+
+	SpawnOffset = 20,
 	
 	Members = {
 		Mass = 1700,
@@ -103,64 +106,71 @@ local V = {
 		Gears = {-0.15,0,0.15,0.25,0.35,0.45}
 	}
 }
-list.Set("dac_simfphys_civilian", 1, V )
+list.Set("dac_simfphys_civilian", "sim_fphys_jeep", V )
 
 local V = {
-	Name = "Resistance Van",
-	Model = "models/vehicles/7seatvan.mdl",
+	Name = "Transport Van",
+	Model = "models/blu/van/pw_van.mdl",
 	ListName = "dac_simfphys_civilian",
-	Class = "gmod_sent_vehicle_fphysics_base",
-    Icon = "entities/sim_fphys_van.png",
-	Category = "Transportation",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_van",
+    Icon = "entities/sim_fphys_pwvan.png",
+	Category = "TRANSPORTATION",
     VehicleType = "simfphys",
     IsFlagTransport = true,
 	Cost = 150,
 
+	SpawnOffset = 20,
+	
 	Members = {
 		Mass = 2500,
 		
-		FrontWheelRadius = 15.5,
-		RearWheelRadius = 15.5,
+		EnginePos = Vector(89.98,0,51.3),
 		
-		SeatOffset = Vector(0,0,-5),
-		SeatPitch = 6,
+		LightsTable = "van",
+		
+		CustomWheels = true,
+		CustomSuspensionTravel = 10,
+		
+		CustomWheelModel = "models/salza/van/van_wheel.mdl",
+		CustomWheelPosFL = Vector(45,44,20),
+		CustomWheelPosFR = Vector(45,-44,20),
+		CustomWheelPosRL = Vector(-72,44,20),
+		CustomWheelPosRR = Vector(-72,-44,20),
+		CustomWheelAngleOffset = Angle(0,-90,0),
+		
+		CustomMassCenter = Vector(0,0,15),
+		
+		CustomSteerAngle = 35,
+		
+		SeatOffset = Vector(36,-23,72),
+		SeatPitch = 8,
+		SeatYaw = 90,
 		
 		PassengerSeats = {
 			{
-				pos = Vector(27,60,33),
-				ang = Angle(0,0,9)
+				pos = Vector(45,-27,33),
+				ang = Angle(0,-90,9)
 			},
 			{
-				pos = Vector(0,60,33),
-				ang = Angle(0,0,9)
+				pos = Vector(45,0,33),
+				ang = Angle(0,-90,9)
 			},
 			{
-				pos = Vector(30,-25,37.5),
-				ang = Angle(0,90,0)
-			},
-			{
-				pos = Vector(-30,-25,37.5),
-				ang = Angle(0,-90,0)
-			},
-			{
-				pos = Vector(-30,-60,37.5),
-				ang = Angle(0,-90,0)
-			},
-			{
-				pos = Vector(30,-60,37.5),
-				ang = Angle(0,90,0)
+				pos = Vector(-38,-29,28),
+				ang = Angle(0,0,0)
 			}
 		},
 		
 		FrontHeight = 12,
 		FrontConstant = 45000,
-		FrontDamping = 2500,
-		FrontRelativeDamping = 2500,
+		FrontDamping = 3500,
+		FrontRelativeDamping = 3500,
 		
 		RearHeight = 12,
 		RearConstant = 45000,
-		RearDamping = 2500,
-		RearRelativeDamping = 2500,
+		RearDamping = 3500,
+		RearRelativeDamping = 3500,
 		
 		FastSteeringAngle = 10,
 		SteeringFadeFastSpeed = 350,
@@ -169,18 +179,18 @@ local V = {
 		
 		MaxGrip = 45,
 		Efficiency = 1.8,
-		GripOffset = 0,
+		GripOffset = -2,
 		BrakePower = 55,
 		
 		IdleRPM = 750,
 		LimitRPM = 6000,
-		PeakTorque = 80,
+		PeakTorque = 95,
 		PowerbandStart = 1000,
 		PowerbandEnd = 5500,
 		Turbocharged = false,
 		Supercharged = false,
 		
-		FuelFillPos = Vector(-47.65,-76.59,47.43),
+		FuelFillPos = Vector(-93.45,46.02,42.24),
 		FuelType = FUELTYPE_PETROL,
 		FuelTankSize = 65,
 		
@@ -189,32 +199,35 @@ local V = {
 		EngineSoundPreset = -1,
 		
 		snd_pitch = 1,
-		snd_idle = "simulated_vehicles/4banger/4banger_idle.wav",
+		snd_idle = "simulated_vehicles/generic3/generic3_idle.wav",
 		
-		snd_low = "simulated_vehicles/4banger/4banger_low.wav",
+		snd_low = "simulated_vehicles/generic3/generic3_low.wav",
+		snd_low_revdown = "simulated_vehicles/generic3/generic3_revdown.wav",
 		snd_low_pitch = 0.9,
 		
-		snd_mid = "simulated_vehicles/4banger/4banger_mid.wav",
-		snd_mid_gearup = "simulated_vehicles/4banger/4banger_second.wav",
-		snd_mid_pitch = 0.8,
+		snd_mid = "simulated_vehicles/generic3/generic3_mid.wav",
+		snd_mid_gearup = "simulated_vehicles/generic3/generic3_second.wav",
+		snd_mid_pitch = 1,
 		
 		DifferentialGear = 0.52,
 		Gears = {-0.1,0,0.1,0.2,0.3,0.4}
 	}
 }
-list.Set("dac_simfphys_civilian", 2, V )
+list.Set("dac_simfphys_civilian", "sim_fphys_van", V )
 
 local V = {
 	Name = "Pickup Truck",
 	Model = "models/blu/avia/avia.mdl",
 	ListName = "dac_simfphys_civilian",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_pwavia",
     Icon = "entities/sim_fphys_pwavia.png",
-	Category = "Transportation",
+	Category = "TRANSPORTATION",
     VehicleType = "simfphys",
     IsFlagTransport = true,
 	Cost = 200,
 
+	SpawnOffset = 20,
 	SpawnAngleOffset = 90,
 
 	Members = {
@@ -300,6 +313,6 @@ local V = {
 		Gears = {-0.15,0,0.15,0.25,0.35,0.45,0.52}
 	}
 }
-list.Set("dac_simfphys_civilian", 3, V )
+list.Set("dac_simfphys_civilian", "sim_fphys_pwavia", V )
 
 --- [ Civilian Vehicles End ] ---

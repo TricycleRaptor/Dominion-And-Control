@@ -93,7 +93,7 @@ function ENT:Think()
         
             for k,ent in pairs(player.GetAll()) do
                 if ent:IsValid() and ent:IsPlayer() and ent:Alive() and ent:Team() == self:GetTeam() and ent:GetPos():Distance(self.Entity:GetPos()) < 100 then
-                    self.Entity:SetDropTime(self.Entity:GetDropTime() - 0.10)
+                    self.Entity:SetDropTime(self.Entity:GetDropTime() - 0.15)
                 end
             end
 

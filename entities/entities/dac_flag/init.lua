@@ -29,7 +29,7 @@ end
 
 function ENT:StartTouch(entity)
 
-	if entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() != self:GetTeam() and not entity:InVehicle() then -- Consider adding a condition to check against spectators, come back to this later
+	if entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() != self:GetTeam() and not entity:InVehicle() and not self:GetHeld() then -- Consider adding a condition to check against spectators, come back to this later
 		
 		-- Can't set this in the entity initialization hook for some reason, so I have to fucking do it here
 		if(self:GetOnBase() == true and self:GetHeld() == false) then

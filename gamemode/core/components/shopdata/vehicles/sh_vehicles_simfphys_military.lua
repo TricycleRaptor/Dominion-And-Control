@@ -4,12 +4,15 @@ local V = {
 	Name = "Elite Dune Buggy",
 	Model = "models/vehicles/buggy_elite.mdl",
 	ListName = "dac_simfphys_armed",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_v8elite_armed2",
     Icon = "entities/sim_fphys_v8elite_armed2.png",
 	Category = "SCOUTING",
     VehicleType = "simfphys",
     IsFlagTransport = true,
 	Cost = 250,
+
+	SpawnOffset = 20,
 
 	Members = {
 		Mass = 1700,
@@ -101,19 +104,21 @@ local V = {
 		Gears = {-0.1,0,0.1,0.18,0.25,0.31,0.40}
 	}
 }
-list.Set("dac_simfphys_armed", 1, V )
+list.Set("dac_simfphys_armed", "sim_fphys_v8elite_armed2", V )
 
 local V = {
 	Name = "Resistance APC",
 	Model = "models/blu/conscript_apc.mdl",
 	ListName = "dac_simfphys_armed",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_conscriptapc_armed",
     Icon = "entities/sim_fphys_conscriptapc_armed.png",
 	Category = "ANTI-AIR",
     VehicleType = "simfphys",
     IsFlagTransport = false,
 	Cost = 500,
-	SpawnOffset = Vector(0,0,50),
+
+	SpawnOffset = 90,
 
 	Members = {
 		Mass = 4800,
@@ -343,18 +348,21 @@ local V = {
 		Gears = {-0.09,0,0.09,0.18,0.28,0.35}
 	}
 }
-list.Set("dac_simfphys_armed", 2, V )
+list.Set("dac_simfphys_armed", "sim_fphys_conscriptapc_armed", V )
 
 local V = {
 	Name = "Combine APC",
 	Model = "models/combine_apc.mdl",
 	ListName = "dac_simfphys_armed",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_combineapc_armed",
     Icon = "entities/sim_fphys_combineapc_armed.png",
 	Category = "ANTI-PERSONNEL",
     VehicleType = "simfphys",
     IsFlagTransport = false,
 	Cost = 750,
+
+	SpawnOffset = 20,
 
 	Members = {
 		Mass = 3500,
@@ -429,19 +437,21 @@ local V = {
 		Gears = {-0.1,0,0.1,0.2,0.3}
 	}
 }
-list.Set("dac_simfphys_armed", 3, V )
+list.Set("dac_simfphys_armed", "sim_fphys_combineapc_armed", V )
 
 local V = {
 	Name = "Leopard Tank",
 	Model = "models/blu/tanks/leopard2a7.mdl",
 	ListName = "dac_simfphys_armed",
-	Class = "gmod_sent_vehicle_fphysics_base",
+	BaseClass = "gmod_sent_vehicle_fphysics_base",
+	Class = "sim_fphys_tank3",
     Icon = "entities/sim_fphys_tank3.png",
 	Category = "FRONTAL ASSAULT",
     VehicleType = "simfphys",
     IsFlagTransport = false,
 	Cost = 1500,
-	SpawnOffset = Vector(0,0,60),
+
+	SpawnOffset = 20,
 	SpawnAngleOffset = 90,
 
 	Members = {
@@ -598,185 +608,6 @@ local V = {
 		Gears = {-0.06,0,0.06,0.08,0.1,0.12,0.13}
 	}
 }
-list.Set("dac_simfphys_armed", 4, V )
-
---[[local V = {
-	Name = "T-90MS Tank",
-	Model = "models/blu/tanks/t90ms.mdl",
-	ListName = "dac_simfphys_armed",
-	Class = "gmod_sent_vehicle_fphysics_base",
-    Icon = "entities/sim_fphys_tank4.png",
-	Category = "Combat",
-    VehicleType = "simfphys",
-    IsFlagTransport = false,
-	Cost = 2250,
-	SpawnOffset = Vector(0,0,60),
-	SpawnAngleOffset = 90,
-
-	Members = {
-		Mass = 20000,
-		AirFriction = 0,
-		--Inertia = Vector(14017.5,46543,47984.5),
-		Inertia = Vector(20000,80000,100000),
-		
-		LightsTable = "t90ms",
-		
-		OnSpawn = 
-			function(ent) 
-				ent:SetNWBool( "simfphys_NoRacingHud", true )
-				ent:SetNWBool( "simfphys_NoHud", true ) 
-			end,
-
-		ApplyDamage = function( ent, damage, type ) 
-			simfphys.TankApplyDamage(ent, damage, type)
-		end,
-		
-		GibModels = {
-			"models/blu/tanks/t90ms_gib_1.mdl",
-			"models/blu/tanks/t90ms_gib_2.mdl",
-			"models/blu/tanks/t90ms_gib_3.mdl",
-			"models/blu/tanks/t90ms_gib_4.mdl",
-		},
-		
-		MaxHealth = 10000,
-		
-		IsArmored = true,
-		
-		NoWheelGibs = true,
-		
-		FirstPersonViewPos = Vector(-10,-30,20),
-		
-		FrontWheelRadius = 40,
-		RearWheelRadius = 45,
-		
-		EnginePos = Vector(106.08,0.69,38.34),
-		
-		CustomWheels = true,
-		CustomSuspensionTravel = 10,
-		
-		CustomWheelModel = "models/props_c17/canisterchunk01g.mdl",
-		--CustomWheelModel = "models/props_vehicles/apc_tire001.mdl",
-		
-		CustomWheelPosFL = Vector(-122,-50,16),
-		CustomWheelPosFR = Vector(-122,50,16),
-		CustomWheelPosML = Vector(0,-50,20),
-		CustomWheelPosMR = Vector(0,50,20),
-		CustomWheelPosRL = Vector(110,-50,20),
-		CustomWheelPosRR = Vector(110,50,20),
-		CustomWheelAngleOffset = Angle(0,0,90),
-		
-		CustomMassCenter = Vector(0,0,0),
-		
-		CustomSteerAngle = 60,
-		
-		SeatOffset = Vector(68,0,8),
-		SeatPitch = -15,
-		SeatYaw = -90,
-		
-		ModelInfo = {
-			WheelColor = Color(0,0,0,0),
-		},
-
-		
-		ExhaustPositions = {
-			{
-				pos = Vector(71,-75,30.4),
-				ang = Angle(115,-90,0)
-			},
-			{
-				pos = Vector(67,-75,30.4),
-				ang = Angle(115,-90,0)
-			},
-			{
-				pos = Vector(0,0,50),
-				ang = Angle(0,-90,0)
-			},
-			{
-				pos = Vector(0,0,50),
-				ang = Angle(0,-90,0)
-			}
-		},
-		
-		
-		PassengerSeats = {
-			{
-				pos = Vector(0,0,0),
-				ang = Angle(0,90,0)
-			},
-			{
-				pos = Vector(0,0,0),
-				ang = Angle(0,90,0)
-			},
-			{
-				pos = Vector(0,0,0),
-				ang = Angle(0,90,0)
-			}
-		},
-		
-		FrontHeight = 27,
-		FrontConstant = 50000,
-		FrontDamping = 30000,
-		FrontRelativeDamping = 300000,
-		
-		RearHeight = 27,
-		RearConstant = 50000,
-		RearDamping = 20000,
-		RearRelativeDamping = 20000,
-		
-		FastSteeringAngle = 20,
-		SteeringFadeFastSpeed = 300,
-		
-		TurnSpeed = 3,
-		
-		MaxGrip = 1000,
-		Efficiency = 1,
-		GripOffset = -500,
-		BrakePower = 450,
-		BulletProofTires = true,
-		
-		IdleRPM = 600,
-		LimitRPM = 3500,
-		PeakTorque = 780,
-		PowerbandStart = 600,
-		PowerbandEnd = 2600,
-		Turbocharged = false,
-		Supercharged = false,
-		DoNotStall = true,
-		
-		FuelFillPos = Vector(139.42,-3.68,38.38),
-		FuelType = FUELTYPE_DIESEL,
-		FuelTankSize = 220,
-		
-		PowerBias = -0.3,
-		
-		EngineSoundPreset = 0,
-		
-		Sound_Idle = "simulated_vehicles/t90ms/idle.wav",
-		Sound_IdlePitch = 1,
-		
-		Sound_Mid = "simulated_vehicles/t90ms/low.wav",
-		Sound_MidPitch = 1.5,
-		Sound_MidVolume = 1,
-		Sound_MidFadeOutRPMpercent = 100,
-		Sound_MidFadeOutRate = 1,
-		
-		Sound_High = "simulated_vehicles/t90ms/high.wav",
-		Sound_HighPitch = 1.5,
-		Sound_HighVolume = 0.7,
-		Sound_HighFadeInRPMpercent = 50,
-		Sound_HighFadeInRate = 0.2,
-		
-		Sound_Throttle = "",
-		Sound_ThrottlePitch = 0,
-		Sound_ThrottleVolume = 0,
-		
-		snd_horn = "common/null.wav",
-		ForceTransmission = 1,
-		
-		DifferentialGear = 0.4,
-		Gears = {-0.06,0,0.06,0.08,0.1,0.12,0.13}
-	}
-}
-list.Set("dac_simfphys_armed", 5, V )]]
+list.Set("dac_simfphys_armed", "sim_fphys_tank3", V )
 
 --- [ Armed Vehicles End ] ---

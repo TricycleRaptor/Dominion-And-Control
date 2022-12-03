@@ -3,6 +3,12 @@
 util.AddNetworkString("dac_gamestage_sync")
 util.AddNetworkString("dac_validspace_sync")
 util.AddNetworkString("dac_sendbase_confirmation") -- This message is caught in the weapon_dac_baseselector
+util.AddNetworkString("dac_givevehicle_preview") -- Cached at the server to give the player a vehicle preview tool
+util.AddNetworkString("dac_vehicle_confirmation") -- This message is caught in the weapon_dac_vehiclepreviewer
+util.AddNetworkString("dac_vehicle_cancellation") -- This message is caught in the weapon_dac_vehiclepreviewer
+util.AddNetworkString("dac_sendvehicledata") -- This message is caught in the weapon_dac_vehiclepreviewer
+util.AddNetworkString("dac_validspace_vehiclesync")
+util.AddNetworkString("dac_cancelvehiclepurchase")
 
 function DAC:SyncGameStage(ply)
 	net.Start("dac_gamestage_sync")
@@ -13,6 +19,17 @@ function DAC:SyncGameStage(ply)
 		net.Broadcast()
 	end
 end
+
+net.Receive("dac_givevehicle_preview", function(len, ply)
+
+	local previewWeaponClass = net.ReadString()
+	if previewWeaponClass == 'weapon_dac_vehiclepreviewer' then -- Security to prevent someone from passing in whatever weapon they want
+		ply:Give(previewWeaponClass)
+		ply:SelectWeapon(previewWeaponClass)
+		ply:SetNWBool("IsSpawningVehicle", true)
+	else return end
+
+end)
 
 -- Servside Net end
 
@@ -168,16 +185,38 @@ hook.Add("PlayerNoClip", "DAC.NoclipPolicy", function( ply, desiredState )
 end )
 
 hook.Add("CanPlayerEnterVehicle", "DAC.VehicleRestrictions", function(ply, vehicleEnt, seatNum) 
-	if(ply:GetPlayerCarrierStatus() == true and IsValid(vehicleEnt)) then
-		if (vehicleEnt.IsFlagTransport == true) then -- We should make this a property for each vehicle that is permitted to transport a flag carrier
-			return true
+
+	--[[if IsValid(vehicleEnt) then
+		print("[DAC Debug]: " .. tostring(vehicleEnt) .. "'s transport status is " .. tostring(vehicleEnt:GetNWBool('FlagTransport')))
+	end]]
+
+	if IsValid(vehicleEnt) then
+
+		--print(tostring("Vehicle team: " .. vehicleEnt:GetNWInt('OwningTeam') .. " Player team: ".. ply:Team()))
+
+		if vehicleEnt:GetNWInt('OwningTeam') == ply:Team() then
+			
+			if(ply:GetPlayerCarrierStatus() == true) then
+
+				if (vehicleEnt:GetNWBool('FlagTransport') == true) then -- We should make this a property for each vehicle that is permitted to transport a flag carrier
+					return true
+				else
+					ply:ChatPrint("[DAC]: You cannot enter this vehicle while carrying a flag.")
+					return false
+				end
+
+			else
+				return true
+			end
+
 		else
-			ply:ChatPrint("[DAC]: You cannot enter this vehicle while carrying a flag.")
+			ply:ChatPrint("[DAC]: You cannot enter the other team's vehicles.")
 			return false
 		end
-	else
-		return true
+
 	end
+
+
 end)
 
 function BuildArea(ply, team, spawnPos, flagPos)
@@ -194,6 +233,12 @@ function BuildArea(ply, team, spawnPos, flagPos)
 	FlagPlatform:SetGravity(0)
 
 	BuildSphere = ents.Create("dac_buildsphere")
+	BuildSphere:SetPos(flagPos)
+	BuildSphere:Spawn()
+	BuildSphere:SetTeam(team)
+	BuildSphere:SetGravity(0)
+
+	BuildSphere = ents.Create("dac_perimetersphere")
 	BuildSphere:SetPos(flagPos)
 	BuildSphere:Spawn()
 	BuildSphere:SetTeam(team)
@@ -289,6 +334,8 @@ function EndMatch(winningTeam) -- Pass in the winning team
 			ply:Spawn()
 			player_manager.RunClass(ply, "Loadout")
 			ply:SetNWInt("storeCredits", GetConVar("dac_income_balance"):GetInt())
+			ply:SetNWBool("IsSpawningVehicle", false)
+			ply:SetNWBool("IsInBase", false)
 			--ply:SetNWInt("playerMoney", 0)
 			--ply:SetNWInt("playerMoney", ply:GetNWInt("playerMoney") + (GetConVar("ctf_startingbalance"):GetFloat()))
 

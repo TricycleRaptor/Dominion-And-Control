@@ -29,6 +29,8 @@ function GM:PlayerDeath( ply, inflictor, attacker )
 	net.WriteFloat(ply.DeathTime)
 	net.WriteFloat(ply.NextSpawnTime)
 	net.Send(ply)
+	ply:SetNWBool("IsSpawningVehicle", false)
+	ply:SetNWBool("IsInBase", false)
 
 	--print("Sent " .. ply.DeathTime .. " as death time.")
 	--print("Sent " .. ply.NextSpawnTime .. " as respawn time.")
