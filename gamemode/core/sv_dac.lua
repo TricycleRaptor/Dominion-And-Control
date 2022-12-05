@@ -9,6 +9,7 @@ util.AddNetworkString("dac_vehicle_cancellation") -- This message is caught in t
 util.AddNetworkString("dac_sendvehicledata") -- This message is caught in the weapon_dac_vehiclepreviewer
 util.AddNetworkString("dac_validspace_vehiclesync")
 util.AddNetworkString("dac_cancelvehiclepurchase")
+util.AddNetworkString("dac_purchase_entity")
 
 function DAC:SyncGameStage(ply)
 	net.Start("dac_gamestage_sync")

@@ -1,14 +1,16 @@
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
-ENT.PrintName = "Perimeter Sphere"
-ENT.Author = "Arrin Bevers"
-ENT.Purpose = "Gamemode team base region"
-ENT.Category = "DAC"
-ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
+ENT.PrintName = "Shotgun Ammo Crate"
+ENT.Author = "Tricycle Raptor"
+ENT.Purpose = "Shotgun ammo crate for the buy menu"
+ENT.Category = "DAC Shop"
 
-ENT.Spawnable = false
+ENT.Cost = 2000
+ENT.Model = "models/items/ammocrate_ar2.mdl"
+
+ENT.Spawnable = true
 ENT.AdminSpawnable = false
-ENT.Editable = false
+ENT.Editable = true
 
 function ENT:SetupDataTables()
 
@@ -34,13 +36,5 @@ function ENT:SetupDataTables()
         self:NetworkVarNotify("Team", self.OnTeamChanged)
 
     end
-
-end
-
-function ENT:PhysicsUpdate( phys )
-
-	local angles = phys:GetAngles()
-	phys:GetEntity():SetAngles(Angle(0,angles.y,0))
-	phys:SetAngles(Angle(0,angles.y,0))
 
 end

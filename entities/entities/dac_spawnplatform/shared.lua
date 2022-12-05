@@ -5,8 +5,8 @@ ENT.Author = "Arrin Bevers"
 ENT.Purpose = "Gamemode team spawn"
 ENT.Category = "DAC"
 
-ENT.Spawnable = true
-ENT.AdminSpawnable = false
+ENT.Spawnable = false
+ENT.AdminSpawnable = true
 ENT.Editable = true
 
 function ENT:SetupDataTables()

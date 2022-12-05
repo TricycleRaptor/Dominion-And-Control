@@ -3,10 +3,10 @@ ENT.Base = "base_gmodentity"
 ENT.PrintName = "AR2 Ammo Crate"
 ENT.Author = "Tricycle Raptor"
 ENT.Purpose = "AR2 ammo crate for the buy menu"
-ENT.Category = "DAC"
+ENT.Category = "DAC Shop"
 
-ENT.Price = 2000
-ENT.StoreModel = "models/items/ammocrate_ar2.mdl"
+ENT.Cost = 2000
+ENT.Model = "models/items/ammocrate_ar2.mdl"
 
 ENT.Spawnable = true
 ENT.AdminSpawnable = false

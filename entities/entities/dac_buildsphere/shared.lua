@@ -6,7 +6,7 @@ ENT.Purpose = "Gamemode team build region"
 ENT.Category = "DAC"
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.Editable = true
 
