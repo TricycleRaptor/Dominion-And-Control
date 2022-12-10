@@ -89,7 +89,14 @@ hook.Add( "OnNPCKilled", "DAC.CombineTurretExplosion", function( npc, attacker, 
 				npc:EmitSound("buttons/button8.wav")
 				npc:Fire("SelfDestruct")
 	
-				timer.Simple( 4.1, function() 
+				timer.Simple( 4.1, function()
+
+					if GetConVar("dac_eastereggs"):GetBool() == true then
+						local randomInt = math.random(0, 100)
+						if (randomInt >= 85) then -- 15% chance to do a goofy ugh
+							npc:EmitSound("memes/asiansnore.wav")
+						end	
+					end
 
 					local blastRadius = 300
 					local effectData = EffectData()

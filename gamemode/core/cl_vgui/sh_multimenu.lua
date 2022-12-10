@@ -483,7 +483,7 @@ if CLIENT then
                                         draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                         surface.SetDrawColor(255,255,255)
                                         surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                                        draw.SimpleText("POINT DEFENSE", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                        draw.SimpleText("AUTOMATED DEFENSE", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                                     end
         
                                         local shopSheet_Items_AutoDefense_IconLayout = vgui.Create( "DIconLayout", shopSheet_Items_Primary_ScrollPanel )
@@ -577,12 +577,122 @@ if CLIENT then
                                                     entityBound_size = math.max( entityBound_size, math.abs(entityBound_mn.z) + math.abs(entityBound_mx.z) )
                                     
                                                     shopSheet_Items_Secondary_PreviewPanel_Model:SetFOV( 45 )
-                                                    shopSheet_Items_Secondary_PreviewPanel_Model:SetCamPos( Vector( entityBound_size, entityBound_size + 35 , entityBound_size) )
-                                                    shopSheet_Items_Secondary_PreviewPanel_Model:SetLookAt( (entityBound_mn + entityBound_mx) * -2 )
+                                                    shopSheet_Items_Secondary_PreviewPanel_Model:SetCamPos( Vector( entityBound_size + 55, entityBound_size + 15, entityBound_size) )
+                                                    shopSheet_Items_Secondary_PreviewPanel_Model:SetLookAt( (entityBound_mn + entityBound_mx) * 0.40)
         
                                                 end
         
                                             end
+
+                                            local shopSheet_Items_PhysicsProps_TitlePanel = vgui.Create("DPanel", shopSheet_Items_Primary_ScrollPanel)
+                                            shopSheet_Items_PhysicsProps_TitlePanel:SetTall(shopSheet_Items_Primary_PreviewPanel:GetTall() / 12)
+                                            shopSheet_Items_PhysicsProps_TitlePanel:DockMargin(5,15,5,5)
+                                            shopSheet_Items_PhysicsProps_TitlePanel:Dock(TOP)
+                                            shopSheet_Items_PhysicsProps_TitlePanel:InvalidateParent(true)
+                                            shopSheet_Items_PhysicsProps_TitlePanel.Paint = function(self, w, h)
+                                                draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
+                                                surface.SetDrawColor(255,255,255)
+                                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                                draw.SimpleText("PHYSICS OBJECTS", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                            end
+                
+                                                local shopSheet_Items_PhysicsProps_IconLayout = vgui.Create( "DIconLayout", shopSheet_Items_Primary_ScrollPanel )
+                                                shopSheet_Items_PhysicsProps_IconLayout:Dock(TOP)
+                                                shopSheet_Items_PhysicsProps_IconLayout:SetBorder(10)
+                                                shopSheet_Items_PhysicsProps_IconLayout:SetSpaceY(5)
+                                                shopSheet_Items_PhysicsProps_IconLayout:SetSpaceX(5)
+                                                
+                                                    for entityIndex, entityValue in pairs (list.Get("dac_physicsprops")) do
+                
+                                                        local shopSheet_Items_PhysicsProps_IconLayout_PanelFrame = shopSheet_Items_PhysicsProps_IconLayout:Add( "DPanel" )
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame:SetSize( shopSheet_Items_Primary_PreviewPanel:GetWide() / 6, shopSheet_Items_Primary_PreviewPanel:GetWide() / 6 )
+                                                        
+                                                        -- Assign contextual values to each panel as it is created for later use
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Name = entityValue.Name
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.ListName = entityValue.ListName
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.VehicleType = entityValue.VehicleType
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Model = entityValue.Model
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Category = entityValue.Category
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Cost = entityValue.Cost
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Class = entityValue.Class
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.SpawnOffset = entityValue.SpawnOffset
+                
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Paint = function (self, w, h)
+                                                            if entityValue.Name == selectedEntity then
+                                                                draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
+                                                            else
+                                                                draw.RoundedBox(3,0,0, w, h, Color(218,218,218))
+                                                            end
+                                                        end
+                
+                                                        local shopSheet_Items_PhysicsProps_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Items_PhysicsProps_IconLayout_PanelFrame)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot:SetWide(shopSheet_Items_PhysicsProps_IconLayout_PanelFrame:GetTall() * 0.95)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot:DockMargin(4,4,4,4)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot:Dock(LEFT)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot:InvalidateParent(true)
+                
+                                                        -- Manually draw the icon slot so it looks nice
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot.Paint = function(self, w, h)
+                                                            draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                                                            surface.SetDrawColor(255,255,255)
+                                                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                                        end
+                
+                                                        local shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Items_PhysicsProps_IconLayout_IconSlot)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Image:Dock(FILL)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Image:InvalidateParent(true)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Image:SetImage(entityValue.Icon)
+                
+                                                        local shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Image)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Label:SetTall(shopSheet_Items_PhysicsProps_IconLayout_PanelFrame:GetTall() * 0.15)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Label:Dock(BOTTOM)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Label:InvalidateParent(true)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Label.Paint = function(self, w, h)
+                                                            draw.RoundedBox(3,0,0, w, h, Color(0,0,0,192))
+                                                            draw.SimpleText(entityValue.Name, "DermaDefault", w * 0.5, 3, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                                        end
+                
+                                                        local shopSheet_Items_PhysicsProps_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Items_PhysicsProps_IconLayout_PanelFrame)
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame_Button:SetWide(shopSheet_Items_PhysicsProps_IconLayout_PanelFrame:GetWide())
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame_Button:SetTall(shopSheet_Items_PhysicsProps_IconLayout_PanelFrame:GetTall())
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
+                                                            -- Return nothing for the ultimate prank, haha ghehgeegr
+                                                        end
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame_Button:SetText("")
+                
+                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame_Button.DoClick = function()
+                
+                                                            LocalPlayer():EmitSound(ButtonNoise)
+                
+                                                            selectedEntity = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Name
+                                                            selectedEntityModel = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Model
+                                                            selectedEntityType = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.VehicleType
+                                                            selectedEntityCategory = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Category
+                                                            selectedEntityCost = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Cost
+                                                            selectedEntityClass = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Class
+                                                            selectedEntityList = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.ListName
+                                                            selectedEntitySpawnOffset = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.SpawnOffset
+                
+                                                            shopSheet_Items_Secondary_PreviewPanel_Model:SetModel(selectedEntityModel)
+                                                            shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE (" .. selectedEntityCost .. "cR)")
+                                                            shopSheet_Items_Secondary_StatsPanel_NameLabel:SetText(selectedEntity)
+                                                            shopSheet_Items_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedEntityCategory)
+                                
+                                                            entityBound_mn, entityBound_mx = shopSheet_Items_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                                                            entityBound_size = 0
+                                                            entityBound_size = math.max( entityBound_size, math.abs(entityBound_mn.x) + math.abs(entityBound_mx.x) )
+                                                            entityBound_size = math.max( entityBound_size, math.abs(entityBound_mn.y) + math.abs(entityBound_mx.y) )
+                                                            entityBound_size = math.max( entityBound_size, math.abs(entityBound_mn.z) + math.abs(entityBound_mx.z) )
+                                            
+                                                            shopSheet_Items_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                                                            shopSheet_Items_Secondary_PreviewPanel_Model:SetCamPos( Vector( entityBound_size + 55, entityBound_size + 15, entityBound_size) )
+                                                            shopSheet_Items_Secondary_PreviewPanel_Model:SetLookAt( (entityBound_mn + entityBound_mx) * 0.40)
+                
+                                                        end
+                
+                                                end
 
             --- VEHICLE TAB ---
 
