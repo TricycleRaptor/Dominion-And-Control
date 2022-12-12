@@ -11,7 +11,7 @@ CreateConVar("maxammo_smg1_grenade", 		3, 		{FCVAR_NOTIFY, FCVAR_REPLICATED, FCV
 CreateConVar("maxammo_ar2", 				180, 	{FCVAR_NOTIFY, FCVAR_REPLICATED, FCVAR_ARCHIVE}, true)
 CreateConVar("maxammo_ar2_ball", 			3, 		{FCVAR_NOTIFY, FCVAR_REPLICATED, FCVAR_ARCHIVE}, true)
 CreateConVar("maxammo_buckshot", 			36, 	{FCVAR_NOTIFY, FCVAR_REPLICATED, FCVAR_ARCHIVE}, true)
-CreateConVar("maxammo_crossbowbolt", 		10, 	{FCVAR_NOTIFY, FCVAR_REPLICATED, FCVAR_ARCHIVE}, true)
+CreateConVar("maxammo_crossbowbolt", 		20, 	{FCVAR_NOTIFY, FCVAR_REPLICATED, FCVAR_ARCHIVE}, true)
 CreateConVar("maxammo_grenade", 			6, 		{FCVAR_NOTIFY, FCVAR_REPLICATED, FCVAR_ARCHIVE}, true)
 CreateConVar("maxammo_slam", 				5, 		{FCVAR_NOTIFY, FCVAR_REPLICATED, FCVAR_ARCHIVE}, true)
 CreateConVar("maxammo_rpg_round", 			3, 		{FCVAR_NOTIFY, FCVAR_REPLICATED, FCVAR_ARCHIVE}, true)

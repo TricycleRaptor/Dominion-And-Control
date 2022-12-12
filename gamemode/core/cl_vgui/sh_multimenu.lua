@@ -58,7 +58,14 @@ if CLIENT then
                 selectedEntityCost == nil or
                 selectedEntityClass == nil or
                 selectedEntityList == nil or
-                selectedEntitySpawnOffset == nil
+                selectedEntitySpawnOffset == nil or 
+                selectedItem == nil or
+                selectedItemModel == nil or
+                selectedItemCategory == nil or
+                selectedItemCost == nil or
+                selectedItemClass == nil or
+                selectedItemList == nil or
+                selectedItemSpawnOffset == nil
                 then
 
                 -- We assign the first class value to a variable that is used to drive the paint function on the selection buttons later
@@ -96,6 +103,17 @@ if CLIENT then
                     selectedEntityClass = entityValue.Class
                     selectedEntityList = entityValue.ListName
                     selectedEntitySpawnOffset = entityValue.SpawnOffset
+                    break
+                end
+
+                for itemIndex, itemValue in pairs(list.Get("dac_items_ammo")) do
+                    selectedItem = itemValue.Name -- We're just getting the first value and breaking after that
+                    selectedItemModel = itemValue.Model
+                    selectedItemCategory = itemValue.Category
+                    selectedItemCost = itemValue.Cost
+                    selectedItemClass = itemValue.Class
+                    selectedItemList = itemValue.ListName
+                    selectedItemSpawnOffset = itemValue.SpawnOffset
                     break
                 end
 
@@ -138,7 +156,7 @@ if CLIENT then
             local inBaseLabel = vgui.Create("DLabel", MENU_FRAME)
             inBaseLabel:SetFont("DAC.ScoreboardTitle") -- Size 22px
             inBaseLabel:Dock(BOTTOM)
-            inBaseLabel:DockMargin(25, 15, 15, 15)
+            inBaseLabel:DockMargin(28, 15, 15, 15)
             inBaseLabel.Paint = function(self, w, h)
                 if LocalPlayer():Alive() == true then
                     if LocalPlayer():GetNWBool("IsInBase") == true then
@@ -166,7 +184,7 @@ if CLIENT then
             mainColumnSheet:Dock(FILL)
             mainColumnSheet:InvalidateParent(true)
 
-            --- ITEMS TAB ---
+            --- ENTITIES TAB ---
 
             local shopSheet_Items = vgui.Create("DPanel", mainColumnSheet)
             shopSheet_Items:Dock(FILL)
@@ -235,8 +253,8 @@ if CLIENT then
                     entityBound_size = math.max( entityBound_size, math.abs(entityBound_mn.z) + math.abs(entityBound_mx.z) )
     
                     shopSheet_Items_Secondary_PreviewPanel_Model:SetFOV( 45 )
-                    shopSheet_Items_Secondary_PreviewPanel_Model:SetCamPos( Vector( entityBound_size, entityBound_size + 35 , entityBound_size) )
-                    shopSheet_Items_Secondary_PreviewPanel_Model:SetLookAt( (entityBound_mn + entityBound_mx) * -2 )
+                    shopSheet_Items_Secondary_PreviewPanel_Model:SetCamPos( Vector( entityBound_size + 55, entityBound_size + 15, entityBound_size) )
+                    shopSheet_Items_Secondary_PreviewPanel_Model:SetLookAt( (entityBound_mn + entityBound_mx) * 0.40)
 
                     local shopSheet_Items_Secondary_StatsTitle = vgui.Create("DPanel", shopSheet_Items_Secondary)
                     shopSheet_Items_Secondary_StatsTitle:SetTall(shopSheet_Items:GetTall() / 12)
@@ -467,8 +485,8 @@ if CLIENT then
                                             entityBound_size = math.max( entityBound_size, math.abs(entityBound_mn.z) + math.abs(entityBound_mx.z) )
                             
                                             shopSheet_Items_Secondary_PreviewPanel_Model:SetFOV( 45 )
-                                            shopSheet_Items_Secondary_PreviewPanel_Model:SetCamPos( Vector( entityBound_size, entityBound_size + 35 , entityBound_size) )
-                                            shopSheet_Items_Secondary_PreviewPanel_Model:SetLookAt( (entityBound_mn + entityBound_mx) * -2 )
+                                            shopSheet_Items_Secondary_PreviewPanel_Model:SetCamPos( Vector( entityBound_size + 55, entityBound_size + 15, entityBound_size) )
+                                            shopSheet_Items_Secondary_PreviewPanel_Model:SetLookAt( (entityBound_mn + entityBound_mx) * 0.40)
 
                                         end
 
@@ -500,7 +518,6 @@ if CLIENT then
                                                 -- Assign contextual values to each panel as it is created for later use
                                                 shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Name = entityValue.Name
                                                 shopSheet_Items_AutoDefense_IconLayout_PanelFrame.ListName = entityValue.ListName
-                                                shopSheet_Items_AutoDefense_IconLayout_PanelFrame.VehicleType = entityValue.VehicleType
                                                 shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Model = entityValue.Model
                                                 shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Category = entityValue.Category
                                                 shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Cost = entityValue.Cost
@@ -558,7 +575,6 @@ if CLIENT then
         
                                                     selectedEntity = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Name
                                                     selectedEntityModel = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Model
-                                                    selectedEntityType = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.VehicleType
                                                     selectedEntityCategory = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Category
                                                     selectedEntityCost = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Cost
                                                     selectedEntityClass = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Class
@@ -610,7 +626,6 @@ if CLIENT then
                                                         -- Assign contextual values to each panel as it is created for later use
                                                         shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Name = entityValue.Name
                                                         shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.ListName = entityValue.ListName
-                                                        shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.VehicleType = entityValue.VehicleType
                                                         shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Model = entityValue.Model
                                                         shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Category = entityValue.Category
                                                         shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Cost = entityValue.Cost
@@ -668,7 +683,6 @@ if CLIENT then
                 
                                                             selectedEntity = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Name
                                                             selectedEntityModel = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Model
-                                                            selectedEntityType = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.VehicleType
                                                             selectedEntityCategory = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Category
                                                             selectedEntityCost = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Cost
                                                             selectedEntityClass = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Class
@@ -1291,6 +1305,417 @@ if CLIENT then
                 draw.RoundedBox(0,0,0, w, h, Color(10,10,10,100))
             end
             mainColumnSheet:AddSheet("Upgrades", shopSheet_Upgrades, "icon16/user_add.png")
+
+                -- Divide the vehicles panel into two pieces, dock this child panel to the left
+                local shopSheet_Upgrades_Primary = vgui.Create("DPanel", shopSheet_Upgrades)
+                shopSheet_Upgrades_Primary:SetWide(shopSheet_Upgrades:GetWide() / 1.5)
+                shopSheet_Upgrades_Primary:DockPadding(20,20,20,20)
+                shopSheet_Upgrades_Primary:Dock(LEFT)
+                shopSheet_Upgrades_Primary:InvalidateParent(true)
+                shopSheet_Upgrades_Primary.Paint = function(self, w, h)
+                    draw.RoundedBox(0,0,0, w, h, Color(107,0,0,0)) -- Red for visualizing positioning
+                end
+
+                local shopSheet_Upgrades_Secondary = vgui.Create("DPanel", shopSheet_Upgrades)
+                shopSheet_Upgrades_Secondary:SetWide(shopSheet_Upgrades:GetWide() / 3)
+                shopSheet_Upgrades_Secondary:DockPadding(20,20,20,20)
+                shopSheet_Upgrades_Secondary:Dock(RIGHT)
+                shopSheet_Upgrades_Secondary:InvalidateParent(true)
+                shopSheet_Upgrades_Secondary.Paint = function(self, w, h)
+                        draw.RoundedBox(0,0,0, w, h, Color(0,35,131,0)) -- Blue for visualizing positioning
+                end
+
+                local shopSheet_Upgrades_Secondary_TitlePanel = vgui.Create("DPanel", shopSheet_Upgrades_Secondary)
+                shopSheet_Upgrades_Secondary_TitlePanel:SetTall(shopSheet_Upgrades:GetTall() / 12)
+                shopSheet_Upgrades_Secondary_TitlePanel:DockPadding(20,20,20,20)
+                shopSheet_Upgrades_Secondary_TitlePanel:Dock(TOP)
+                shopSheet_Upgrades_Secondary_TitlePanel:InvalidateParent(true)
+                shopSheet_Upgrades_Secondary_TitlePanel.Paint = function(self, w, h)
+                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                    surface.SetDrawColor(255,255,255)
+                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("PREVIEW", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end
+
+                local shopSheet_Upgrades_Secondary_PreviewPanel = vgui.Create("DPanel", shopSheet_Upgrades_Secondary)
+                shopSheet_Upgrades_Secondary_PreviewPanel:SetTall(shopSheet_Upgrades_Secondary:GetTall() / 2.5)
+                shopSheet_Upgrades_Secondary_PreviewPanel:DockPadding(4,4,4,4)
+                shopSheet_Upgrades_Secondary_PreviewPanel:Dock(TOP)
+                shopSheet_Upgrades_Secondary_PreviewPanel:InvalidateParent(true)
+                shopSheet_Upgrades_Secondary_PreviewPanel.Paint = function(self, w, h)
+                    draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
+                    surface.SetDrawColor(255,255,255)
+                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                end
+
+                    local shopSheet_Upgrades_Secondary_PreviewPanel_Model = vgui.Create("DModelPanel", shopSheet_Upgrades_Secondary_PreviewPanel)
+                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:Dock(FILL)
+                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:DockPadding(4,4,4,4)
+                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:InvalidateParent(true)
+                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
+                    shopSheet_Upgrades_Secondary_PreviewPanel_Model.LayoutEntity = function(entity)	
+                        return
+                    end
+
+                    local itemBound_mn, itemBound_mx = shopSheet_Upgrades_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                    local itemBound_size = 0
+                    itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.x) + math.abs(itemBound_mx.x) )
+                    itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.y) + math.abs(itemBound_mx.y) )
+                    itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.z) + math.abs(itemBound_mx.z) )
+    
+                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10, itemBound_size) )
+                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
+
+                    local shopSheet_Upgrades_Secondary_StatsTitle = vgui.Create("DPanel", shopSheet_Upgrades_Secondary)
+                    shopSheet_Upgrades_Secondary_StatsTitle:SetTall(shopSheet_Upgrades:GetTall() / 12)
+                    shopSheet_Upgrades_Secondary_StatsTitle:DockPadding(20,20,20,20)
+                    shopSheet_Upgrades_Secondary_StatsTitle:Dock(TOP)
+                    shopSheet_Upgrades_Secondary_StatsTitle:InvalidateParent(true)
+                    shopSheet_Upgrades_Secondary_StatsTitle.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                        surface.SetDrawColor(255,255,255)
+                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        draw.SimpleText("INFORMATION", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                    end
+
+                    local shopSheet_Upgrades_Secondary_StatsFrame = vgui.Create("DPanel", shopSheet_Upgrades_Secondary)
+                    shopSheet_Upgrades_Secondary_StatsFrame:SetTall(shopSheet_Upgrades_Secondary:GetTall() / 5)
+                    shopSheet_Upgrades_Secondary_StatsFrame:DockPadding(4,4,4,4)
+                    shopSheet_Upgrades_Secondary_StatsFrame:Dock(TOP)
+                    shopSheet_Upgrades_Secondary_StatsFrame:InvalidateParent(true)
+                    shopSheet_Upgrades_Secondary_StatsFrame.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(71,71,71,100))
+                        surface.SetDrawColor(255,255,255)
+                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    end
+
+                        local shopSheet_Upgrades_Secondary_StatsPanel_NameLabel = vgui.Create("DLabel", shopSheet_Upgrades_Secondary_StatsFrame)
+                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:Dock(TOP)
+                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:DockMargin(6,8,4,4)
+                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:InvalidateParent(true)
+                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetFont("DAC.ScoreboardTitle")
+                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
+                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetTextColor(Color(255,255,255))
+                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetContentAlignment(5) -- https://wiki.facepunch.com/gmod/Panel:SetContentAlignment
+
+                        local shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel = vgui.Create("DLabel", shopSheet_Upgrades_Secondary_StatsFrame)
+                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:Dock(TOP)
+                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:DockMargin(6,0,0,0)
+                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:InvalidateParent(true)
+                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetFont("DermaDefaultBold")
+                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
+                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetTextColor(Color(255,255,255))
+                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetContentAlignment(5)
+
+                    local shopSheet_Upgrades_Secondary_BuyButton = vgui.Create("DButton", shopSheet_Upgrades_Secondary)
+                    --shopSheet_Upgrades_Secondary_BuyButton:SetTall(shopSheet_Upgrades_Secondary:GetTall() / 5)
+                    shopSheet_Upgrades_Secondary_BuyButton:DockMargin(24,24,24,24)
+                    shopSheet_Upgrades_Secondary_BuyButton:Dock(FILL)
+                    shopSheet_Upgrades_Secondary_BuyButton:SetFont("DAC.PickTeam")
+                    shopSheet_Upgrades_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                    shopSheet_Upgrades_Secondary_BuyButton:InvalidateParent(true)
+                    shopSheet_Upgrades_Secondary_BuyButton.Paint = function(self, w, h)
+
+                        local gameStage = DAC:GetGameStage()
+                        local gameStageData = gameStage:GetData()
+
+                        if LocalPlayer():GetNWInt("storeCredits") >= selectedItemCost 
+                            and LocalPlayer():Alive() 
+                            and LocalPlayer():GetNWBool("IsInBase") == true 
+                            and (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetPos()):Length() <= 300 -- Entities need a distance check before they can be purchased
+                            and gameStageData.name == "MATCH" -- Not allowed to buy ammo or health during pre-setup
+                        then
+                            shopSheet_Upgrades_Secondary_BuyButton:SetEnabled(true)
+                            draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
+                            surface.SetDrawColor(109,255,73)
+                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            shopSheet_Upgrades_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                        else
+                            shopSheet_Upgrades_Secondary_BuyButton:SetEnabled(false)
+                            draw.RoundedBox(3,0,0, w, h, Color(179,179,179,255))
+                            surface.SetDrawColor(255,126,126)
+                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            shopSheet_Upgrades_Secondary_BuyButton:SetText("MATCH NOT STARTED")
+                        end
+                    end
+                    shopSheet_Upgrades_Secondary_BuyButton.DoClick = function(self, w, h)
+                        if LocalPlayer():GetNWInt("storeCredits") >= selectedItemCost then
+
+                            LocalPlayer():EmitSound(ConfirmNoise)
+
+                            --[[print("\n[DAC DEBUG]: Sending data to server...\n" 
+                            .. "Name: " .. selectedItem .. "\n" 
+                            .. "Category: " .. selectedItemCategory .. "\n"
+                            .. "Cost: " .. selectedItemCost .. "\n"
+                            .. "Model: " .. selectedItemModel .. "\n"
+                            .. "List: " .. selectedItemList .. "\n"
+                            .. "Class: " .. selectedItemClass .. "\n"
+                            )]]
+                            
+                            net.Start("dac_purchase_entity")
+                                net.WriteString(selectedItem)
+                                net.WriteString(selectedItemCategory)
+                                net.WriteString(selectedItemCost)
+                                net.WriteString(selectedItemModel)
+                                net.WriteString(selectedItemList)
+                                net.WriteString(selectedItemClass)
+                                net.WriteString(selectedItemSpawnOffset)
+                            net.SendToServer()
+                                --print("[DAC DEBUG]: Sent.")
+
+                        else
+                            LocalPlayer():EmitSound(DenyNoise)
+                        end
+                    end
+
+                local shopSheet_Upgrades_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Upgrades_Primary)
+                shopSheet_Upgrades_Primary_TitlePanel:SetTall(shopSheet_Upgrades:GetTall() / 12)
+                shopSheet_Upgrades_Primary_TitlePanel:DockPadding(20,20,20,20)
+                shopSheet_Upgrades_Primary_TitlePanel:Dock(TOP)
+                shopSheet_Upgrades_Primary_TitlePanel:InvalidateParent(true)
+                shopSheet_Upgrades_Primary_TitlePanel.Paint = function(self, w, h)
+                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                    surface.SetDrawColor(255,255,255)
+                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("UPGRADES CATALOG", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end
+
+                    local shopSheet_Upgrades_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Upgrades_Primary)
+                    --shopSheet_Upgrades_Primary_PreviewPanel:SetTall(shopSheet_Upgrades_Primary:GetTall() / 1.5)
+                    shopSheet_Upgrades_Primary_PreviewPanel:DockPadding(5,5,5,5)
+                    shopSheet_Upgrades_Primary_PreviewPanel:Dock(FILL)
+                    shopSheet_Upgrades_Primary_PreviewPanel:InvalidateParent(true)
+                    shopSheet_Upgrades_Primary_PreviewPanel.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
+                        surface.SetDrawColor(255,255,255)
+                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    end
+
+                        local shopSheet_Upgrades_Primary_ScrollPanel = vgui.Create("DScrollPanel", shopSheet_Upgrades_Primary_PreviewPanel)
+                        shopSheet_Upgrades_Primary_ScrollPanel:Dock(FILL)
+                        shopSheet_Upgrades_Primary_ScrollPanel:InvalidateParent(true)
+                        shopSheet_Upgrades_Primary_ScrollPanel:GetCanvas():DockPadding(5,5,5,5)
+                        shopSheet_Upgrades_Primary_ScrollPanel.Paint = function(self, w, h)
+                            draw.RoundedBox(0,0,0, w, h, Color(255,0,179,0))
+                        end
+
+                            local shopSheet_Upgrades_AmmoCrates_TitlePanel = vgui.Create("DPanel", shopSheet_Upgrades_Primary_ScrollPanel)
+                            shopSheet_Upgrades_AmmoCrates_TitlePanel:SetTall(shopSheet_Upgrades_Primary_PreviewPanel:GetTall() / 12)
+                            shopSheet_Upgrades_AmmoCrates_TitlePanel:DockMargin(5,5,5,5)
+                            shopSheet_Upgrades_AmmoCrates_TitlePanel:Dock(TOP)
+                            shopSheet_Upgrades_AmmoCrates_TitlePanel:InvalidateParent(true)
+                            shopSheet_Upgrades_AmmoCrates_TitlePanel.Paint = function(self, w, h)
+                                draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
+                                surface.SetDrawColor(255,255,255)
+                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                draw.SimpleText("INDIVIDUAL AMMO", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                            end
+
+                                local shopSheet_Upgrades_AmmoCrates_IconLayout = vgui.Create( "DIconLayout", shopSheet_Upgrades_Primary_ScrollPanel )
+                                shopSheet_Upgrades_AmmoCrates_IconLayout:Dock(TOP)
+                                shopSheet_Upgrades_AmmoCrates_IconLayout:SetBorder(10)
+                                shopSheet_Upgrades_AmmoCrates_IconLayout:SetSpaceY(5)
+                                shopSheet_Upgrades_AmmoCrates_IconLayout:SetSpaceX(5)
+                                
+                                    for itemIndex, itemValue in pairs (list.Get("dac_items_ammo")) do
+
+                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame = shopSheet_Upgrades_AmmoCrates_IconLayout:Add( "DPanel" )
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:SetSize( shopSheet_Upgrades_Primary_PreviewPanel:GetWide() / 6, shopSheet_Upgrades_Primary_PreviewPanel:GetWide() / 6 )
+                                        
+                                        -- Assign contextual values to each panel as it is created for later use
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Name = itemValue.Name
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.ListName = itemValue.ListName
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Model = itemValue.Model
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Category = itemValue.Category
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Cost = itemValue.Cost
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Class = itemValue.Class
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.SpawnOffset = itemValue.SpawnOffset
+
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Paint = function (self, w, h)
+                                            if itemValue.Name == selectedItem then
+                                                draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
+                                            else
+                                                draw.RoundedBox(3,0,0, w, h, Color(218,218,218))
+                                            end
+                                        end
+
+                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot:SetWide(shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:GetTall() * 0.95)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot:DockMargin(4,4,4,4)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot:Dock(LEFT)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot:InvalidateParent(true)
+
+                                        -- Manually draw the icon slot so it looks nice
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot.Paint = function(self, w, h)
+                                            draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                                            surface.SetDrawColor(255,255,255)
+                                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                        end
+
+                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image:Dock(FILL)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image:InvalidateParent(true)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image:SetImage(itemValue.Icon)
+
+                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label:SetTall(shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:GetTall() * 0.15)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label:Dock(BOTTOM)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label:InvalidateParent(true)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label.Paint = function(self, w, h)
+                                            draw.RoundedBox(3,0,0, w, h, Color(0,0,0,192))
+                                            draw.SimpleText(itemValue.Name, "DermaDefault", w * 0.5, 3, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                        end
+
+                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame)
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button:SetWide(shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:GetWide())
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button:SetTall(shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:GetTall())
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
+                                            -- Return nothing for the ultimate prank, haha ghehgeegr
+                                        end
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button:SetText("")
+
+                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button.DoClick = function()
+
+                                            LocalPlayer():EmitSound(ButtonNoise)
+
+                                            selectedItem = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Name
+                                            selectedItemModel = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Model
+                                            selectedItemCategory = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Category
+                                            selectedItemCost = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Cost
+                                            selectedItemClass = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Class
+                                            selectedItemList = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.ListName
+                                            selectedItemSpawnOffset = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.SpawnOffset
+
+                                            shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
+                                            shopSheet_Upgrades_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                                            shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
+                                            shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
+                
+                                            itemBound_mn, itemBound_mx = shopSheet_Upgrades_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                                            itemBound_size = 0
+                                            itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.x) + math.abs(itemBound_mx.x) )
+                                            itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.y) + math.abs(itemBound_mx.y) )
+                                            itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.z) + math.abs(itemBound_mx.z) )
+                            
+                                            shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                                            shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10 , itemBound_size) )
+                                            shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
+
+                                        end
+
+                                    end
+
+                                    local shopSheet_Upgrades_AutoDefense_TitlePanel = vgui.Create("DPanel", shopSheet_Upgrades_Primary_ScrollPanel)
+                                    shopSheet_Upgrades_AutoDefense_TitlePanel:SetTall(shopSheet_Upgrades_Primary_PreviewPanel:GetTall() / 12)
+                                    shopSheet_Upgrades_AutoDefense_TitlePanel:DockMargin(5,15,5,5)
+                                    shopSheet_Upgrades_AutoDefense_TitlePanel:Dock(TOP)
+                                    shopSheet_Upgrades_AutoDefense_TitlePanel:InvalidateParent(true)
+                                    shopSheet_Upgrades_AutoDefense_TitlePanel.Paint = function(self, w, h)
+                                        draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
+                                        surface.SetDrawColor(255,255,255)
+                                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                        draw.SimpleText("HEALTH & ARMOR", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                    end
+        
+                                        local shopSheet_Upgrades_AutoDefense_IconLayout = vgui.Create( "DIconLayout", shopSheet_Upgrades_Primary_ScrollPanel )
+                                        shopSheet_Upgrades_AutoDefense_IconLayout:Dock(TOP)
+                                        shopSheet_Upgrades_AutoDefense_IconLayout:SetBorder(10)
+                                        shopSheet_Upgrades_AutoDefense_IconLayout:SetSpaceY(5)
+                                        shopSheet_Upgrades_AutoDefense_IconLayout:SetSpaceX(5)
+                                        
+                                            for entityIndex, itemValue in pairs (list.Get("dac_items_playersupplies")) do
+        
+                                                local shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame = shopSheet_Upgrades_AutoDefense_IconLayout:Add( "DPanel" )
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:SetSize( shopSheet_Upgrades_Primary_PreviewPanel:GetWide() / 6, shopSheet_Upgrades_Primary_PreviewPanel:GetWide() / 6 )
+                                                
+                                                -- Assign contextual values to each panel as it is created for later use
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Name = itemValue.Name
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.ListName = itemValue.ListName
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Model = itemValue.Model
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Category = itemValue.Category
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Cost = itemValue.Cost
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Class = itemValue.Class
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.SpawnOffset = itemValue.SpawnOffset
+        
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Paint = function (self, w, h)
+                                                    if itemValue.Name == selectedItem then
+                                                        draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
+                                                    else
+                                                        draw.RoundedBox(3,0,0, w, h, Color(218,218,218))
+                                                    end
+                                                end
+        
+                                                local shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot:SetWide(shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:GetTall() * 0.95)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot:DockMargin(4,4,4,4)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot:Dock(LEFT)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot:InvalidateParent(true)
+        
+                                                -- Manually draw the icon slot so it looks nice
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot.Paint = function(self, w, h)
+                                                    draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
+                                                    surface.SetDrawColor(255,255,255)
+                                                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                                end
+        
+                                                local shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image:Dock(FILL)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image:InvalidateParent(true)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image:SetImage(itemValue.Icon)
+        
+                                                local shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label:SetTall(shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:GetTall() * 0.15)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label:Dock(BOTTOM)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label:InvalidateParent(true)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label.Paint = function(self, w, h)
+                                                    draw.RoundedBox(3,0,0, w, h, Color(0,0,0,192))
+                                                    draw.SimpleText(itemValue.Name, "DermaDefault", w * 0.5, 3, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                                end
+        
+                                                local shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame)
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button:SetWide(shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:GetWide())
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button:SetTall(shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:GetTall())
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
+                                                    -- Return nothing for the ultimate prank, haha ghehgeegr
+                                                end
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button:SetText("")
+        
+                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button.DoClick = function()
+        
+                                                    LocalPlayer():EmitSound(ButtonNoise)
+        
+                                                    selectedItem = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Name
+                                                    selectedItemModel = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Model
+                                                    selectedItemType = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.VehicleType
+                                                    selectedItemCategory = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Category
+                                                    selectedItemCost = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Cost
+                                                    selectedItemClass = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Class
+                                                    selectedItemList = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.ListName
+                                                    selectedItemSpawnOffset = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.SpawnOffset
+        
+                                                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
+                                                    shopSheet_Upgrades_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                                                    shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
+                                                    shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
+                        
+                                                    itemBound_mn, itemBound_mx = shopSheet_Upgrades_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                                                    itemBound_size = 0
+                                                    itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.x) + math.abs(itemBound_mx.x) )
+                                                    itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.y) + math.abs(itemBound_mx.y) )
+                                                    itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.z) + math.abs(itemBound_mx.z) )
+                                    
+                                                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                                                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10 , itemBound_size) )
+                                                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
+        
+                                                end
+        
+                                            end
 
             --- LOADOUT TAB ---
 
