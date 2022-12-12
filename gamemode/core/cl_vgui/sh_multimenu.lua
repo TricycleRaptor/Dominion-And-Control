@@ -139,7 +139,7 @@ if CLIENT then
 
             local titleLabel = vgui.Create("DLabel", MENU_FRAME)
             titleLabel:SetFont("DAC.PickTeam") -- Size 32px
-            titleLabel:SetText("GAMEMODE MENU PROTOTYPE")
+            titleLabel:SetText("DOMINION & CONTROL")
             titleLabel:SetPos(panelX * 0.01,6)
             titleLabel:SizeToContents()
 
@@ -1304,118 +1304,118 @@ if CLIENT then
             shopSheet_Upgrades.Paint = function(self, w, h)
                 draw.RoundedBox(0,0,0, w, h, Color(10,10,10,100))
             end
-            mainColumnSheet:AddSheet("Upgrades", shopSheet_Upgrades, "icon16/user_add.png")
+            mainColumnSheet:AddSheet("Ammo", shopSheet_Upgrades, "icon16/box.png")
 
                 -- Divide the vehicles panel into two pieces, dock this child panel to the left
-                local shopSheet_Upgrades_Primary = vgui.Create("DPanel", shopSheet_Upgrades)
-                shopSheet_Upgrades_Primary:SetWide(shopSheet_Upgrades:GetWide() / 1.5)
-                shopSheet_Upgrades_Primary:DockPadding(20,20,20,20)
-                shopSheet_Upgrades_Primary:Dock(LEFT)
-                shopSheet_Upgrades_Primary:InvalidateParent(true)
-                shopSheet_Upgrades_Primary.Paint = function(self, w, h)
+                local shopSheet_Ammo_Primary = vgui.Create("DPanel", shopSheet_Upgrades)
+                shopSheet_Ammo_Primary:SetWide(shopSheet_Upgrades:GetWide() / 1.5)
+                shopSheet_Ammo_Primary:DockPadding(20,20,20,20)
+                shopSheet_Ammo_Primary:Dock(LEFT)
+                shopSheet_Ammo_Primary:InvalidateParent(true)
+                shopSheet_Ammo_Primary.Paint = function(self, w, h)
                     draw.RoundedBox(0,0,0, w, h, Color(107,0,0,0)) -- Red for visualizing positioning
                 end
 
-                local shopSheet_Upgrades_Secondary = vgui.Create("DPanel", shopSheet_Upgrades)
-                shopSheet_Upgrades_Secondary:SetWide(shopSheet_Upgrades:GetWide() / 3)
-                shopSheet_Upgrades_Secondary:DockPadding(20,20,20,20)
-                shopSheet_Upgrades_Secondary:Dock(RIGHT)
-                shopSheet_Upgrades_Secondary:InvalidateParent(true)
-                shopSheet_Upgrades_Secondary.Paint = function(self, w, h)
+                local shopSheet_Ammo_Secondary = vgui.Create("DPanel", shopSheet_Upgrades)
+                shopSheet_Ammo_Secondary:SetWide(shopSheet_Upgrades:GetWide() / 3)
+                shopSheet_Ammo_Secondary:DockPadding(20,20,20,20)
+                shopSheet_Ammo_Secondary:Dock(RIGHT)
+                shopSheet_Ammo_Secondary:InvalidateParent(true)
+                shopSheet_Ammo_Secondary.Paint = function(self, w, h)
                         draw.RoundedBox(0,0,0, w, h, Color(0,35,131,0)) -- Blue for visualizing positioning
                 end
 
-                local shopSheet_Upgrades_Secondary_TitlePanel = vgui.Create("DPanel", shopSheet_Upgrades_Secondary)
-                shopSheet_Upgrades_Secondary_TitlePanel:SetTall(shopSheet_Upgrades:GetTall() / 12)
-                shopSheet_Upgrades_Secondary_TitlePanel:DockPadding(20,20,20,20)
-                shopSheet_Upgrades_Secondary_TitlePanel:Dock(TOP)
-                shopSheet_Upgrades_Secondary_TitlePanel:InvalidateParent(true)
-                shopSheet_Upgrades_Secondary_TitlePanel.Paint = function(self, w, h)
+                local shopSheet_Ammo_Secondary_TitlePanel = vgui.Create("DPanel", shopSheet_Ammo_Secondary)
+                shopSheet_Ammo_Secondary_TitlePanel:SetTall(shopSheet_Upgrades:GetTall() / 12)
+                shopSheet_Ammo_Secondary_TitlePanel:DockPadding(20,20,20,20)
+                shopSheet_Ammo_Secondary_TitlePanel:Dock(TOP)
+                shopSheet_Ammo_Secondary_TitlePanel:InvalidateParent(true)
+                shopSheet_Ammo_Secondary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
                     surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     draw.SimpleText("PREVIEW", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                 end
 
-                local shopSheet_Upgrades_Secondary_PreviewPanel = vgui.Create("DPanel", shopSheet_Upgrades_Secondary)
-                shopSheet_Upgrades_Secondary_PreviewPanel:SetTall(shopSheet_Upgrades_Secondary:GetTall() / 2.5)
-                shopSheet_Upgrades_Secondary_PreviewPanel:DockPadding(4,4,4,4)
-                shopSheet_Upgrades_Secondary_PreviewPanel:Dock(TOP)
-                shopSheet_Upgrades_Secondary_PreviewPanel:InvalidateParent(true)
-                shopSheet_Upgrades_Secondary_PreviewPanel.Paint = function(self, w, h)
+                local shopSheet_Ammo_Secondary_PreviewPanel = vgui.Create("DPanel", shopSheet_Ammo_Secondary)
+                shopSheet_Ammo_Secondary_PreviewPanel:SetTall(shopSheet_Ammo_Secondary:GetTall() / 2.5)
+                shopSheet_Ammo_Secondary_PreviewPanel:DockPadding(4,4,4,4)
+                shopSheet_Ammo_Secondary_PreviewPanel:Dock(TOP)
+                shopSheet_Ammo_Secondary_PreviewPanel:InvalidateParent(true)
+                shopSheet_Ammo_Secondary_PreviewPanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                     surface.SetDrawColor(255,255,255)
                     surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                 end
 
-                    local shopSheet_Upgrades_Secondary_PreviewPanel_Model = vgui.Create("DModelPanel", shopSheet_Upgrades_Secondary_PreviewPanel)
-                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:Dock(FILL)
-                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:DockPadding(4,4,4,4)
-                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:InvalidateParent(true)
-                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
-                    shopSheet_Upgrades_Secondary_PreviewPanel_Model.LayoutEntity = function(entity)	
+                    local shopSheet_Ammo_Secondary_PreviewPanel_Model = vgui.Create("DModelPanel", shopSheet_Ammo_Secondary_PreviewPanel)
+                    shopSheet_Ammo_Secondary_PreviewPanel_Model:Dock(FILL)
+                    shopSheet_Ammo_Secondary_PreviewPanel_Model:DockPadding(4,4,4,4)
+                    shopSheet_Ammo_Secondary_PreviewPanel_Model:InvalidateParent(true)
+                    shopSheet_Ammo_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
+                    shopSheet_Ammo_Secondary_PreviewPanel_Model.LayoutEntity = function(entity)	
                         return
                     end
 
-                    local itemBound_mn, itemBound_mx = shopSheet_Upgrades_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                    local itemBound_mn, itemBound_mx = shopSheet_Ammo_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
                     local itemBound_size = 0
                     itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.x) + math.abs(itemBound_mx.x) )
                     itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.y) + math.abs(itemBound_mx.y) )
                     itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.z) + math.abs(itemBound_mx.z) )
     
-                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetFOV( 45 )
-                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10, itemBound_size) )
-                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
+                    shopSheet_Ammo_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                    shopSheet_Ammo_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10, itemBound_size) )
+                    shopSheet_Ammo_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
 
-                    local shopSheet_Upgrades_Secondary_StatsTitle = vgui.Create("DPanel", shopSheet_Upgrades_Secondary)
-                    shopSheet_Upgrades_Secondary_StatsTitle:SetTall(shopSheet_Upgrades:GetTall() / 12)
-                    shopSheet_Upgrades_Secondary_StatsTitle:DockPadding(20,20,20,20)
-                    shopSheet_Upgrades_Secondary_StatsTitle:Dock(TOP)
-                    shopSheet_Upgrades_Secondary_StatsTitle:InvalidateParent(true)
-                    shopSheet_Upgrades_Secondary_StatsTitle.Paint = function(self, w, h)
+                    local shopSheet_Ammo_Secondary_StatsTitle = vgui.Create("DPanel", shopSheet_Ammo_Secondary)
+                    shopSheet_Ammo_Secondary_StatsTitle:SetTall(shopSheet_Upgrades:GetTall() / 12)
+                    shopSheet_Ammo_Secondary_StatsTitle:DockPadding(20,20,20,20)
+                    shopSheet_Ammo_Secondary_StatsTitle:Dock(TOP)
+                    shopSheet_Ammo_Secondary_StatsTitle:InvalidateParent(true)
+                    shopSheet_Ammo_Secondary_StatsTitle.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                         surface.SetDrawColor(255,255,255)
                         surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                         draw.SimpleText("INFORMATION", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                     end
 
-                    local shopSheet_Upgrades_Secondary_StatsFrame = vgui.Create("DPanel", shopSheet_Upgrades_Secondary)
-                    shopSheet_Upgrades_Secondary_StatsFrame:SetTall(shopSheet_Upgrades_Secondary:GetTall() / 5)
-                    shopSheet_Upgrades_Secondary_StatsFrame:DockPadding(4,4,4,4)
-                    shopSheet_Upgrades_Secondary_StatsFrame:Dock(TOP)
-                    shopSheet_Upgrades_Secondary_StatsFrame:InvalidateParent(true)
-                    shopSheet_Upgrades_Secondary_StatsFrame.Paint = function(self, w, h)
+                    local shopSheet_Ammo_Secondary_StatsFrame = vgui.Create("DPanel", shopSheet_Ammo_Secondary)
+                    shopSheet_Ammo_Secondary_StatsFrame:SetTall(shopSheet_Ammo_Secondary:GetTall() / 5)
+                    shopSheet_Ammo_Secondary_StatsFrame:DockPadding(4,4,4,4)
+                    shopSheet_Ammo_Secondary_StatsFrame:Dock(TOP)
+                    shopSheet_Ammo_Secondary_StatsFrame:InvalidateParent(true)
+                    shopSheet_Ammo_Secondary_StatsFrame.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(71,71,71,100))
                         surface.SetDrawColor(255,255,255)
                         surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
-                        local shopSheet_Upgrades_Secondary_StatsPanel_NameLabel = vgui.Create("DLabel", shopSheet_Upgrades_Secondary_StatsFrame)
-                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:Dock(TOP)
-                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:DockMargin(6,8,4,4)
-                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:InvalidateParent(true)
-                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetFont("DAC.ScoreboardTitle")
-                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
-                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetTextColor(Color(255,255,255))
-                        shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetContentAlignment(5) -- https://wiki.facepunch.com/gmod/Panel:SetContentAlignment
+                        local shopSheet_Ammo_Secondary_StatsPanel_NameLabel = vgui.Create("DLabel", shopSheet_Ammo_Secondary_StatsFrame)
+                        shopSheet_Ammo_Secondary_StatsPanel_NameLabel:Dock(TOP)
+                        shopSheet_Ammo_Secondary_StatsPanel_NameLabel:DockMargin(6,8,4,4)
+                        shopSheet_Ammo_Secondary_StatsPanel_NameLabel:InvalidateParent(true)
+                        shopSheet_Ammo_Secondary_StatsPanel_NameLabel:SetFont("DAC.ScoreboardTitle")
+                        shopSheet_Ammo_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
+                        shopSheet_Ammo_Secondary_StatsPanel_NameLabel:SetTextColor(Color(255,255,255))
+                        shopSheet_Ammo_Secondary_StatsPanel_NameLabel:SetContentAlignment(5) -- https://wiki.facepunch.com/gmod/Panel:SetContentAlignment
 
-                        local shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel = vgui.Create("DLabel", shopSheet_Upgrades_Secondary_StatsFrame)
-                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:Dock(TOP)
-                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:DockMargin(6,0,0,0)
-                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:InvalidateParent(true)
-                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetFont("DermaDefaultBold")
-                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
-                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetTextColor(Color(255,255,255))
-                        shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetContentAlignment(5)
+                        local shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel = vgui.Create("DLabel", shopSheet_Ammo_Secondary_StatsFrame)
+                        shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:Dock(TOP)
+                        shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:DockMargin(6,0,0,0)
+                        shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:InvalidateParent(true)
+                        shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:SetFont("DermaDefaultBold")
+                        shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
+                        shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:SetTextColor(Color(255,255,255))
+                        shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:SetContentAlignment(5)
 
-                    local shopSheet_Upgrades_Secondary_BuyButton = vgui.Create("DButton", shopSheet_Upgrades_Secondary)
-                    --shopSheet_Upgrades_Secondary_BuyButton:SetTall(shopSheet_Upgrades_Secondary:GetTall() / 5)
-                    shopSheet_Upgrades_Secondary_BuyButton:DockMargin(24,24,24,24)
-                    shopSheet_Upgrades_Secondary_BuyButton:Dock(FILL)
-                    shopSheet_Upgrades_Secondary_BuyButton:SetFont("DAC.PickTeam")
-                    shopSheet_Upgrades_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
-                    shopSheet_Upgrades_Secondary_BuyButton:InvalidateParent(true)
-                    shopSheet_Upgrades_Secondary_BuyButton.Paint = function(self, w, h)
+                    local shopSheet_Ammo_Secondary_BuyButton = vgui.Create("DButton", shopSheet_Ammo_Secondary)
+                    --shopSheet_Ammo_Secondary_BuyButton:SetTall(shopSheet_Ammo_Secondary:GetTall() / 5)
+                    shopSheet_Ammo_Secondary_BuyButton:DockMargin(24,24,24,24)
+                    shopSheet_Ammo_Secondary_BuyButton:Dock(FILL)
+                    shopSheet_Ammo_Secondary_BuyButton:SetFont("DAC.PickTeam")
+                    shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                    shopSheet_Ammo_Secondary_BuyButton:InvalidateParent(true)
+                    shopSheet_Ammo_Secondary_BuyButton.Paint = function(self, w, h)
 
                         local gameStage = DAC:GetGameStage()
                         local gameStageData = gameStage:GetData()
@@ -1426,20 +1426,20 @@ if CLIENT then
                             and (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetPos()):Length() <= 300 -- Entities need a distance check before they can be purchased
                             and gameStageData.name == "MATCH" -- Not allowed to buy ammo or health during pre-setup
                         then
-                            shopSheet_Upgrades_Secondary_BuyButton:SetEnabled(true)
+                            shopSheet_Ammo_Secondary_BuyButton:SetEnabled(true)
                             draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
                             surface.SetDrawColor(109,255,73)
                             surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
-                            shopSheet_Upgrades_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                            shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
                         else
-                            shopSheet_Upgrades_Secondary_BuyButton:SetEnabled(false)
+                            shopSheet_Ammo_Secondary_BuyButton:SetEnabled(false)
                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,255))
                             surface.SetDrawColor(255,126,126)
                             surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
-                            shopSheet_Upgrades_Secondary_BuyButton:SetText("MATCH NOT STARTED")
+                            shopSheet_Ammo_Secondary_BuyButton:SetText("MATCH NOT STARTED")
                         end
                     end
-                    shopSheet_Upgrades_Secondary_BuyButton.DoClick = function(self, w, h)
+                    shopSheet_Ammo_Secondary_BuyButton.DoClick = function(self, w, h)
                         if LocalPlayer():GetNWInt("storeCredits") >= selectedItemCost then
 
                             LocalPlayer():EmitSound(ConfirmNoise)
@@ -1469,70 +1469,70 @@ if CLIENT then
                         end
                     end
 
-                local shopSheet_Upgrades_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Upgrades_Primary)
-                shopSheet_Upgrades_Primary_TitlePanel:SetTall(shopSheet_Upgrades:GetTall() / 12)
-                shopSheet_Upgrades_Primary_TitlePanel:DockPadding(20,20,20,20)
-                shopSheet_Upgrades_Primary_TitlePanel:Dock(TOP)
-                shopSheet_Upgrades_Primary_TitlePanel:InvalidateParent(true)
-                shopSheet_Upgrades_Primary_TitlePanel.Paint = function(self, w, h)
+                local shopSheet_Ammo_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Ammo_Primary)
+                shopSheet_Ammo_Primary_TitlePanel:SetTall(shopSheet_Upgrades:GetTall() / 12)
+                shopSheet_Ammo_Primary_TitlePanel:DockPadding(20,20,20,20)
+                shopSheet_Ammo_Primary_TitlePanel:Dock(TOP)
+                shopSheet_Ammo_Primary_TitlePanel:InvalidateParent(true)
+                shopSheet_Ammo_Primary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
                     surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     draw.SimpleText("UPGRADES CATALOG", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                 end
 
-                    local shopSheet_Upgrades_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Upgrades_Primary)
-                    --shopSheet_Upgrades_Primary_PreviewPanel:SetTall(shopSheet_Upgrades_Primary:GetTall() / 1.5)
-                    shopSheet_Upgrades_Primary_PreviewPanel:DockPadding(5,5,5,5)
-                    shopSheet_Upgrades_Primary_PreviewPanel:Dock(FILL)
-                    shopSheet_Upgrades_Primary_PreviewPanel:InvalidateParent(true)
-                    shopSheet_Upgrades_Primary_PreviewPanel.Paint = function(self, w, h)
+                    local shopSheet_Ammo_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Ammo_Primary)
+                    --shopSheet_Ammo_Primary_PreviewPanel:SetTall(shopSheet_Ammo_Primary:GetTall() / 1.5)
+                    shopSheet_Ammo_Primary_PreviewPanel:DockPadding(5,5,5,5)
+                    shopSheet_Ammo_Primary_PreviewPanel:Dock(FILL)
+                    shopSheet_Ammo_Primary_PreviewPanel:InvalidateParent(true)
+                    shopSheet_Ammo_Primary_PreviewPanel.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
                         surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
-                        local shopSheet_Upgrades_Primary_ScrollPanel = vgui.Create("DScrollPanel", shopSheet_Upgrades_Primary_PreviewPanel)
-                        shopSheet_Upgrades_Primary_ScrollPanel:Dock(FILL)
-                        shopSheet_Upgrades_Primary_ScrollPanel:InvalidateParent(true)
-                        shopSheet_Upgrades_Primary_ScrollPanel:GetCanvas():DockPadding(5,5,5,5)
-                        shopSheet_Upgrades_Primary_ScrollPanel.Paint = function(self, w, h)
+                        local shopSheet_Ammo_Primary_ScrollPanel = vgui.Create("DScrollPanel", shopSheet_Ammo_Primary_PreviewPanel)
+                        shopSheet_Ammo_Primary_ScrollPanel:Dock(FILL)
+                        shopSheet_Ammo_Primary_ScrollPanel:InvalidateParent(true)
+                        shopSheet_Ammo_Primary_ScrollPanel:GetCanvas():DockPadding(5,5,5,5)
+                        shopSheet_Ammo_Primary_ScrollPanel.Paint = function(self, w, h)
                             draw.RoundedBox(0,0,0, w, h, Color(255,0,179,0))
                         end
 
-                            local shopSheet_Upgrades_AmmoCrates_TitlePanel = vgui.Create("DPanel", shopSheet_Upgrades_Primary_ScrollPanel)
-                            shopSheet_Upgrades_AmmoCrates_TitlePanel:SetTall(shopSheet_Upgrades_Primary_PreviewPanel:GetTall() / 12)
-                            shopSheet_Upgrades_AmmoCrates_TitlePanel:DockMargin(5,5,5,5)
-                            shopSheet_Upgrades_AmmoCrates_TitlePanel:Dock(TOP)
-                            shopSheet_Upgrades_AmmoCrates_TitlePanel:InvalidateParent(true)
-                            shopSheet_Upgrades_AmmoCrates_TitlePanel.Paint = function(self, w, h)
+                            local shopSheet_Ammo_AmmoCrates_TitlePanel = vgui.Create("DPanel", shopSheet_Ammo_Primary_ScrollPanel)
+                            shopSheet_Ammo_AmmoCrates_TitlePanel:SetTall(shopSheet_Ammo_Primary_PreviewPanel:GetTall() / 12)
+                            shopSheet_Ammo_AmmoCrates_TitlePanel:DockMargin(5,5,5,5)
+                            shopSheet_Ammo_AmmoCrates_TitlePanel:Dock(TOP)
+                            shopSheet_Ammo_AmmoCrates_TitlePanel:InvalidateParent(true)
+                            shopSheet_Ammo_AmmoCrates_TitlePanel.Paint = function(self, w, h)
                                 draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                 surface.SetDrawColor(255,255,255)
                                 surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                 draw.SimpleText("INDIVIDUAL AMMO", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                             end
 
-                                local shopSheet_Upgrades_AmmoCrates_IconLayout = vgui.Create( "DIconLayout", shopSheet_Upgrades_Primary_ScrollPanel )
-                                shopSheet_Upgrades_AmmoCrates_IconLayout:Dock(TOP)
-                                shopSheet_Upgrades_AmmoCrates_IconLayout:SetBorder(10)
-                                shopSheet_Upgrades_AmmoCrates_IconLayout:SetSpaceY(5)
-                                shopSheet_Upgrades_AmmoCrates_IconLayout:SetSpaceX(5)
+                                local shopSheet_Ammo_AmmoCrates_IconLayout = vgui.Create( "DIconLayout", shopSheet_Ammo_Primary_ScrollPanel )
+                                shopSheet_Ammo_AmmoCrates_IconLayout:Dock(TOP)
+                                shopSheet_Ammo_AmmoCrates_IconLayout:SetBorder(10)
+                                shopSheet_Ammo_AmmoCrates_IconLayout:SetSpaceY(5)
+                                shopSheet_Ammo_AmmoCrates_IconLayout:SetSpaceX(5)
                                 
                                     for itemIndex, itemValue in pairs (list.Get("dac_items_ammo")) do
 
-                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame = shopSheet_Upgrades_AmmoCrates_IconLayout:Add( "DPanel" )
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:SetSize( shopSheet_Upgrades_Primary_PreviewPanel:GetWide() / 6, shopSheet_Upgrades_Primary_PreviewPanel:GetWide() / 6 )
+                                        local shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame = shopSheet_Ammo_AmmoCrates_IconLayout:Add( "DPanel" )
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame:SetSize( shopSheet_Ammo_Primary_PreviewPanel:GetWide() / 6, shopSheet_Ammo_Primary_PreviewPanel:GetWide() / 6 )
                                         
                                         -- Assign contextual values to each panel as it is created for later use
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Name = itemValue.Name
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.ListName = itemValue.ListName
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Model = itemValue.Model
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Category = itemValue.Category
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Cost = itemValue.Cost
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Class = itemValue.Class
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.SpawnOffset = itemValue.SpawnOffset
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Name = itemValue.Name
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.ListName = itemValue.ListName
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Model = itemValue.Model
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Category = itemValue.Category
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Cost = itemValue.Cost
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Class = itemValue.Class
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.SpawnOffset = itemValue.SpawnOffset
 
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Paint = function (self, w, h)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Paint = function (self, w, h)
                                             if itemValue.Name == selectedItem then
                                                 draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
                                             else
@@ -1540,107 +1540,107 @@ if CLIENT then
                                             end
                                         end
 
-                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot:SetWide(shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:GetTall() * 0.95)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot:DockMargin(4,4,4,4)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot:Dock(LEFT)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot:InvalidateParent(true)
+                                        local shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot:SetWide(shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame:GetTall() * 0.95)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot:DockMargin(4,4,4,4)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot:Dock(LEFT)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot:InvalidateParent(true)
 
                                         -- Manually draw the icon slot so it looks nice
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot.Paint = function(self, w, h)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot.Paint = function(self, w, h)
                                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                             surface.SetDrawColor(255,255,255)
                                             surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                         end
 
-                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image:Dock(FILL)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image:InvalidateParent(true)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image:SetImage(itemValue.Icon)
+                                        local shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Image:Dock(FILL)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Image:InvalidateParent(true)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Image:SetImage(itemValue.Icon)
 
-                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Image)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label:SetTall(shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:GetTall() * 0.15)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label:Dock(BOTTOM)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label:InvalidateParent(true)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_IconSlot_Label.Paint = function(self, w, h)
+                                        local shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Image)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Label:SetTall(shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame:GetTall() * 0.15)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Label:Dock(BOTTOM)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Label:InvalidateParent(true)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Label.Paint = function(self, w, h)
                                             draw.RoundedBox(3,0,0, w, h, Color(0,0,0,192))
                                             draw.SimpleText(itemValue.Name, "DermaDefault", w * 0.5, 3, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                                         end
 
-                                        local shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame)
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button:SetWide(shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:GetWide())
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button:SetTall(shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame:GetTall())
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
+                                        local shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame)
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame_Button:SetWide(shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame:GetWide())
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame_Button:SetTall(shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame:GetTall())
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
                                             -- Return nothing for the ultimate prank, haha ghehgeegr
                                         end
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button:SetText("")
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame_Button:SetText("")
 
-                                        shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame_Button.DoClick = function()
+                                        shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame_Button.DoClick = function()
 
                                             LocalPlayer():EmitSound(ButtonNoise)
 
-                                            selectedItem = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Name
-                                            selectedItemModel = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Model
-                                            selectedItemCategory = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Category
-                                            selectedItemCost = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Cost
-                                            selectedItemClass = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.Class
-                                            selectedItemList = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.ListName
-                                            selectedItemSpawnOffset = shopSheet_Upgrades_AmmoCrates_IconLayout_PanelFrame.SpawnOffset
+                                            selectedItem = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Name
+                                            selectedItemModel = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Model
+                                            selectedItemCategory = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Category
+                                            selectedItemCost = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Cost
+                                            selectedItemClass = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Class
+                                            selectedItemList = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.ListName
+                                            selectedItemSpawnOffset = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.SpawnOffset
 
-                                            shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
-                                            shopSheet_Upgrades_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
-                                            shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
-                                            shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
+                                            shopSheet_Ammo_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
+                                            shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                                            shopSheet_Ammo_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
+                                            shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
                 
-                                            itemBound_mn, itemBound_mx = shopSheet_Upgrades_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                                            itemBound_mn, itemBound_mx = shopSheet_Ammo_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
                                             itemBound_size = 0
                                             itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.x) + math.abs(itemBound_mx.x) )
                                             itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.y) + math.abs(itemBound_mx.y) )
                                             itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.z) + math.abs(itemBound_mx.z) )
                             
-                                            shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetFOV( 45 )
-                                            shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10 , itemBound_size) )
-                                            shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
+                                            shopSheet_Ammo_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                                            shopSheet_Ammo_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10 , itemBound_size) )
+                                            shopSheet_Ammo_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
 
                                         end
 
                                     end
 
-                                    local shopSheet_Upgrades_AutoDefense_TitlePanel = vgui.Create("DPanel", shopSheet_Upgrades_Primary_ScrollPanel)
-                                    shopSheet_Upgrades_AutoDefense_TitlePanel:SetTall(shopSheet_Upgrades_Primary_PreviewPanel:GetTall() / 12)
-                                    shopSheet_Upgrades_AutoDefense_TitlePanel:DockMargin(5,15,5,5)
-                                    shopSheet_Upgrades_AutoDefense_TitlePanel:Dock(TOP)
-                                    shopSheet_Upgrades_AutoDefense_TitlePanel:InvalidateParent(true)
-                                    shopSheet_Upgrades_AutoDefense_TitlePanel.Paint = function(self, w, h)
+                                    local shopSheet_Ammo_AutoDefense_TitlePanel = vgui.Create("DPanel", shopSheet_Ammo_Primary_ScrollPanel)
+                                    shopSheet_Ammo_AutoDefense_TitlePanel:SetTall(shopSheet_Ammo_Primary_PreviewPanel:GetTall() / 12)
+                                    shopSheet_Ammo_AutoDefense_TitlePanel:DockMargin(5,15,5,5)
+                                    shopSheet_Ammo_AutoDefense_TitlePanel:Dock(TOP)
+                                    shopSheet_Ammo_AutoDefense_TitlePanel:InvalidateParent(true)
+                                    shopSheet_Ammo_AutoDefense_TitlePanel.Paint = function(self, w, h)
                                         draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                         surface.SetDrawColor(255,255,255)
                                         surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                         draw.SimpleText("HEALTH & ARMOR", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                                     end
         
-                                        local shopSheet_Upgrades_AutoDefense_IconLayout = vgui.Create( "DIconLayout", shopSheet_Upgrades_Primary_ScrollPanel )
-                                        shopSheet_Upgrades_AutoDefense_IconLayout:Dock(TOP)
-                                        shopSheet_Upgrades_AutoDefense_IconLayout:SetBorder(10)
-                                        shopSheet_Upgrades_AutoDefense_IconLayout:SetSpaceY(5)
-                                        shopSheet_Upgrades_AutoDefense_IconLayout:SetSpaceX(5)
+                                        local shopSheet_Ammo_AutoDefense_IconLayout = vgui.Create( "DIconLayout", shopSheet_Ammo_Primary_ScrollPanel )
+                                        shopSheet_Ammo_AutoDefense_IconLayout:Dock(TOP)
+                                        shopSheet_Ammo_AutoDefense_IconLayout:SetBorder(10)
+                                        shopSheet_Ammo_AutoDefense_IconLayout:SetSpaceY(5)
+                                        shopSheet_Ammo_AutoDefense_IconLayout:SetSpaceX(5)
                                         
                                             for entityIndex, itemValue in pairs (list.Get("dac_items_playersupplies")) do
         
-                                                local shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame = shopSheet_Upgrades_AutoDefense_IconLayout:Add( "DPanel" )
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:SetSize( shopSheet_Upgrades_Primary_PreviewPanel:GetWide() / 6, shopSheet_Upgrades_Primary_PreviewPanel:GetWide() / 6 )
+                                                local shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame = shopSheet_Ammo_AutoDefense_IconLayout:Add( "DPanel" )
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame:SetSize( shopSheet_Ammo_Primary_PreviewPanel:GetWide() / 6, shopSheet_Ammo_Primary_PreviewPanel:GetWide() / 6 )
                                                 
                                                 -- Assign contextual values to each panel as it is created for later use
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Name = itemValue.Name
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.ListName = itemValue.ListName
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Model = itemValue.Model
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Category = itemValue.Category
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Cost = itemValue.Cost
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Class = itemValue.Class
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.SpawnOffset = itemValue.SpawnOffset
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Name = itemValue.Name
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.ListName = itemValue.ListName
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Model = itemValue.Model
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Category = itemValue.Category
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Cost = itemValue.Cost
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Class = itemValue.Class
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.SpawnOffset = itemValue.SpawnOffset
         
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Paint = function (self, w, h)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Paint = function (self, w, h)
                                                     if itemValue.Name == selectedItem then
                                                         draw.RoundedBox(3,0,0, w, h, Color(71,144,255))
                                                     else
@@ -1648,70 +1648,70 @@ if CLIENT then
                                                     end
                                                 end
         
-                                                local shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot:SetWide(shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:GetTall() * 0.95)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot:DockMargin(4,4,4,4)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot:Dock(LEFT)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot:InvalidateParent(true)
+                                                local shopSheet_Ammo_AutoDefense_IconLayout_IconSlot = vgui.Create("DPanel", shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot:SetWide(shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame:GetTall() * 0.95)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot:DockMargin(4,4,4,4)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot:Dock(LEFT)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot:InvalidateParent(true)
         
                                                 -- Manually draw the icon slot so it looks nice
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot.Paint = function(self, w, h)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot.Paint = function(self, w, h)
                                                     draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                                     surface.SetDrawColor(255,255,255)
                                                     surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                                 end
         
-                                                local shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image:Dock(FILL)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image:InvalidateParent(true)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image:SetImage(itemValue.Icon)
+                                                local shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Ammo_AutoDefense_IconLayout_IconSlot)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Image:DockMargin(4,4,4,4)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Image:Dock(FILL)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Image:InvalidateParent(true)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Image:SetImage(itemValue.Icon)
         
-                                                local shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Image)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label:SetTall(shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:GetTall() * 0.15)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label:Dock(BOTTOM)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label:InvalidateParent(true)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_IconSlot_Label.Paint = function(self, w, h)
+                                                local shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Label = vgui.Create("DPanel", shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Image)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Label:SetTall(shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame:GetTall() * 0.15)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Label:DockMargin(4,4,4,4)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Label:Dock(BOTTOM)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Label:InvalidateParent(true)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Label.Paint = function(self, w, h)
                                                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,192))
                                                     draw.SimpleText(itemValue.Name, "DermaDefault", w * 0.5, 3, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                                                 end
         
-                                                local shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame)
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button:SetWide(shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:GetWide())
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button:SetTall(shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame:GetTall())
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
+                                                local shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame_Button = vgui.Create("DButton", shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame)
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame_Button:SetWide(shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame:GetWide())
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame_Button:SetTall(shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame:GetTall())
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame_Button.Paint = function(self, w, h)
                                                     -- Return nothing for the ultimate prank, haha ghehgeegr
                                                 end
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button:SetText("")
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame_Button:SetText("")
         
-                                                shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame_Button.DoClick = function()
+                                                shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame_Button.DoClick = function()
         
                                                     LocalPlayer():EmitSound(ButtonNoise)
         
-                                                    selectedItem = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Name
-                                                    selectedItemModel = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Model
-                                                    selectedItemType = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.VehicleType
-                                                    selectedItemCategory = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Category
-                                                    selectedItemCost = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Cost
-                                                    selectedItemClass = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.Class
-                                                    selectedItemList = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.ListName
-                                                    selectedItemSpawnOffset = shopSheet_Upgrades_AutoDefense_IconLayout_PanelFrame.SpawnOffset
+                                                    selectedItem = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Name
+                                                    selectedItemModel = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Model
+                                                    selectedItemType = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.VehicleType
+                                                    selectedItemCategory = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Category
+                                                    selectedItemCost = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Cost
+                                                    selectedItemClass = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Class
+                                                    selectedItemList = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.ListName
+                                                    selectedItemSpawnOffset = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.SpawnOffset
         
-                                                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
-                                                    shopSheet_Upgrades_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
-                                                    shopSheet_Upgrades_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
-                                                    shopSheet_Upgrades_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
+                                                    shopSheet_Ammo_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
+                                                    shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                                                    shopSheet_Ammo_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
+                                                    shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
                         
-                                                    itemBound_mn, itemBound_mx = shopSheet_Upgrades_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
+                                                    itemBound_mn, itemBound_mx = shopSheet_Ammo_Secondary_PreviewPanel_Model.Entity:GetRenderBounds()
                                                     itemBound_size = 0
                                                     itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.x) + math.abs(itemBound_mx.x) )
                                                     itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.y) + math.abs(itemBound_mx.y) )
                                                     itemBound_size = math.max( itemBound_size, math.abs(itemBound_mn.z) + math.abs(itemBound_mx.z) )
                                     
-                                                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetFOV( 45 )
-                                                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10 , itemBound_size) )
-                                                    shopSheet_Upgrades_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
+                                                    shopSheet_Ammo_Secondary_PreviewPanel_Model:SetFOV( 45 )
+                                                    shopSheet_Ammo_Secondary_PreviewPanel_Model:SetCamPos( Vector( itemBound_size, itemBound_size + 10 , itemBound_size) )
+                                                    shopSheet_Ammo_Secondary_PreviewPanel_Model:SetLookAt( (itemBound_mn + itemBound_mx) * 0.42 )
         
                                                 end
         
@@ -1998,14 +1998,44 @@ if CLIENT then
                                 rowValue.Class = secondaryWeaponClasses[panelIndex]
                             end
 
-            --[[local shopSheet_Tip = vgui.Create("DHTML", mainColumnSheet)
+            --- PLAYERMODEL TAB ---
+
+            local shopSheet_Player = vgui.Create("DPanel", mainColumnSheet)
+            shopSheet_Player:Dock(FILL)
+            shopSheet_Player:InvalidateParent(true)
+            shopSheet_Player.Paint = function(self, w, h)
+                draw.RoundedBox(0,0,0, w, h, Color(10,10,10,100))
+            end
+            mainColumnSheet:AddSheet("Player", shopSheet_Player, "icon16/user.png")
+
+                local shopSheet_Player_Primary = vgui.Create("DPanel", shopSheet_Player)
+                shopSheet_Player_Primary:SetWide(shopSheet_Player:GetWide() / 2)
+                shopSheet_Player_Primary:DockPadding(20,20,20,20)
+                shopSheet_Player_Primary:Dock(LEFT)
+                shopSheet_Player_Primary:InvalidateParent(true)
+                shopSheet_Player_Primary.Paint = function(self, w, h)
+                    draw.RoundedBox(0,0,0, w, h, Color(107,0,0,100)) -- Red for visualizing positioning
+                end
+
+                local shopSheet_Player_Secondary = vgui.Create("DPanel", shopSheet_Player)
+                shopSheet_Player_Secondary:SetWide(shopSheet_Player:GetWide() / 2)
+                shopSheet_Player_Secondary:DockPadding(20,20,20,20)
+                shopSheet_Player_Secondary:Dock(RIGHT)
+                shopSheet_Player_Secondary:InvalidateParent(true)
+                shopSheet_Player_Secondary.Paint = function(self, w, h)
+                    draw.RoundedBox(0,0,0, w, h, Color(0,35,100)) -- Blue for visualizing positioning
+                end
+
+            --- KOFI TIP TAB ---
+
+            local shopSheet_Tip = vgui.Create("DHTML", mainColumnSheet)
             shopSheet_Tip:Dock(FILL)
             shopSheet_Tip:InvalidateParent(true)
-            mainColumnSheet:AddSheet("Tip Me?", shopSheet_Tip, "icon16/star.png")
+            mainColumnSheet:AddSheet("Ko-fi Tip", shopSheet_Tip, "icon16/cup.png")
 
                 local shopSheet_Tip_Panel = vgui.Create("DPanel", shopSheet_Tip)
-                --shopSheet_Tip_Panel:SetWide(shopSheet_Loadout:GetWide() / 2)
-                --shopSheet_Tip_Panel:DockPadding(20,20,20,20)
+                shopSheet_Tip_Panel:SetWide(shopSheet_Tip:GetWide() / 2)
+                shopSheet_Tip_Panel:DockPadding(20,20,20,20)
                 shopSheet_Tip_Panel:Dock(FILL)
                 shopSheet_Tip_Panel:InvalidateParent(true)
                 shopSheet_Tip_Panel.Paint = function(self, w, h)
@@ -2015,7 +2045,7 @@ if CLIENT then
 
                 local shopSheet_Tip_Window = vgui.Create( "DHTML", shopSheet_Tip_Panel )
                 shopSheet_Tip_Window:Dock(FILL)
-                shopSheet_Tip_Window:OpenURL("ko-fi.com/dragonbyte1546")]]
+                shopSheet_Tip_Window:OpenURL("ko-fi.com/dragonbyte1546")
 
         else
 
