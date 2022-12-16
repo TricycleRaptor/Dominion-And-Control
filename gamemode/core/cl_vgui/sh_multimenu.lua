@@ -306,7 +306,8 @@ if CLIENT then
                     shopSheet_Items_Secondary_BuyButton:InvalidateParent(true)
                     shopSheet_Items_Secondary_BuyButton.Paint = function(self, w, h)
                         if LocalPlayer():GetNWInt("storeCredits") >= selectedEntityCost 
-                            and LocalPlayer():Alive() 
+                            and LocalPlayer():Alive()
+                            and LocalPlayer():InVehicle() == false
                             and LocalPlayer():GetNWBool("IsInBase") == true 
                             and (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetPos()):Length() <= 300 -- Entities need a distance check before they can be purchased
                         then
@@ -837,7 +838,10 @@ if CLIENT then
                     shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
                     shopSheet_Vehicles_Secondary_BuyButton:InvalidateParent(true)
                     shopSheet_Vehicles_Secondary_BuyButton.Paint = function(self, w, h)
-                        if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost and LocalPlayer():Alive() and LocalPlayer():GetNWBool("IsInBase") == true then
+                        if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost 
+                        and LocalPlayer():Alive() 
+                        and LocalPlayer():InVehicle() == false
+                        and LocalPlayer():GetNWBool("IsInBase") == true then
                             shopSheet_Vehicles_Secondary_BuyButton:SetEnabled(true)
                             draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
                             surface.SetDrawColor(109,255,73)
@@ -1304,7 +1308,7 @@ if CLIENT then
             shopSheet_Upgrades.Paint = function(self, w, h)
                 draw.RoundedBox(0,0,0, w, h, Color(10,10,10,100))
             end
-            mainColumnSheet:AddSheet("Ammo", shopSheet_Upgrades, "icon16/box.png")
+            mainColumnSheet:AddSheet("Items", shopSheet_Upgrades, "icon16/box.png")
 
                 -- Divide the vehicles panel into two pieces, dock this child panel to the left
                 local shopSheet_Ammo_Primary = vgui.Create("DPanel", shopSheet_Upgrades)
@@ -1424,6 +1428,7 @@ if CLIENT then
                             and LocalPlayer():Alive() 
                             and LocalPlayer():GetNWBool("IsInBase") == true 
                             and (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetPos()):Length() <= 300 -- Entities need a distance check before they can be purchased
+                            and LocalPlayer():InVehicle() == false
                             and gameStageData.name == "MATCH" -- Not allowed to buy ammo or health during pre-setup
                         then
                             shopSheet_Ammo_Secondary_BuyButton:SetEnabled(true)
@@ -2014,8 +2019,40 @@ if CLIENT then
                 shopSheet_Player_Primary:Dock(LEFT)
                 shopSheet_Player_Primary:InvalidateParent(true)
                 shopSheet_Player_Primary.Paint = function(self, w, h)
-                    draw.RoundedBox(0,0,0, w, h, Color(107,0,0,100)) -- Red for visualizing positioning
+                    draw.RoundedBox(0,0,0, w, h, Color(107,0,0,0)) -- Red for visualizing positioning
                 end
+
+                    local shopSheet_Player_PrimaryTitlePanel = vgui.Create("DPanel", shopSheet_Player_Primary)
+                    shopSheet_Player_PrimaryTitlePanel:SetTall(shopSheet_Player_Primary:GetTall() / 12)
+                    shopSheet_Player_PrimaryTitlePanel:Dock(TOP)
+                    shopSheet_Player_PrimaryTitlePanel:InvalidateParent(true)
+                    shopSheet_Player_PrimaryTitlePanel.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
+                        surface.SetDrawColor(255,255,255)
+                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        draw.SimpleText("PLAYER MODEL PREVIEW", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                    end
+
+                    local shopSheet_Player_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Player_Primary)
+                    shopSheet_Player_Primary_PreviewPanel:DockPadding(5,5,5,5)
+                    shopSheet_Player_Primary_PreviewPanel:Dock(FILL)
+                    shopSheet_Player_Primary_PreviewPanel:InvalidateParent(true)
+                    shopSheet_Player_Primary_PreviewPanel.Paint = function(self, w, h)
+                        draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
+                        surface.SetDrawColor(255,255,255)
+                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    end
+                
+                    local shopSheet_Player_Primary_ModelPanel = shopSheet_Player_Primary_PreviewPanel:Add( "DModelPanel" )
+                    shopSheet_Player_Primary_ModelPanel:Dock( FILL )
+                    shopSheet_Player_Primary_ModelPanel:SetFOV( 36 )
+                    shopSheet_Player_Primary_ModelPanel:SetCamPos( vector_origin )
+                    shopSheet_Player_Primary_ModelPanel:SetDirectionalLight( BOX_RIGHT, Color( 255, 160, 80, 255 ) )
+                    shopSheet_Player_Primary_ModelPanel:SetDirectionalLight( BOX_LEFT, Color( 80, 160, 255, 255 ) )
+                    shopSheet_Player_Primary_ModelPanel:SetAmbientLight( Vector( -64, -64, -64 ) )
+                    shopSheet_Player_Primary_ModelPanel:SetAnimated( true )
+                    shopSheet_Player_Primary_ModelPanel.Angles = angle_zero
+                    shopSheet_Player_Primary_ModelPanel:SetLookAt( Vector( -100, 0, -22 ) )
 
                 local shopSheet_Player_Secondary = vgui.Create("DPanel", shopSheet_Player)
                 shopSheet_Player_Secondary:SetWide(shopSheet_Player:GetWide() / 2)
@@ -2023,8 +2060,130 @@ if CLIENT then
                 shopSheet_Player_Secondary:Dock(RIGHT)
                 shopSheet_Player_Secondary:InvalidateParent(true)
                 shopSheet_Player_Secondary.Paint = function(self, w, h)
-                    draw.RoundedBox(0,0,0, w, h, Color(0,35,100)) -- Blue for visualizing positioning
+                    draw.RoundedBox(0,0,0, w, h, Color(0,1,35,0)) -- Blue for visualizing positioning
                 end
+
+                    local shopSheet_Player_Secondary_PropertySheet = shopSheet_Player_Secondary:Add( "DPropertySheet" )
+                    shopSheet_Player_Secondary_PropertySheet:Dock( FILL )
+                    shopSheet_Player_Secondary_PropertySheet:SetSize( 430, 0 )
+            
+                    local shopSheet_Player_Secondary_ModelList = shopSheet_Player_Secondary:Add( "DPanel" )
+                    shopSheet_Player_Secondary_ModelList:DockPadding( 8, 8, 8, 8 )
+            
+                    local shopSheet_Player_Secondary_ModelList_PanelSelect = shopSheet_Player_Secondary_ModelList:Add( "DPanelSelect" )
+                    shopSheet_Player_Secondary_ModelList_PanelSelect:Dock( FILL )
+            
+                    for name, model in SortedPairs( player_manager.AllValidModels() ) do
+            
+                        local icon = vgui.Create( "SpawnIcon" )
+                        icon:SetModel( model )
+                        icon:SetSize( 64, 64 )
+                        icon:SetTooltip( name )
+                        icon.playermodel = name
+                        icon.model_path = model
+                        icon.OpenMenu = function( button )
+                            local menu = DermaMenu()
+                            menu:AddOption( "#spawnmenu.menu.copy", function() SetClipboardText( model ) end ):SetIcon( "icon16/page_copy.png" )
+                            menu:Open()
+                        end
+            
+                        shopSheet_Player_Secondary_ModelList_PanelSelect:AddPanel( icon, { cl_playermodel = name } )
+            
+                    end
+            
+                    shopSheet_Player_Secondary_PropertySheet:AddSheet( "#smwidget.model", shopSheet_Player_Secondary_ModelList, "icon16/user.png" )
+            
+                    local bdcontrols = shopSheet_Player_Secondary:Add( "DPanel" )
+                    bdcontrols:DockPadding( 8, 8, 8, 8 )
+            
+                    local bdcontrolspanel = bdcontrols:Add( "DPanelList" )
+                    bdcontrolspanel:EnableVerticalScrollbar( true )
+                    bdcontrolspanel:Dock( FILL )
+            
+                    local bgtab = shopSheet_Player_Secondary_PropertySheet:AddSheet( "#smwidget.bodygroups", bdcontrols, "icon16/cog.png" )
+            
+                    -- Helper functions
+            
+                    local function MakeNiceName( str )
+                        local newname = {}
+            
+                        for _, s in pairs( string.Explode( "_", str ) ) do
+                            if ( string.len( s ) == 1 ) then table.insert( newname, string.upper( s ) ) continue end
+                            table.insert( newname, string.upper( string.Left( s, 1 ) ) .. string.Right( s, string.len( s ) - 1 ) ) -- Ugly way to capitalize first letters.
+                        end
+            
+                        return string.Implode( " ", newname )
+                    end
+            
+                    -- Updating
+                    local function UpdateBodyGroups( pnl, val )
+                        if ( pnl.type == "bgroup" ) then
+            
+                            shopSheet_Player_Primary_ModelPanel.Entity:SetBodygroup( pnl.typenum, math.Round( val ) )
+            
+                            local str = string.Explode( " ", GetConVarString( "cl_playerbodygroups" ) )
+                            if ( #str < pnl.typenum + 1 ) then for i = 1, pnl.typenum + 1 do str[ i ] = str[ i ] or 0 end end
+                            str[ pnl.typenum + 1 ] = math.Round( val )
+                            RunConsoleCommand( "cl_playerbodygroups", table.concat( str, " " ) )
+            
+                        elseif ( pnl.type == "skin" ) then
+            
+                            shopSheet_Player_Primary_ModelPanel.Entity:SetSkin( math.Round( val ) )
+                            RunConsoleCommand( "cl_playerskin", math.Round( val ) )
+            
+                        end
+                    end
+            
+                    local function RebuildBodygroupTab()
+                        bdcontrolspanel:Clear()
+            
+                        bgtab.Tab:SetVisible( false )
+            
+                        local nskins = shopSheet_Player_Primary_ModelPanel.Entity:SkinCount() - 1
+                        if ( nskins > 0 ) then
+                            local skins = vgui.Create( "DNumSlider" )
+                            skins:Dock( TOP )
+                            skins:SetText( "Skin" )
+                            skins:SetDark( true )
+                            skins:SetTall( 50 )
+                            skins:SetDecimals( 0 )
+                            skins:SetMax( nskins )
+                            skins:SetValue( GetConVarNumber( "cl_playerskin" ) )
+                            skins.type = "skin"
+                            skins.OnValueChanged = UpdateBodyGroups
+            
+                            bdcontrolspanel:AddItem( skins )
+            
+                            shopSheet_Player_Primary_ModelPanel.Entity:SetSkin( GetConVarNumber( "cl_playerskin" ) )
+            
+                            bgtab.Tab:SetVisible( true )
+                        end
+            
+                        local groups = string.Explode( " ", GetConVarString( "cl_playerbodygroups" ) )
+                        for k = 0, shopSheet_Player_Primary_ModelPanel.Entity:GetNumBodyGroups() - 1 do
+                            if ( shopSheet_Player_Primary_ModelPanel.Entity:GetBodygroupCount( k ) <= 1 ) then continue end
+            
+                            local bgroup = vgui.Create( "DNumSlider" )
+                            bgroup:Dock( TOP )
+                            bgroup:SetText( MakeNiceName( shopSheet_Player_Primary_ModelPanel.Entity:GetBodygroupName( k ) ) )
+                            bgroup:SetDark( true )
+                            bgroup:SetTall( 50 )
+                            bgroup:SetDecimals( 0 )
+                            bgroup.type = "bgroup"
+                            bgroup.typenum = k
+                            bgroup:SetMax( shopSheet_Player_Primary_ModelPanel.Entity:GetBodygroupCount( k ) - 1 )
+                            bgroup:SetValue( groups[ k + 1 ] or 0 )
+                            bgroup.OnValueChanged = UpdateBodyGroups
+            
+                            bdcontrolspanel:AddItem( bgroup )
+            
+                            shopSheet_Player_Primary_ModelPanel.Entity:SetBodygroup( k, groups[ k + 1 ] or 0 )
+            
+                            bgtab.Tab:SetVisible( true )
+                        end
+            
+                        shopSheet_Player_Secondary_PropertySheet.tabScroller:InvalidateLayout()
+                    end
 
             --- KOFI TIP TAB ---
 
@@ -2035,7 +2194,7 @@ if CLIENT then
 
                 local shopSheet_Tip_Panel = vgui.Create("DPanel", shopSheet_Tip)
                 shopSheet_Tip_Panel:SetWide(shopSheet_Tip:GetWide() / 2)
-                shopSheet_Tip_Panel:DockPadding(20,20,20,20)
+                --shopSheet_Tip_Panel:DockPadding(20,20,20,20)
                 shopSheet_Tip_Panel:Dock(FILL)
                 shopSheet_Tip_Panel:InvalidateParent(true)
                 shopSheet_Tip_Panel.Paint = function(self, w, h)
@@ -2046,6 +2205,59 @@ if CLIENT then
                 local shopSheet_Tip_Window = vgui.Create( "DHTML", shopSheet_Tip_Panel )
                 shopSheet_Tip_Window:Dock(FILL)
                 shopSheet_Tip_Window:OpenURL("ko-fi.com/dragonbyte1546")
+
+            --- Helper Functions ---
+
+            local function UpdateFromConvars()
+                
+                local model = LocalPlayer():GetInfo( "cl_playermodel" )
+                local modelname = player_manager.TranslatePlayerModel( model )
+                util.PrecacheModel( modelname )
+                shopSheet_Player_Primary_ModelPanel:SetModel( modelname )
+                shopSheet_Player_Primary_ModelPanel.Entity.GetPlayerColor = function() 
+                    team.GetColor(LocalPlayer():Team()):ToVector() 
+                end
+                shopSheet_Player_Primary_ModelPanel.Entity:SetPos( Vector( -100, 0, -61 ) )
+
+                --PlayPreviewAnimation( shopSheet_Player_Primary_ModelPanel, model )
+                RebuildBodygroupTab()
+
+            end
+
+            UpdateFromConvars()
+
+            function shopSheet_Player_Secondary_ModelList_PanelSelect:OnActivePanelChanged( old, new )
+
+                if ( old != new ) then -- Only reset if we changed the model
+                    RunConsoleCommand( "cl_playerbodygroups", "0" )
+                    RunConsoleCommand( "cl_playerskin", "0" )
+                end
+
+                timer.Simple( 0.1, function() UpdateFromConvars() end )
+
+            end
+
+            -- Hold to rotate
+
+            function shopSheet_Player_Primary_ModelPanel:DragMousePress()
+                self.PressX, self.PressY = gui.MousePos()
+                self.Pressed = true
+            end
+
+            function shopSheet_Player_Primary_ModelPanel:DragMouseRelease() self.Pressed = false end
+
+            function shopSheet_Player_Primary_ModelPanel:LayoutEntity( ent )
+                if ( self.bAnimated ) then self:RunAnimation() end
+
+                if ( self.Pressed ) then
+                    local mx = gui.MousePos()
+                    self.Angles = self.Angles - Angle( 0, ( ( self.PressX or mx ) - mx ) / 2, 0 )
+
+                    self.PressX, self.PressY = gui.MousePos()
+                end
+
+                ent:SetAngles( self.Angles )
+            end
 
         else
 
