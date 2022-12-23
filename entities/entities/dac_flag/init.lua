@@ -29,7 +29,14 @@ end
 
 function ENT:StartTouch(entity)
 
-	if entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() != self:GetTeam() and not entity:InVehicle() and not self:GetHeld() then -- Consider adding a condition to check against spectators, come back to this later
+	if entity:IsValid() 
+	and entity:IsPlayer() 
+	and entity:Alive() 
+	and entity:Team() != self:GetTeam() 
+	and entity:GetPlayerCarrierStatus() == false
+	and not entity:InVehicle() 
+	and not self:GetHeld() 
+	then -- Consider adding a condition to check against spectators, come back to this later
 		
 		-- Can't set this in the entity initialization hook for some reason, so I have to fucking do it here
 		if(self:GetOnBase() == true and self:GetHeld() == false) then
@@ -71,38 +78,40 @@ function ENT:StartTouch(entity)
 
 	----- END INSTANT FLAG RECOVERY CONDITION -----
 		
-	elseif entity:IsValid() and entity:IsPlayer() and entity:Alive() and entity:Team() == self:GetTeam() and self:GetHeld() == false and self:GetOnBase() == true then -- Flag is on base and the player is on the same team
-
-		if(entity:GetPlayerCarrierStatus() == true) then
+	elseif entity:IsValid() 
+		and entity:IsPlayer() 
+		and entity:Alive() 
+		and entity:Team() == self:GetTeam() 
+		and entity:GetPlayerCarrierStatus() == true
+		and self:GetHeld() == false 
+		and self:GetOnBase() == true then -- Flag is on base and the player is on the same team
 			
-			--print("[DAC DEBUG]: Score condition tripped.")
-			self:ScoreFlag(self.Entity:GetTeam())
+		--print("[DAC DEBUG]: Score condition tripped.")
+		self:ScoreFlag(self.Entity:GetTeam())
 			
-			for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
-				if (child:GetClass() == "dac_flag") then
-					--print("[DAC DEBUG]: Child flag identified. Returning.")
-					child:ReturnFlag()
-					break -- Stop iterations after flag is identified
-				end
+		for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
+			if (child:GetClass() == "dac_flag") then
+				--print("[DAC DEBUG]: Child flag identified. Returning.")
+				child:ReturnFlag()
+				break -- Stop iterations after flag is identified
 			end
-
-			entity:SetPlayerCarrierStatus(false)
-
-			local curMoney = entity:GetNWInt("storeCredits")
-			local newMoney = curMoney + GetConVar("dac_income_amount"):GetInt() * 2
-			entity:SetNWInt("storeCredits", newMoney)
-			entity:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_income_amount"):GetInt() * 2 .. "cR for capturing a flag!")
-
-			net.Start("SendScoreAudio")
-			net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
-			net.Broadcast() -- This sends to all players, not just the flag carrier
-
-			net.Start("SendFlagHUDNotify") -- Notify the carrying player's HUD
-			net.WriteEntity(self.Entity)
-			net.WriteBool(false)
-			net.Send(entity)
-
 		end
+
+		entity:SetPlayerCarrierStatus(false)
+
+		local curMoney = entity:GetNWInt("storeCredits")
+		local newMoney = curMoney + GetConVar("dac_income_amount"):GetInt() * 2
+		entity:SetNWInt("storeCredits", newMoney)
+		entity:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_income_amount"):GetInt() * 2 .. "cR for capturing a flag!")
+
+		net.Start("SendScoreAudio")
+		net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
+		net.Broadcast() -- This sends to all players, not just the flag carrier
+
+		net.Start("SendFlagHUDNotify") -- Notify the carrying player's HUD
+		net.WriteEntity(self.Entity)
+		net.WriteBool(false)
+		net.Send(entity)
 
 	end
 

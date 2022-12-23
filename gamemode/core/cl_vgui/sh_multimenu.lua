@@ -1441,7 +1441,11 @@ if CLIENT then
                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,255))
                             surface.SetDrawColor(255,126,126)
                             surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
-                            shopSheet_Ammo_Secondary_BuyButton:SetText("MATCH NOT STARTED")
+                            if gameStageData.name ~= "MATCH" then
+                                shopSheet_Ammo_Secondary_BuyButton:SetText("DISABLED")
+                            else
+                                shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                            end
                         end
                     end
                     shopSheet_Ammo_Secondary_BuyButton.DoClick = function(self, w, h)

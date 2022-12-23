@@ -83,6 +83,3 @@ function GM:ContextMenuOpen()
 	end
 end
 hook.Add("ContextMenuOpen", "DAC.ContextMenu", ContextMenuOpen)
-
-function GM:Think()
-end
