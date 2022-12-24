@@ -5,8 +5,8 @@ ENT.Author = "Arrin Bevers"
 ENT.Purpose = "Base for flag objective"
 ENT.Category = "DAC"
 
-ENT.Spawnable = true
-ENT.AdminSpawnable = false
+ENT.Spawnable = false
+ENT.AdminSpawnable = true
 ENT.Editable = true
 
 function ENT:GetFlagPos()

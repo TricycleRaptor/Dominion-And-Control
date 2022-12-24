@@ -1,3 +1,6 @@
+--Credit to LuaBee Gaming and Raubana for the original stencil work: https://pastebin.com/nxiixHgd
+--Made several edits and adjustments to the stenciling processes and use cases to fit the gamemode needs
+
 local color_mask2 = Color(0,0,0,0)
 
 local function drawStencilSphere( pos, ref, compare_func, radius, color, detail )

@@ -34,11 +34,17 @@ local function BroadcastTakenAudio(len, ply)
     LocalPlayer():EmitSound(PickupNoise)
     LocalPlayer():EmitSound(PickupNoise2)
 
-    local randomInt = math.Round(math.Rand(1,100), 0)
-    if GetConVar("dac_eastereggs"):GetBool() == true and randomInt == 1 then -- 1% chance
-        timer.Simple( 3, function() 
-            LocalPlayer():EmitSound(ActionComing)
-        end )
+    if GetConVar("dac_eastereggs"):GetBool() == true then -- 1% chance
+
+        if GetConVar("dac_eastereggs"):GetBool() == true then
+            local randomInt = math.random(0, 100)
+            if (randomInt > 99) then -- 1% chance
+                timer.Simple( 3, function() 
+                    LocalPlayer():EmitSound(ActionComing)
+                end )
+            end
+        end
+
     end
 
 end
