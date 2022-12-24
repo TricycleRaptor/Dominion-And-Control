@@ -8,7 +8,7 @@ ENT.Category = "DAC Shop"
 ENT.Cost = 500
 ENT.Model = "models/combine_turrets/floor_turret.mdl"
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.Editable = true
 

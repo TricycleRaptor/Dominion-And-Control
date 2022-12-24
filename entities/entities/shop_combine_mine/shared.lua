@@ -8,7 +8,7 @@ ENT.PrintName = "Combine Mine"
 ENT.Category = "DAC Shop"
 ENT.Author = "DoopieWop"
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 
 function ENT:SetupDataTables()
 

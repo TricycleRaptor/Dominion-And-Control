@@ -135,4 +135,18 @@ local V = {
 }
 list.Set( "weapons_equipment", 3, V )
 
--- TODO: Add spotter tool and vehicle repair tool
+local V = {
+
+	Name = "Vehicle Repair Tool",
+	Model = "models/weapons/w_physics.mdl",
+	Icon = "entities/weapon_simrepair.png",
+	Class = "weapon_dac_vehiclerepair",
+	Category = "Equipment",
+	Capacity = 1,
+	AmmoType = "None",
+	Description = "A handheld tool for repairing and restocking purchasable vehicles.",
+
+}
+list.Set( "weapons_equipment", 4, V )
+
+-- TODO: Add spotter tool

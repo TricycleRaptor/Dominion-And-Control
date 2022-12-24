@@ -5,7 +5,7 @@ ENT.Author = "Tricycle Raptor"
 ENT.Purpose = "An oildrum useful for blockades or throwing as a makeshift weapon"
 ENT.Category = "DAC Shop"
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.Editable = true
 

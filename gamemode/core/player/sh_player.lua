@@ -17,6 +17,7 @@ function GM:PlayerSpawn(ply)
 	self.BaseClass:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)
 
+	-- Reset player variables used for previewing vehicles
 	ply.vehicleName = nil
 	ply.vehicleType = nil
 	ply.vehicleCategory = nil
@@ -33,6 +34,14 @@ function GM:PlayerSpawn(ply)
 	-- Changes player model colors, if the model has any, as well as the physgun
 	ply:SetPlayerColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )
 	ply:SetWeaponColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )
+
+	-- Brief 3-second invulnerability when spawning
+	if stageData.name == "MATCH" then 
+		ply:GodEnable()
+		timer.Simple(3, function() 
+			ply:GodDisable()
+		end)
+	end
 
 	-- Set up player configurations
 	player_manager.SetPlayerClass(ply, "DAC_playerclass") -- Get the internal player settings from the DAC custom class

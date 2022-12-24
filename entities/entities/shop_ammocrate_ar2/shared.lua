@@ -8,7 +8,7 @@ ENT.Category = "DAC Shop"
 ENT.Cost = 2000
 ENT.Model = "models/items/ammocrate_ar2.mdl"
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.Editable = true
 

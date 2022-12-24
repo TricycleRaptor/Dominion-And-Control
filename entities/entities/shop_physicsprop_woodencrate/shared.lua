@@ -5,7 +5,7 @@ ENT.Author = "Tricycle Raptor"
 ENT.Purpose = "A standard crate useful for barricades or impeding movement in tight spaces"
 ENT.Category = "DAC Shop"
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.Editable = true
 

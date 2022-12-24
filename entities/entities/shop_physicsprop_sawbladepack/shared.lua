@@ -5,7 +5,7 @@ ENT.Author = "Tricycle Raptor"
 ENT.Purpose = "An pack of sawblades used to kill people"
 ENT.Category = "DAC Shop"
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.Editable = true
 
