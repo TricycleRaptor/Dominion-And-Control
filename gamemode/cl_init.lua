@@ -69,7 +69,7 @@ function GM:SpawnMenuOpen()
 end
 hook.Add("SpawnMenuOpen", "DAC.SpawnMenu", SpawnMenuOpen)
 
-function GM:ContextMenuOpen()
+--[[function GM:ContextMenuOpen()
     local stage = DAC:GetGameStage()
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
@@ -81,5 +81,17 @@ function GM:ContextMenuOpen()
 	else
 		return true 
 	end
+end
+hook.Add("ContextMenuOpen", "DAC.ContextMenu", ContextMenuOpen)]]
+
+function GM:ContextMenuOpen()
+
+	-- Disable the context menu entirely if the player isn't an admin
+	if not LocalPlayer():IsAdmin() then 
+		return false
+	else 
+		return true 
+	end
+
 end
 hook.Add("ContextMenuOpen", "DAC.ContextMenu", ContextMenuOpen)

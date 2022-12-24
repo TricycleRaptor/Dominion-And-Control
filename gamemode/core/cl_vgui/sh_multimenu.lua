@@ -135,6 +135,8 @@ if CLIENT then
 
             local panelX, panelY = MENU_FRAME:GetSize()
 
+            MENU_FRAME:SetVisible(true)
+
             --- MAIN PANELS SETUP ---
 
             local titleLabel = vgui.Create("DLabel", MENU_FRAME)
@@ -2265,11 +2267,18 @@ if CLIENT then
 
         else
 
-            -- Menu button was pushed, and the frame is already open, so now we'll close it
-            LocalPlayer():EmitSound(CloseNoise)
-            gui.EnableScreenClicker(false)
-            MENU_FRAME:Remove()
-            MENU_FRAME = nil
+            -- Only executed after the menu has been painted once
+            if MENU_FRAME:IsVisible() then
+                -- Menu button was pushed, and the menu is already open, so now we'll close it
+                LocalPlayer():EmitSound(CloseNoise)
+                gui.EnableScreenClicker(false)
+                MENU_FRAME:SetVisible(false)
+            else
+                -- Menu isn't visible, but created, so we'll open it again
+                LocalPlayer():EmitSound(OpenNoise)
+                gui.EnableScreenClicker(true)
+                MENU_FRAME:SetVisible(true)
+            end
 
         end
     
