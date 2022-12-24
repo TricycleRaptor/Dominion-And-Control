@@ -1,13 +1,13 @@
 local SH = ScrH()
 local SW = ScrW()
 
-local BLUE_PANE_POS = {x = SW * 0.45, y = (10)}
-local BLUE_PANE_LENGTH = SW * 0.055 -- % of screen width
-local BLUE_PANE_HEIGHT = 50
-
-local RED_PANE_POS = {x = SW * 0.55, y = (10)}
+local RED_PANE_POS = {x = SW * 0.45, y = (10)}
 local RED_PANE_LENGTH = SW * 0.055 -- % of screen width
 local RED_PANE_HEIGHT = 50
+
+local BLUE_PANE_POS = {x = SW * 0.55, y = (10)}
+local BLUE_PANE_LENGTH = SW * 0.055 -- % of screen width
+local BLUE_PANE_HEIGHT = 50
 
 local FLAG_PANE_POS = {x = 30, y = (SH - 100)}
 
@@ -21,18 +21,18 @@ local animated_values = {
 }
 
 -- Drawing Team Indicators
-local red_group_indicator_coordinates = {
-	{x = RED_PANE_POS.x + RED_PANE_LENGTH - GROUP_INDICATOR_WIDTH, y = RED_PANE_POS.y},
-	{x = RED_PANE_POS.x + RED_PANE_LENGTH, y = RED_PANE_POS.y},
-	{x = RED_PANE_POS.x + RED_PANE_LENGTH - RED_PANE_HEIGHT * ANGLE, y = RED_PANE_POS.y + RED_PANE_HEIGHT},
-	{x = RED_PANE_POS.x + RED_PANE_LENGTH - RED_PANE_HEIGHT * ANGLE - GROUP_INDICATOR_WIDTH, y = RED_PANE_POS.y + RED_PANE_HEIGHT}
+local blue_group_indicator_coordinates = {
+	{x = BLUE_PANE_POS.x + BLUE_PANE_LENGTH - GROUP_INDICATOR_WIDTH, y = BLUE_PANE_POS.y},
+	{x = BLUE_PANE_POS.x + BLUE_PANE_LENGTH, y = BLUE_PANE_POS.y},
+	{x = BLUE_PANE_POS.x + BLUE_PANE_LENGTH - BLUE_PANE_HEIGHT * ANGLE, y = BLUE_PANE_POS.y + BLUE_PANE_HEIGHT},
+	{x = BLUE_PANE_POS.x + BLUE_PANE_LENGTH - BLUE_PANE_HEIGHT * ANGLE - GROUP_INDICATOR_WIDTH, y = BLUE_PANE_POS.y + BLUE_PANE_HEIGHT}
 }
 
-local blue_group_indicator_coordinates = {
-    {x = BLUE_PANE_POS.x - BLUE_PANE_LENGTH - GROUP_INDICATOR_WIDTH, y = BLUE_PANE_POS.y},
-    {x = BLUE_PANE_POS.x - BLUE_PANE_LENGTH, y = BLUE_PANE_POS.y},
-    {x = BLUE_PANE_POS.x - BLUE_PANE_LENGTH + BLUE_PANE_HEIGHT * ANGLE, y = BLUE_PANE_POS.y + BLUE_PANE_HEIGHT},
-    {x = BLUE_PANE_POS.x - BLUE_PANE_LENGTH + BLUE_PANE_HEIGHT * ANGLE - GROUP_INDICATOR_WIDTH, y = BLUE_PANE_POS.y + BLUE_PANE_HEIGHT}
+local red_group_indicator_coordinates = {
+    {x = RED_PANE_POS.x - RED_PANE_LENGTH - GROUP_INDICATOR_WIDTH, y = RED_PANE_POS.y},
+    {x = RED_PANE_POS.x - RED_PANE_LENGTH, y = RED_PANE_POS.y},
+    {x = RED_PANE_POS.x - RED_PANE_LENGTH + RED_PANE_HEIGHT * ANGLE, y = RED_PANE_POS.y + RED_PANE_HEIGHT},
+    {x = RED_PANE_POS.x - RED_PANE_LENGTH + RED_PANE_HEIGHT * ANGLE - GROUP_INDICATOR_WIDTH, y = RED_PANE_POS.y + RED_PANE_HEIGHT}
 }
 
 -- HUD Elements
@@ -72,15 +72,15 @@ hook.Add("HUDPaint", "DAC.HudScoreModules", function()
     if data.name == "MATCH" then
 
         -- We're just hard referencing team indexes for now. In the future, if we make this support multiple teams, we'll have to change this up a bit.
-        drawTrapeziumReversed(BLUE_PANE_POS, BLUE_PANE_HEIGHT, BLUE_PANE_LENGTH, PANE_COLOR)
-        surface.SetDrawColor(team.GetColor(1)) -- Blue team is index 1
-        surface.DrawPoly(blue_group_indicator_coordinates)
-        drawText({x = BLUE_PANE_POS.x - 35 , y = BLUE_PANE_POS.y + 0}, Color(255, 255, 255), "HUD.AmmoFont48", team.GetScore(1))
-
-        drawTrapezium(RED_PANE_POS, RED_PANE_HEIGHT, RED_PANE_LENGTH, PANE_COLOR)
+        drawTrapeziumReversed(RED_PANE_POS, RED_PANE_HEIGHT, RED_PANE_LENGTH, PANE_COLOR)
         surface.SetDrawColor(team.GetColor(2)) -- Red team is index 2
         surface.DrawPoly(red_group_indicator_coordinates)
-        drawText({x = RED_PANE_POS.x + 10, y = RED_PANE_POS.y + 0}, Color(255, 255, 255), "HUD.AmmoFont48", team.GetScore(2))
+        drawText({x = RED_PANE_POS.x - 35 , y = RED_PANE_POS.y + 0}, Color(255, 255, 255), "HUD.AmmoFont48", team.GetScore(2))
+
+        drawTrapezium(BLUE_PANE_POS, BLUE_PANE_HEIGHT, BLUE_PANE_LENGTH, PANE_COLOR)
+        surface.SetDrawColor(team.GetColor(1)) -- Blue team is index 1
+        surface.DrawPoly(blue_group_indicator_coordinates)
+        drawText({x = BLUE_PANE_POS.x + 10, y = BLUE_PANE_POS.y + 0}, Color(255, 255, 255), "HUD.AmmoFont48", team.GetScore(1))
 
     end
 
