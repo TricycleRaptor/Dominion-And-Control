@@ -5,7 +5,7 @@ SWEP.Base = "weapon_base"
 SWEP.PrintName = "BASE LOCATOR"
 SWEP.Author = "Tricycle Raptor"
 SWEP.Instructions = "Sets the designated build zone for your team's base. Left click to confirm desired location."
-SWEP.Spawnable = true
+SWEP.Spawnable = false
 SWEP.AdminSpawnable = true
 SWEP.AdminOnly = true
 

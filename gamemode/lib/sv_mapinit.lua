@@ -49,6 +49,12 @@ hook.Add("PostCleanupMap", "DAC.MapCleaned", function(ply, cmd)
 		team.SetScore(teamKey, 0)
 	end
 
+	-- Remove passive timers for income
+	if timer.Exists("DAC.timerSalary") then
+		timer.Pause("DAC.timerSalary")
+		timer.Remove("DAC.timerSalary")
+	end
+
 	--PrintTable(GAMEMODE.Teams)
 	local setupStage = DAC.GameStage.New(1) -- 1 is the ENUM for the setup phase
 	DAC:SetGameStage(setupStage)

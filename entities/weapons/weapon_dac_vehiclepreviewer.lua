@@ -4,7 +4,8 @@ SWEP.Category = "DAC"
 SWEP.Base = "weapon_base"
 SWEP.PrintName = "VEHICLE PREVIEWER"
 SWEP.Author = "Tricycle Raptor"
-SWEP.Instructions = "Preview positioning for a selected vehicle from the shop menu."
+SWEP.Purpose = "Preview positioning for a selected vehicle from the shop menu."
+SWEP.Instructions = "Primary to confirm position\nSecondary to cancel purchase"
 SWEP.Spawnable = false
 SWEP.AdminSpawnable = true
 SWEP.AdminOnly = true
@@ -187,7 +188,7 @@ net.Receive("dac_sendvehicledata", function(len, ply)
     ply.vehicleClass = net.ReadString() -- Class
     ply.vehicleSpawnOffset = net.ReadString() -- Class
 
-    print("\n[DAC DEBUG]: Server received:\n"
+    --[[print("\n[DAC DEBUG]: Server received:\n"
     .. "Sending Player: " ..tostring(ply:Nick()) .. "\n" 
     .. "Name: " .. tostring(ply.vehicleName) .. "\n" 
     .. "Type: " .. tostring(ply.vehicleType) .. "\n"
@@ -197,7 +198,7 @@ net.Receive("dac_sendvehicledata", function(len, ply)
     .. "Model: " .. tostring(ply.vehicleModel) .. "\n"
     .. "List: " .. tostring(ply.vehicleListName) .. "\n"
     .. "Class: " .. tostring(ply.vehicleClass) .. "\n"
-    )
+    )]]
 
     ply:EmitSound("buttons/combine_button3.wav")
 
@@ -210,7 +211,7 @@ net.Receive("dac_vehicle_confirmation", function(len, ply)
     if confirmationBool == true then
         --print("[DAC DEBUG]: Server received confirmation message.")
 
-        print("[DAC DEBUG]: Vehicle class " .. tostring(ply.vehicleClass))
+        --print("[DAC DEBUG]: Vehicle class " .. tostring(ply.vehicleClass))
     
         -- Pass in all the necessary data here for spawning a vehicle, including deducting credits from the player's balance
         if ply.vehicleType == "simfphys" then

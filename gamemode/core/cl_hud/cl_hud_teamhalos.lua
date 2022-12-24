@@ -9,8 +9,9 @@ timer.Create("dac_haloTargetEnt", 0.1, 0, function()
 
 	if IsValid(CurrentTarget) then
 		if (CurrentTarget:IsPlayer()) then
-                haloColor = team.GetColor((CurrentTarget:Team()))
-		elseif (CurrentTarget:IsVehicle() or CurrentTarget:GetNWBool('IsLFSVehicle') == true) then
+            haloColor = team.GetColor((CurrentTarget:Team()))
+		elseif (CurrentTarget:GetNWInt('OwningTeam') ~= 0) then
+			--print("[DAC DEBUG]: " .. tostring(CurrentTarget) .. "'s team is " .. CurrentTarget:GetNWInt('OwningTeam'))
             haloColor = team.GetColor(CurrentTarget:GetNWInt('OwningTeam'))
 		else
 			CurrentTarget = nil

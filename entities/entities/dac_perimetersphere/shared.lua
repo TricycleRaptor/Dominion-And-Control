@@ -6,9 +6,9 @@ ENT.Purpose = "Gamemode team base region"
 ENT.Category = "DAC"
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
-ENT.Spawnable = true
+ENT.Spawnable = false
 ENT.AdminSpawnable = false
-ENT.Editable = true
+ENT.Editable = false
 
 function ENT:SetupDataTables()
 
