@@ -859,6 +859,8 @@ if CLIENT then
                         if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost then
 
                             LocalPlayer():EmitSound(ConfirmNoise)
+                            MENU_FRAME:SetVisible(false)
+                            gui.EnableScreenClicker(false)
 
                             net.Start("dac_givevehicle_preview")
                                 net.WriteString("weapon_dac_vehiclepreviewer")
