@@ -10,8 +10,8 @@ local TDM_SCOREBOARD = true
 
 -- Derma modules
 local Scoreboard = nil
-local RedPlayerList = nil
 local BluePlayerList = nil
+local RedPlayerList = nil
 local PlayerScrollPanel = nil
 local PlayerList = nil
 local ContextMenu = nil
@@ -69,36 +69,36 @@ function createPlayerList()
 
   -- Split Scoreboard in two if TDM is enabled
   if(TDM_SCOREBOARD) then
-    RedPlayerList = vgui.Create("DListLayout", PlayerScrollPanel)
-    RedPlayerList:SetSize(PlayerScrollPanel:GetWide()/2-100, PlayerScrollPanel:GetTall())
-    RedPlayerList:SetPos(50,0)
-    RedPlayerList:MakeDroppable("PlayerPanel")
-    RedPlayerList:DockPadding(0, 50, 0, 10)
-    RedPlayerList.Paint = function()
-      draw.RoundedBox(0, 0, 0, RedPlayerList:GetWide(), 40, Color(24, 24, 24, 255))
-      draw.SimpleText("Player", "DermaDefaultBold", 52, 12, Color(255, 255, 255, 255))
-      draw.SimpleText("Kills", "DermaDefaultBold", RedPlayerList:GetWide()-120, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-      draw.SimpleText("Deaths", "DermaDefaultBold", RedPlayerList:GetWide()-70, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-      draw.SimpleText("Ping", "DermaDefaultBold", RedPlayerList:GetWide()-20, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-      draw.SimpleText(team.NumPlayers(1).." /16", "DermaDefaultBold", RedPlayerList:GetWide()/2, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-      draw.RoundedBox(0, 0, 40, RedPlayerList:GetWide(), 10, COLOR_RED)
-      draw.RoundedBox(0, 0, RedPlayerList:GetTall()-10, RedPlayerList:GetWide(), 10, COLOR_RED)
-    end
-
     BluePlayerList = vgui.Create("DListLayout", PlayerScrollPanel)
     BluePlayerList:SetSize(PlayerScrollPanel:GetWide()/2-100, PlayerScrollPanel:GetTall())
-    BluePlayerList:SetPos(PlayerScrollPanel:GetWide()/2+50, 0)
+    BluePlayerList:SetPos(50,0)
     BluePlayerList:MakeDroppable("PlayerPanel")
     BluePlayerList:DockPadding(0, 50, 0, 10)
     BluePlayerList.Paint = function()
-      draw.RoundedBox(0, 0, 0, RedPlayerList:GetWide(), 40, Color(24, 24, 24, 255))
+      draw.RoundedBox(0, 0, 0, BluePlayerList:GetWide(), 40, Color(24, 24, 24, 255))
       draw.SimpleText("Player", "DermaDefaultBold", 52, 12, Color(255, 255, 255, 255))
       draw.SimpleText("Kills", "DermaDefaultBold", BluePlayerList:GetWide()-120, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
       draw.SimpleText("Deaths", "DermaDefaultBold", BluePlayerList:GetWide()-70, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
       draw.SimpleText("Ping", "DermaDefaultBold", BluePlayerList:GetWide()-20, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-      draw.SimpleText(team.NumPlayers(2).." /16", "DermaDefaultBold", BluePlayerList:GetWide()/2, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
-      draw.RoundedBox(0, 0, 40, BluePlayerList:GetWide(), 10, COLOR_BLUE)
-      draw.RoundedBox(0, 0, BluePlayerList:GetTall()-10, BluePlayerList:GetWide(), 10, COLOR_BLUE)
+      draw.SimpleText(team.NumPlayers(1).." /16", "DermaDefaultBold", BluePlayerList:GetWide()/2, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+      draw.RoundedBox(0, 0, 40, BluePlayerList:GetWide(), 10, COLOR_RED)
+      draw.RoundedBox(0, 0, BluePlayerList:GetTall()-10, BluePlayerList:GetWide(), 10, COLOR_RED)
+    end
+
+    RedPlayerList = vgui.Create("DListLayout", PlayerScrollPanel)
+    RedPlayerList:SetSize(PlayerScrollPanel:GetWide()/2-100, PlayerScrollPanel:GetTall())
+    RedPlayerList:SetPos(PlayerScrollPanel:GetWide()/2+50, 0)
+    RedPlayerList:MakeDroppable("PlayerPanel")
+    RedPlayerList:DockPadding(0, 50, 0, 10)
+    RedPlayerList.Paint = function()
+      draw.RoundedBox(0, 0, 0, BluePlayerList:GetWide(), 40, Color(24, 24, 24, 255))
+      draw.SimpleText("Player", "DermaDefaultBold", 52, 12, Color(255, 255, 255, 255))
+      draw.SimpleText("Kills", "DermaDefaultBold", RedPlayerList:GetWide()-120, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+      draw.SimpleText("Deaths", "DermaDefaultBold", RedPlayerList:GetWide()-70, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+      draw.SimpleText("Ping", "DermaDefaultBold", RedPlayerList:GetWide()-20, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+      draw.SimpleText(team.NumPlayers(2).." /16", "DermaDefaultBold", RedPlayerList:GetWide()/2, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+      draw.RoundedBox(0, 0, 40, RedPlayerList:GetWide(), 10, COLOR_BLUE)
+      draw.RoundedBox(0, 0, RedPlayerList:GetTall()-10, RedPlayerList:GetWide(), 10, COLOR_BLUE)
     end
   else
     PlayerList = vgui.Create("DListLayout", PlayerScrollPanel)
@@ -183,13 +183,13 @@ function createPlayerPanel(ply, team)
 
   if(TDM_SCOREBOARD) then
     if team == 2 then
-      PlayerPanel = vgui.Create("DPanel", RedPlayerList)
-      PlayerPanel:SetSize(RedPlayerList:GetWide(), 40)
+      PlayerPanel = vgui.Create("DPanel", BluePlayerList)
+      PlayerPanel:SetSize(BluePlayerList:GetWide(), 40)
       PlayerPanel:SetPos(0,0)
       PlayerPanel.Paint = function()
 
         if(ply == LocalPlayer()) then
-          draw.RoundedBox(0, PlayerPanel:GetWide() - BluePlayerList:GetWide(), 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(111, 112, 109, 220))
+          draw.RoundedBox(0, PlayerPanel:GetWide() - RedPlayerList:GetWide(), 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(111, 112, 109, 220))
         else
           draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(64, 65, 60, 220))
         end
@@ -207,17 +207,17 @@ function createPlayerPanel(ply, team)
     end
 
     if team == 1 then
-      PlayerPanel = vgui.Create("DPanel", BluePlayerList)
-      PlayerPanel:SetSize(BluePlayerList:GetWide(), 40)
-      PlayerPanel:SetPos(BluePlayerList:GetWide()/2, 0)
+      PlayerPanel = vgui.Create("DPanel", RedPlayerList)
+      PlayerPanel:SetSize(RedPlayerList:GetWide(), 40)
+      PlayerPanel:SetPos(RedPlayerList:GetWide()/2, 0)
       PlayerPanel.Paint = function()
 
         if(ply == LocalPlayer()) then
-          draw.RoundedBox(0, PlayerPanel:GetWide() - BluePlayerList:GetWide(), 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(111, 112, 109, 220))
+          draw.RoundedBox(0, PlayerPanel:GetWide() - RedPlayerList:GetWide(), 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(111, 112, 109, 220))
         else
-          draw.RoundedBox(0, PlayerPanel:GetWide() - BluePlayerList:GetWide(), 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(64, 65, 60, 220))
+          draw.RoundedBox(0, PlayerPanel:GetWide() - RedPlayerList:GetWide(), 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(64, 65, 60, 220))
         end
-        draw.RoundedBox(0, PlayerPanel:GetWide() - BluePlayerList:GetWide(), 39, PlayerPanel:GetWide(), 10, Color(0, 0, 0, 100))
+        draw.RoundedBox(0, PlayerPanel:GetWide() - RedPlayerList:GetWide(), 39, PlayerPanel:GetWide(), 10, Color(0, 0, 0, 100))
 
         draw.SimpleText(ply:GetName(), "DermaDefaultBold", 52, 12, Color(255, 255, 255))
         draw.SimpleText(ply:Ping(), "DermaDefaultBold", PlayerPanel:GetWide()-20, 12, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
@@ -277,8 +277,8 @@ function ShowScoreboard()
   -- Print names in order of teams
   if IsValid(Scoreboard) then
     if(TDM_SCOREBOARD) then
-      RedPlayerList:Clear()
       BluePlayerList:Clear()
+      RedPlayerList:Clear()
     else
       PlayerList:Clear()
     end

@@ -858,6 +858,7 @@ if CLIENT then
                     shopSheet_Vehicles_Secondary_BuyButton.DoClick = function(self, w, h)
                         if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost then
 
+                            -- Close the menu when preparing a vehicle for placement
                             LocalPlayer():EmitSound(ConfirmNoise)
                             MENU_FRAME:SetVisible(false)
                             gui.EnableScreenClicker(false)

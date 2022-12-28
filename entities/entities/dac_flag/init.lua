@@ -87,6 +87,7 @@ function ENT:StartTouch(entity)
 		and self:GetOnBase() == true then -- Flag is on base and the player is on the same team
 			
 		--print("[DAC DEBUG]: Score condition tripped.")
+		entity:SetPlayerCarrierStatus(false)
 		self:ScoreFlag(self.Entity:GetTeam())
 			
 		for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
@@ -96,8 +97,6 @@ function ENT:StartTouch(entity)
 				break -- Stop iterations after flag is identified
 			end
 		end
-
-		entity:SetPlayerCarrierStatus(false)
 
 		local curMoney = entity:GetNWInt("storeCredits")
 		local newMoney = curMoney + GetConVar("dac_income_amount"):GetInt() * 2
