@@ -1,4 +1,3 @@
-
 -- function GM:ShowTeam()
 -- 	if ( IsValid( self.TeamSelectFrame ) ) then return end
 -- end
@@ -8,6 +7,8 @@ function GM:ShowTeam()
 	GAMEMODE:HideTeam()
 	TEAM_FRAME = vgui.Create( "DFrame" )
 	self.TeamSelectFrame = TEAM_FRAME
+
+	GAMEMODE.Color = Color(255,255,255)
 
 	TEAM_FRAME:SetTitle( "Pick Team" )
 	TEAM_FRAME:SetBackgroundBlur(true)
@@ -43,12 +44,12 @@ function GM:ShowTeam()
 	bottomBar:InvalidateParent(true)
 	bottomBar.Paint = nil
 
-	local spectatorButton = vgui.Create("DButton", bottomBar)
+	--[[local spectatorButton = vgui.Create("DButton", bottomBar)
 	spectatorButton:SetFont("DAC.PickTeam")
 	spectatorButton:SetColor(GAMEMODE.Color)
 	spectatorButton:SetText("Spectate")
 	spectatorButton:SetTall(bottomBar:GetTall())
-	spectatorButton.Paint = nil
+	spectatorButton.Paint = nil]]
 
 	if ( GAMEMODE.AllowAutoTeam ) then
 		local autoButton = vgui.Create("DButton", bottomBar)

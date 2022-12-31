@@ -139,6 +139,26 @@ if CLIENT then
 
             --- MAIN PANELS SETUP ---
 
+            local closeButton = vgui.Create("DButton", MENU_FRAME)
+            closeButton:SetText("CLOSE")
+            closeButton:SetSize(50, 30)
+            closeButton:SetPos( panelX - 50, 0)
+            function closeButton.Paint(w, h)
+                if closeButton:IsDown() then
+                    closeButton:SetColor(Color(150, 255, 150))
+                elseif closeButton:IsHovered() then
+                    closeButton:SetColor(Color(200, 255, 200))
+                else
+                    closeButton:SetColor(Color(138, 138, 138))
+                end
+            end
+
+            closeButton.DoClick = function()
+                LocalPlayer():EmitSound(CloseNoise)
+                gui.EnableScreenClicker(false)
+                MENU_FRAME:SetVisible(false)
+            end
+
             local titleLabel = vgui.Create("DLabel", MENU_FRAME)
             titleLabel:SetFont("DAC.PickTeam") -- Size 32px
             titleLabel:SetText("DOMINION & CONTROL")
