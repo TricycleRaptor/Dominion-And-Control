@@ -16,7 +16,7 @@
 			"text"		"Build Time"
 			"help"		"The number in minutes where teams can build."
 			"type"		"Numeric"
-			"default"	"30"
+			"default"	"15"
 		}
 
 		2
@@ -43,7 +43,7 @@
 			"text"		"Respawn Time"
 			"help"		"Number of seconds before a player can respawn."
 			"type"		"Numeric"
-			"default"	"10"
+			"default"	"15"
 		}
 		
 		5
@@ -61,7 +61,7 @@
 			"text"		"Income Timer (seconds)"
 			"help"		"Sets the interval for passive income timer (In seconds)."
 			"type"		"Numeric"
-			"default"	"600"
+			"default"	"300"
 		}
 		
 		7
@@ -79,7 +79,7 @@
 			"text"		"Starting Balance"
 			"help"		"Amount given to each player at the start of the match."
 			"type"		"Numeric"
-			"default"	"200"
+			"default"	"100"
 		}
 		
 		9
@@ -88,7 +88,7 @@
 			"text"		"Kill Reward"
 			"help"		"Amount awarded to players for killing another player."
 			"type"		"Numeric"
-			"default"	"50"
+			"default"	"100"
 		}
 
 		10

@@ -43,7 +43,7 @@ hook.Add("PlayerDeath", "DAC.RewardPlayerKill", function( victim, inflictor, att
                 local curMoney = attacker:GetNWInt("storeCredits")
                 local newMoney = curMoney + GetConVar("dac_kill_reward"):GetInt()
                 attacker:SetNWInt("storeCredits", newMoney)
-                attacker:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_income_amount"):GetInt() .. "cR for killing " .. victim:Nick() .."!")
+                attacker:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_kill_reward"):GetInt() .. "cR for killing " .. victim:Nick() .."!")
             end
         end
     end

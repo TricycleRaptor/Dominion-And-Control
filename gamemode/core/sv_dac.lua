@@ -322,7 +322,7 @@ function EndMatch(winningTeam) -- Pass in the winning team
 
 		-- Reset team stats
 		for teamKey, teamData in pairs(GAMEMODE.Teams) do
-			GAMEMODE.Teams[teamKey].basePos = Vector(0,0,0)
+			GAMEMODE.Teams[teamKey].basePos = nil
 			GAMEMODE.Teams[teamKey].baseSet = false
 			team.SetScore(teamkey, 0)
 		end

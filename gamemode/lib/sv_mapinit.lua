@@ -44,7 +44,7 @@ hook.Add("PostCleanupMap", "DAC.MapCleaned", function(ply, cmd)
 	end)
 
 	for teamKey, teamData in pairs(GAMEMODE.Teams) do
-		GAMEMODE.Teams[teamKey].basePos = Vector(0,0,0)
+		GAMEMODE.Teams[teamKey].basePos = nil
 		GAMEMODE.Teams[teamKey].baseSet = false
 		team.SetScore(teamKey, 0)
 	end

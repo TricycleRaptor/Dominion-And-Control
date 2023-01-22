@@ -111,20 +111,23 @@ end
 function ENT:ReturnFlag()
 
 	--print("[DAC DEBUG]: Return function called. Parent base is " .. tostring(self.ParentBase))
+    self:SetParent(NULL)
+    self:SetParent(self.ParentBase)
 
-    self:SetOnBase(true)
-	self:SetHeld(false)
-	self:SetCarrier(NULL)
-
-	self:SetParent(NULL)
-	self:SetParent(self.ParentBase)
-	self:SetPos(self.ParentBase:GetPos() + self.ParentBase:GetUp() * 10)
+    self:SetPos(self.ParentBase:GetPos() + self.ParentBase:GetUp() * 10)
 	self:SetAngles(self.ParentBase:GetAngles())
 	self:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 
-	self.ParentBase:SetHasFlag(true)
     self.Entity:SetDropTime(0)
 
+    -- Staggering this by two seconds to try and prevent the flag from being taken again upon capture
+    timer.Simple(2, function()
+        self:SetOnBase(true)
+        self:SetHeld(false)
+        self:SetCarrier(NULL)
+        self.ParentBase:SetHasFlag(true)
+    end)
+	
 end
 
 function ENT:ScoreFlag(scoredTeam)
