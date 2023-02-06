@@ -87,7 +87,6 @@ function ENT:StartTouch(entity)
 		and self:GetOnBase() == true then -- Flag is on base and the player is on the same team
 			
 		--print("[DAC DEBUG]: Score condition tripped.")
-		entity:SetPlayerCarrierStatus(false)
 		self:ScoreFlag(self.Entity:GetTeam())
 			
 		for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
@@ -111,6 +110,11 @@ function ENT:StartTouch(entity)
 		net.WriteEntity(self.Entity)
 		net.WriteBool(false)
 		net.Send(entity)
+
+		-- Stagger carrier status by two seconds to mitigate delay that causes the instant re-taking of the flag
+		timer.Simple(2, function() 
+			entity:SetPlayerCarrierStatus(false)
+		end)
 
 	end
 

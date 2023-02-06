@@ -120,13 +120,10 @@ function ENT:ReturnFlag()
 
     self.Entity:SetDropTime(0)
 
-    -- Staggering this by two seconds to try and prevent the flag from being taken again upon capture
-    timer.Simple(2, function()
-        self:SetOnBase(true)
-        self:SetHeld(false)
-        self:SetCarrier(NULL)
-        self.ParentBase:SetHasFlag(true)
-    end)
+    self:SetOnBase(true)
+    self:SetHeld(false)
+    self:SetCarrier(NULL)
+    self.ParentBase:SetHasFlag(true)
 	
 end
 
