@@ -20,6 +20,7 @@ function ENT:Initialize()
 	-- The flag starts attached to the base, so adjust these values accordingly
 	self:SetOnBase(true)
 	self:SetHeld(false)
+	self:SetAvailable(true)
 	self:SetCarrier(nil)
 	self:SetDropTime(0)
 	self:SetAngles(Angle(0,90,0))
@@ -34,6 +35,7 @@ function ENT:StartTouch(entity)
 	and entity:Alive() 
 	and entity:Team() != self:GetTeam() 
 	and entity:GetPlayerCarrierStatus() == false
+	and self:GetAvailable() == true
 	and not entity:InVehicle() 
 	and not self:GetHeld() 
 	then -- Consider adding a condition to check against spectators, come back to this later
@@ -83,24 +85,37 @@ function ENT:StartTouch(entity)
 		and entity:Alive() 
 		and entity:Team() == self:GetTeam() 
 		and entity:GetPlayerCarrierStatus() == true
+		and self:GetAvailable() == true
 		and self:GetHeld() == false 
 		and self:GetOnBase() == true then -- Flag is on base and the player is on the same team
 			
-		--print("[DAC DEBUG]: Score condition tripped.")
-		self:ScoreFlag(self.Entity:GetTeam())
-			
 		for _, child in pairs(entity:GetChildren()) do -- Find the flag held by the flag carrier. There's probably a better way to do this but I'm out of ideas.
 			if (child:GetClass() == "dac_flag") then
+
 				--print("[DAC DEBUG]: Child flag identified. Returning.")
+				child:SetAvailable(false) -- Immediately make the flag unavailable for instant recapture
+				--print("[DAC DEBUG]: " .. tostring(child) .. "'s availability is " .. tostring(child:GetAvailable()))
 				child:ReturnFlag()
+
+				timer.Simple(3, function() -- Three second delay
+					child:SetAvailable(true) -- Make the flag available for capture again
+					--print("[DAC DEBUG]: " .. tostring(child) .. "'s availability is " .. tostring(child:GetAvailable()))
+				end)
+
 				break -- Stop iterations after flag is identified
 			end
 		end
+
+		--print("[DAC DEBUG]: Score condition tripped.")
+		-- We are referring to the flag that we touched to capture as a carrier, in other words, we are touching our home flag while carrying the enemy flag
+		-- "Self" in this condition is the scoring team's flag, not the one being returned
+		self:ScoreFlag(self.Entity:GetTeam()) 
 
 		local curMoney = entity:GetNWInt("storeCredits")
 		local newMoney = curMoney + GetConVar("dac_income_amount"):GetInt() * 2
 		entity:SetNWInt("storeCredits", newMoney)
 		entity:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_income_amount"):GetInt() * 2 .. "cR for capturing a flag!")
+		entity:SetPlayerCarrierStatus(false)
 
 		net.Start("SendScoreAudio")
 		net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
@@ -110,11 +125,6 @@ function ENT:StartTouch(entity)
 		net.WriteEntity(self.Entity)
 		net.WriteBool(false)
 		net.Send(entity)
-
-		-- Stagger carrier status by two seconds to mitigate delay that causes the instant re-taking of the flag
-		timer.Simple(2, function() 
-			entity:SetPlayerCarrierStatus(false)
-		end)
 
 	end
 

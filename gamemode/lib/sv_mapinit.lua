@@ -40,20 +40,20 @@ hook.Add("PostCleanupMap", "DAC.MapCleaned", function(ply, cmd)
 				ply:SelectWeapon("weapon_physcannon")
 			end
 
+			for teamKey, teamData in pairs(GAMEMODE.Teams) do
+				GAMEMODE.Teams[teamKey].basePos = nil
+				GAMEMODE.Teams[teamKey].baseSet = false
+				team.SetScore(teamKey, 0)
+			end
+
+			-- Remove passive timers for income
+			if timer.Exists("DAC.timerSalary") then
+				timer.Pause("DAC.timerSalary")
+				timer.Remove("DAC.timerSalary")
+			end
+
 		end
 	end)
-
-	for teamKey, teamData in pairs(GAMEMODE.Teams) do
-		GAMEMODE.Teams[teamKey].basePos = nil
-		GAMEMODE.Teams[teamKey].baseSet = false
-		team.SetScore(teamKey, 0)
-	end
-
-	-- Remove passive timers for income
-	if timer.Exists("DAC.timerSalary") then
-		timer.Pause("DAC.timerSalary")
-		timer.Remove("DAC.timerSalary")
-	end
 
 	--PrintTable(GAMEMODE.Teams)
 	local setupStage = DAC.GameStage.New(1) -- 1 is the ENUM for the setup phase

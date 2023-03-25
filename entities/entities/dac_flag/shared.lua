@@ -31,6 +31,7 @@ function ENT:SetupDataTables()
     self:NetworkVar("Bool", 0, "Held")
     self:NetworkVar("Bool", 1, "OnBase")
     self:NetworkVar("Entity", 0, "Carrier")
+    self:NetworkVar("Bool", 2, "Available")
 
     if SERVER then
 

@@ -7,7 +7,7 @@ local V = {
 	ListName = "dac_ammocrates",
 	Category = "AMMO RESTOCK",
 	Class = "shop_ammocrate_pistol",
-	Cost = 500,
+	Cost = 300,
 	SpawnOffset = 9,
 }
 list.Set("dac_ammocrates", 1, V )
@@ -19,7 +19,7 @@ local V = {
 	ListName = "dac_ammocrates",
 	Category = "AMMO RESTOCK",
 	Class = "shop_ammocrate_smg",
-	Cost = 2000,
+	Cost = 800,
 	SpawnOffset = 9,
 }
 list.Set("dac_ammocrates", 2, V )
@@ -31,7 +31,7 @@ local V = {
 	ListName = "dac_ammocrates",
 	Category = "AMMO RESTOCK",
 	Class = "shop_ammocrate_ar2",
-	Cost = 2000,
+	Cost = 800,
 	SpawnOffset = 9,
 }
 list.Set("dac_ammocrates", 3, V )
@@ -43,7 +43,7 @@ local V = {
 	ListName = "dac_ammocrates",
 	Category = "AMMO RESTOCK",
 	Class = "shop_ammocrate_shotgun",
-	Cost = 2000,
+	Cost = 800,
 	SpawnOffset = 9,
 }
 list.Set("dac_ammocrates", 4, V )
@@ -55,7 +55,7 @@ local V = {
 	ListName = "dac_ammocrates",
 	Category = "AMMO RESTOCK",
 	Class = "shop_ammocrate_rpg",
-	Cost = 2500,
+	Cost = 1000,
 	SpawnOffset = 9,
 }
 list.Set("dac_ammocrates", 5, V )
@@ -67,7 +67,7 @@ local V = {
 	ListName = "dac_ammocrates",
 	Category = "AMMO RESTOCK",
 	Class = "shop_ammocrate_grenade",
-	Cost = 1500,
+	Cost = 1000,
 	SpawnOffset = 9,
 }
 list.Set("dac_ammocrates", 6, V )

@@ -6,7 +6,7 @@ PLAYER.TauntCam = TauntCamera()
         
 PLAYER.SlowWalkSpeed = 80 -- Reduced speed for silent slow walk
 PLAYER.WalkSpeed = 200 -- Default Half-Life 2 walk speed
-PLAYER.RunSpeed = 350 -- Nerfed sprint speed by 12.5%
+PLAYER.RunSpeed = 335 -- Nerfed sprint speed by 12.5%
 
 if SERVER then
     util.AddNetworkString("UpdatePlayerPrimaryWeapon")
@@ -37,7 +37,7 @@ function PLAYER:Loadout()
     self.Player:GiveAmmo(120, "AR2", true)
     self.Player:GiveAmmo(24, "Buckshot", true)
     self.Player:GiveAmmo(9, "XBowBolt", true)
-    self.Player:GiveAmmo(2, "RPG_Round", true)
+    --self.Player:GiveAmmo(1, "RPG_Round", true)
     self.Player:GiveAmmo(1, "Grenade", true)
     -- This will change later, hard coded for now
 

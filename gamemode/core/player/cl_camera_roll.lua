@@ -18,6 +18,7 @@ local function CalcRoll(angles, velocity, rollAngle, rollSpeed)
     return side * sign
 end
 
+-- Incompatible with Modern Warfare weapons, will need to be deleted/disabled/adjusted for the branch that uses those weapons
 hook.Add("CalcView", "DAC.LuaClViewRoll", function (ply, pos, angles, ...)
 
     if ply:GetMoveType() == MOVETYPE_NOCLIP then return end

@@ -575,6 +575,14 @@ function ENT:ExplodeThink()
 
     util.Decal("Scorch", self:GetPos(), self:GetPos() + Vector(0, 0, -32))
 
+    if GetConVar("dac_eastereggs"):GetBool() == true then
+        local randomInt = math.random(0, 100)
+        local soundSeed = math.random(1,2)
+        --if (randomInt >= 85) then -- 15% chance
+            self:EmitSound("memes/reverbfart_" ..soundSeed .. ".wav")
+        --end	
+    end
+
     self:Remove()
 end
 

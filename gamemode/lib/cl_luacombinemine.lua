@@ -1,7 +1,7 @@
 --Credit to DoopieWop for original code: https://github.com/DoopieWop/lua_combine_mine
 --Minor gamemode-specific edits by TricycleRaptor
 
-language.Add("shop_combine_mine", "Lua Combine Mine")
+language.Add("shop_combine_mine", "Combine Mine")
 
 local mat = Material("sprites/glow04_noz")
 
