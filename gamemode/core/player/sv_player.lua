@@ -1,5 +1,10 @@
 util.AddNetworkString("SendFlagHUDNotify")
 util.AddNetworkString("SendPlayerDeathNotification")
+util.AddNetworkString("ChatMessage_Basic")
+util.AddNetworkString("ChatMessage_PassiveIncome")
+util.AddNetworkString("ChatMessage_FlagCapture")
+util.AddNetworkString("ChatMessage_TeamChangeNotice")
+util.AddNetworkString("ChatMessage_PlayerKill")
 
 function GM:PlayerDeathThink( ply )
 
@@ -18,7 +23,9 @@ function GM:PlayerDeath( ply, inflictor, attacker )
 
     if data.name == "MATCH" then
         ply.NextSpawnTime = CurTime() + GetConVar("dac_respawn_time"):GetFloat() -- Respawn delay based on what the server has set for the gamemode respawn time
-    else
+	elseif data.name == "OVERTIME" then
+		ply.NextSpawnTime = CurTime() + GetConVar("dac_respawn_time"):GetFloat() * 2 -- Respawn delay based on what the server has set for the gamemode respawn time
+	else
         ply.NextSpawnTime = CurTime() + 2 -- Standard 2 second delay otherwise
     end
 	

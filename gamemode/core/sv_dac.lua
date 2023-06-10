@@ -66,7 +66,8 @@ hook.Add("PlayerSpawnObject", "DAC.PlayerSpawnProp", function(ply, model, ent)
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn props during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn props during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn props during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
@@ -81,14 +82,16 @@ hook.Add("PlayerSpawnVehicle", "DAC.PlayerSpawnVehicle", function(ply, model, na
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn vehicles during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn vehicles during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn vehicles during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
 		end
 	else
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn vehicles during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn vehicles during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn vehicles during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
@@ -101,14 +104,16 @@ hook.Add("PlayerSpawnSWEP", "DAC.PlayerSpawnSWEP", function(ply, class, info) --
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn weapons during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn weapons during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn weapons during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
 		end
 	else
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn weapons during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn weapons during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn weapons during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
@@ -121,14 +126,16 @@ hook.Add("PlayerSpawnNPC", "DAC.PlayerSpawnNPC", function(ply, npc_type, weapon)
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn NPCs during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn NPCs during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn NPCs during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
 		end
 	else
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn NPCs during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn NPCs during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn NPCs during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
@@ -142,14 +149,16 @@ hook.Add("PlayerSpawnSENT", "DAC.PlayerSpawnSENT", function(ply, class)
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn entities during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn entities during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn entities during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
 		end
 	else
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot spawn entities during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot spawn entities during the " .. data.name .. " stage.")
+			ply:ChatMessage_Basic("Cannot spawn entities during the " .. data.name .. " stage.")
 			return false 
 		else 
 			return true 
@@ -175,7 +184,7 @@ hook.Add("PlayerNoClip", "DAC.NoclipPolicy", function( ply, desiredState )
 	local data = stage and stage:GetData()
 	if not data.allowBuilding then
 		if not ply:IsAdmin() then 
-			ply:ChatPrint("[DAC]: Cannot use noclip during the " .. data.name .. " stage.")
+			--ply:ChatPrint("[DAC]: Cannot use noclip during the " .. data.name .. " stage.")
 			return false
 		else 
 			return true 
@@ -202,7 +211,8 @@ hook.Add("CanPlayerEnterVehicle", "DAC.VehicleRestrictions", function(ply, vehic
 				if (vehicleEnt:GetNWBool('FlagTransport') == true) then -- We should make this a property for each vehicle that is permitted to transport a flag carrier
 					return true
 				else
-					ply:ChatPrint("[DAC]: You cannot enter this vehicle while carrying a flag.")
+					--ply:ChatPrint("[DAC]: You cannot enter this vehicle while carrying a flag.")
+					ply:ChatMessage_Basic("You cannot enter this vehicle while carrying a flag.")
 					return false
 				end
 
@@ -211,7 +221,8 @@ hook.Add("CanPlayerEnterVehicle", "DAC.VehicleRestrictions", function(ply, vehic
 			end
 
 		else
-			ply:ChatPrint("[DAC]: You cannot enter the other team's vehicles.")
+			--ply:ChatPrint("[DAC]: You cannot enter the other team's vehicles.")
+			ply:ChatMessage_Basic("You cannot vehicles that are not owned by your team.")
 			return false
 		end
 
@@ -288,7 +299,8 @@ function BeginMatch()
 
 	for k, ply in pairs(player.GetAll()) do
 		ply:Spawn()
-		ply:ChatPrint("[DAC]: The match has begun!")
+		--ply:ChatPrint("[DAC]: The match has begun!")
+		ply:ChatMessage_Basic("The match has begun!")
 	end
 
 	net.Start("SendBeginAudio")
@@ -299,11 +311,17 @@ end
 
 function EndMatch(winningTeam) -- Pass in the winning team
 
-	local winTeam = winningTeam
+	local gameStage = DAC:GetGameStage()
+	local data = gameStage:GetData()
+	local parseTimer = nil
 
-	--print("[DAC DEBUG]: Winning team index is " .. tostring(winTeam))
+    if data.name == "OVERTIME" then
+		parseTimer = 0.1
+	else
+		parseTimer = 1
+	end
 
-	timer.Simple(1, function()
+	timer.Simple(parseTimer, function()
 
 		for k, v in pairs(player.GetAll()) do
 			v:ScreenFade( SCREENFADE.OUT, Color( 0, 0, 0, 255), 3, 7)
@@ -329,24 +347,20 @@ function EndMatch(winningTeam) -- Pass in the winning team
 
 		for k,ply in pairs(player.GetAll()) do
 
-			-- Reset player stats, unlock the player positions and respawn everyone to a base state
+			-- Reset player stats and respawn everyone to a base state
 			ply:SetPlayerCarrierStatus(false)
-			--ply:UnLock()
-			ply:Spawn()
 			player_manager.RunClass(ply, "Loadout")
 			ply:SetNWInt("storeCredits", GetConVar("dac_income_balance"):GetInt())
 			ply:SetNWBool("IsSpawningVehicle", false)
 			ply:SetNWBool("IsInBase", false)
-			--ply:SetNWInt("playerMoney", 0)
-			--ply:SetNWInt("playerMoney", ply:GetNWInt("playerMoney") + (GetConVar("ctf_startingbalance"):GetFloat()))
+			ply:Spawn()
 
 			--ply:ConCommand( "ctf_team" ) -- Call the team menu again
 			
 		end
 
-		--PrintTable(GAMEMODE.Teams)
 		-- Reset the game stage back to setup
-		local setupStage = DAC.GameStage.New(1) -- 1 is the ENUM for the setup phase
+		local setupStage = DAC.GameStage.New(GAMESTAGE_SETUP)
 		DAC:SetGameStage(setupStage)
 		DAC:SyncGameStage()
 

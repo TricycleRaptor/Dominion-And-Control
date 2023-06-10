@@ -93,19 +93,21 @@ function GM:PlayerCanJoinTeam( ply, teamid )
 	local TimeBetweenSwitches = GAMEMODE.SecondsBetweenTeamSwitches or 10
 	if ( ply.LastTeamSwitch and RealTime()-ply.LastTeamSwitch < TimeBetweenSwitches ) then
 		ply.LastTeamSwitch = ply.LastTeamSwitch + 1
-		ply:ChatPrint( Format( "[DAC]: Please wait %i seconds before trying to change teams.", ( TimeBetweenSwitches - ( RealTime() - ply.LastTeamSwitch ) ) + 1 ) )
+		--ply:ChatPrint( Format( "[DAC]: Please wait %i seconds before trying to change teams.", ( TimeBetweenSwitches - ( RealTime() - ply.LastTeamSwitch ) ) + 1 ) )
 		return false
 	end
 
 	-- Already on this team
 	if ( ply:Team() == teamid ) then
-		ply:ChatPrint( "[DAC]: You're already on that team." )
+		--ply:ChatPrint( "[DAC]: You're already on that team." )
+		ply:ChatMessage_Basic("You're already on that team.")
 		return false
 	end
 
 	-- Carrying a flag
 	if ( ply:GetPlayerCarrierStatus() == true ) then
-		ply:ChatPrint( "[DAC]: You cannot change teams while carrying a flag." )
+		--ply:ChatPrint( "[DAC]: You cannot change teams while carrying a flag." )
+		ply:ChatMessage_Basic("You cannot change teams while carrying a flag.")
 		return false
 	end
 
@@ -132,10 +134,12 @@ function GM:PlayerRequestTeam( ply, teamid )
 
 		if ply:Team() ~= teamNum then
 			if team.NumPlayers(teamNum) < 1 and GAMEMODE.Teams[teamNum].baseSet == false then
-				ply:ChatPrint( "[DAC]: Please select a location for your base." )
+				--ply:ChatPrint( "[DAC]: Please select a location for your base." )
+				ply:ChatMessage_Basic("Please select a location for your base.")
 				ply.IsCaptain = true
 			elseif team.NumPlayers(teamNum) >= 1 and GAMEMODE.Teams[teamNum].baseSet == false then
-				ply:ChatPrint( "[DAC]: Please wait for your team captain to pick a base location." )
+				--ply:ChatPrint( "[DAC]: Please wait for your team captain to pick a base location." )
+				ply:ChatMessage_Basic("Please wait for your team captain to pick a base location.")
 				ply.IsCaptain = false
 			end
 		end
@@ -169,14 +173,15 @@ end
 
 function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 
---[[ 	if ply.IsCaptain == true and oldteam ~= nil then
+	--[[if ply.IsCaptain == true and oldteam ~= nil then
 		ply.IsCaptain = false
 		for _, v in pairs (team.GetPlayers(oldteam)) do
 			if v != ply and team.NumPlayers(oldteam) < 1 then
 				v.IsCaptain = true
 				if GAMEMODE.Teams[oldteam].baseSet == false then
 					v:Give("weapon_dac_baseselector")
-					v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
+					--v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
+					v:ChatMessage_Basic("You have been made team captain. Please select a location for your base.")
 				end
 			end
 		end
@@ -204,7 +209,12 @@ function GM:OnPlayerChangedTeam( ply, oldteam, newteam )
 
 	end
 
-	PrintMessage( HUD_PRINTTALK, Format( "[DAC]: %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
+	--PrintMessage( HUD_PRINTTALK, Format( "[DAC]: %s joined the %s!", ply:Nick(), team.GetName( newteam ) ) )
+	for playerNum, playerVal in pairs (player.GetAll()) do
+		--playerVal:ChatMessage_Basic(ply:Nick() .. " joined " .. team.GetName(newteam) .. "!")
+		playerVal:ChatMessage_TeamChangeNotice(ply, oldteam, newteam)
+	end
+
 	ply:SetNWBool("IsPreviewingVehicle", false)
 
 end
@@ -221,7 +231,8 @@ function GM:PlayerDisconnected(ply)
 				v.IsCaptain = true
 				if GAMEMODE.Teams[teamNum].baseSet == false then
 					v:Give("weapon_dac_baseselector")
-					v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
+					--v:ChatPrint( "[DAC]: You have been made team captain. Please select a location for your base." )
+					v:ChatMessage_Basic("You have been made team captain. Please select a location for your base.")
 				end
 			end
 		end

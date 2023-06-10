@@ -48,8 +48,6 @@ function ENT:StartTouch(entity)
 		net.Start("SendTakenAudio")
 		net.WriteFloat(entity:Team()) -- Pass in the flag carrier's team for networking behavior
 		net.Broadcast() -- This sends to all players, not just the flag carrier
-		-- We could have this also play "Action is coming" to the player who picked up the flag on a low chance modifier... Good easter egg suggestion made by Steiner.
-		-- https://www.youtube.com/watch?v=-yhgV5_8mMA
 
 		net.Start("SendFlagHUDNotify")
 		net.WriteEntity(self.Entity) -- Pass in the flag for parsing on client
@@ -114,7 +112,8 @@ function ENT:StartTouch(entity)
 		local curMoney = entity:GetNWInt("storeCredits")
 		local newMoney = curMoney + GetConVar("dac_income_amount"):GetInt() * 2
 		entity:SetNWInt("storeCredits", newMoney)
-		entity:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_income_amount"):GetInt() * 2 .. "cR for capturing a flag!")
+		--entity:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_income_amount"):GetInt() * 2 .. "cR for capturing a flag!")
+		entity:ChatMessage_FlagCapture()
 		entity:SetPlayerCarrierStatus(false)
 
 		net.Start("SendScoreAudio")

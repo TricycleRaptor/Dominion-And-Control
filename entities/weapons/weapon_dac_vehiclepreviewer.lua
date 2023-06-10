@@ -137,7 +137,8 @@ function SWEP:PrimaryAttack()
         else
 
             self:GetOwner():EmitSound("buttons/button8.wav") -- Teammates will hear this, too
-            self:GetOwner():ChatPrint("[DAC]: Invalid vehicle position selected.")
+            --self:GetOwner():ChatPrint("[DAC]: Invalid vehicle position selected.")
+            self:GetOwner():ChatMessage_Basic("Invalid vehicle position selected!")
 
         end
         

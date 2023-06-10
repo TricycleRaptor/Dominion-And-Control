@@ -134,7 +134,7 @@ function SWEP:PrimaryAttack()
 
         else
             self:GetOwner():EmitSound("buttons/button8.wav") -- Teammates will hear this, too
-            self:GetOwner():ChatPrint("[DAC]: Invalid base location selected.")
+            self:GetOwner():ChatMessage_Basic("Invalid base location selected!")
         end
         
     end

@@ -30,3 +30,39 @@ local function UpdateDeathInfo()
 
 end
 net.Receive("SendPlayerDeathNotification", UpdateDeathInfo)
+
+net.Receive("ChatMessage_Basic", function()
+    local chatMessage = net.ReadString()
+    chat.PlaySound()
+    chat.AddText(Color(255, 255, 0), "[DAC]: ", Color(255,255,255), chatMessage)
+end)
+
+net.Receive("ChatMessage_TeamChangeNotice", function()
+    local chatPlayer = net.ReadEntity()
+    local chatPlayerOldTeam = net.ReadFloat()
+    local chatPlayerNewTeam = net.ReadFloat()
+
+    if chatPlayerNewTeam ~= 0 and chatPlayerNewTeam ~= 1001 and chatPlayerNewTeam ~= 1002 then
+        chat.AddText(Color(255, 255, 0), "[DAC]: ", Color(255,221,169), chatPlayer:Nick(), Color(255,255,255), " joined ", team.GetColor(chatPlayerNewTeam), team.GetName(chatPlayerNewTeam), "!")
+    end
+end)
+
+net.Receive("ChatMessage_PlayerKill", function()
+    local chatVictim = net.ReadEntity(victim)
+    local chatInflictor = net.ReadEntity(inflictor)
+    local chatAttacker = net.ReadEntity(attacker)
+    local chatReward = net.ReadFloat(reward)
+
+    chat.PlaySound()
+    chat.AddText(Color(255, 255, 0), "[DAC]: ", Color(255,255,255), "You earned ", Color(43,255,0), chatReward .. "cR", Color(255,255,255), " for killing ", team.GetColor(chatVictim:Team()), chatVictim:Nick(), "!")
+end)
+
+net.Receive("ChatMessage_PassiveIncome", function()
+    chat.PlaySound()
+    chat.AddText(Color(255, 255, 0), "[DAC]: ", Color(255,255,255), "Passive income of ", Color(43,255,0), GetConVar("dac_income_amount"):GetInt() .. "cR", Color(255,255,255), " awarded.")
+end)
+
+net.Receive("ChatMessage_FlagCapture", function()
+    chat.PlaySound()
+    chat.AddText(Color(255, 255, 0), "[DAC]:", Color(255,255,255), " You earned ", Color(43,255,0), GetConVar("dac_income_amount"):GetInt() * 2 .. "cR", Color(255,255,255), " for capturing a flag!")
+end)

@@ -1,6 +1,8 @@
 GAMESTAGE_BASEPLACE = 1
 GAMESTAGE_BUILD = 2
 GAMESTAGE_PLAY = 3
+GAMESTAGE_OVERTIME = 4
+GAMESTAGE_END = 5
 
 DAC.DefaultGameStage = GAMESTAGE_BASEPLACE
 
@@ -26,6 +28,23 @@ DAC:RegisterGameStage(GAMESTAGE_PLAY, {
 	name = "MATCH",
 	showOnHud = true,
 	pvp = true,
-	nextStage = nil,
+	nextStage = GAMESTAGE_OVERTIME,
+	duration = GetConVar("dac_match_time"):GetInt(),
 	color = Color(251, 255, 0)
+})
+
+DAC:RegisterGameStage(GAMESTAGE_OVERTIME, {
+	name = "OVERTIME",
+	showOnHud = true,
+	pvp = true,
+	nextStage = nil,
+	color = Color(255, 136, 0)
+})
+
+DAC:RegisterGameStage(GAMESTAGE_END, {
+	name = "END",
+	showOnHud = false,
+	pvp = false,
+	nextStage = nil,
+	color = Color(255, 0, 0)
 })

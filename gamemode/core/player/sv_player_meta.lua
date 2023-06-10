@@ -42,3 +42,37 @@ function meta:SetDefaultWeapons()
     self.specialWeapon = firstSpecialWeapon
 
 end
+
+function meta:ChatMessage_Basic(messageString)
+    net.Start("ChatMessage_Basic")
+    net.WriteString(messageString)
+    net.Send(self)
+end
+
+function meta:ChatMessage_TeamChangeNotice(ply, oldteam, newteam)
+    net.Start("ChatMessage_TeamChangeNotice")
+    net.WriteEntity(ply)
+    net.WriteFloat(oldteam)
+    net.WriteFloat(newteam)
+    net.Send(self)
+end
+
+function meta:ChatMessage_PlayerKill(victim, inflictor, attacker, reward)
+    net.Start("ChatMessage_PlayerKill")
+    net.WriteEntity(victim)
+    net.WriteEntity(inflictor)
+    net.WriteEntity(attacker)
+    net.WriteFloat(reward)
+    net.Send(self)
+end
+
+function meta:ChatMessage_PassiveIncome()
+    net.Start("ChatMessage_PassiveIncome")
+    net.Send(self)
+end
+
+
+function meta:ChatMessage_FlagCapture()
+    net.Start("ChatMessage_FlagCapture")
+    net.Send(self)
+end

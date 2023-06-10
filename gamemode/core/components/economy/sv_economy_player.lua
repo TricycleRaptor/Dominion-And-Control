@@ -8,17 +8,19 @@ hook.Add("Think", "DAC.PassiveRewardTimer", function( ply )
     local gameStage = DAC:GetGameStage()
 	local data = gameStage:GetData()
 
-    if data.name == "MATCH" then
+    if data.name == "MATCH" or data.name == "OVERTIME" then
+
         if timer.Exists("DAC.timerSalary") then
             timer.UnPause("DAC.timerSalary")
         else
-            timer.Create("DAC.timerSalary", GetConVar("dac_income_timer"):GetInt(), 0, function()
+            timer.Create("DAC.timerSalary", GetConVar("dac_income_timer"):GetInt() * 60, 0, function()
 		
                 for _,ply in ipairs(player.GetAll()) do
                     local curMoney = ply:GetNWInt("storeCredits")
                     local newMoney = curMoney + GetConVar("dac_income_amount"):GetInt()
                     ply:SetNWInt("storeCredits", newMoney)
-                    ply:ChatPrint( "[DAC]: Passive income awarded.")
+                    --ply:ChatPrint( "[DAC]: Passive income awarded.")
+                    ply:ChatMessage_PassiveIncome()
                 end
                 
             end)
@@ -43,7 +45,8 @@ hook.Add("PlayerDeath", "DAC.RewardPlayerKill", function( victim, inflictor, att
                 local curMoney = attacker:GetNWInt("storeCredits")
                 local newMoney = curMoney + GetConVar("dac_kill_reward"):GetInt()
                 attacker:SetNWInt("storeCredits", newMoney)
-                attacker:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_kill_reward"):GetInt() .. "cR for killing " .. victim:Nick() .."!")
+                --attacker:ChatPrint( "[DAC]: You earned " .. GetConVar("dac_kill_reward"):GetInt() .. "cR for killing " .. victim:Nick() .."!")
+                attacker:ChatMessage_PlayerKill(victim, inflictor, attacker, GetConVar("dac_kill_reward"):GetInt())
             end
         end
     end

@@ -61,7 +61,11 @@ hook.Add("HUDShouldDraw", "DAC.DisableDefaultHud", function(part_name)
 end)
 
 hook.Add("HUDPaint", "DAC.MainFrameHud", function()
-	if not LocalPlayer():Alive() then -- Hide if dead
+
+	local gameStage = DAC:GetGameStage()
+	local data = gameStage:GetData()
+
+	if not LocalPlayer():Alive() or data.name == "END" then -- Hide if dead
 		return
 	end
 

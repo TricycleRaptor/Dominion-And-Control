@@ -1,11 +1,11 @@
 local SH = ScrH()
 local SW = ScrW()
 
-local RED_PANE_POS = {x = SW * 0.45, y = (10)}
+local RED_PANE_POS = {x = SW * 0.44, y = (10)}
 local RED_PANE_LENGTH = SW * 0.055 -- % of screen width
 local RED_PANE_HEIGHT = 50
 
-local BLUE_PANE_POS = {x = SW * 0.55, y = (10)}
+local BLUE_PANE_POS = {x = SW * 0.56, y = (10)}
 local BLUE_PANE_LENGTH = SW * 0.055 -- % of screen width
 local BLUE_PANE_HEIGHT = 50
 
@@ -69,7 +69,7 @@ hook.Add("HUDPaint", "DAC.HudScoreModules", function()
     local gameStage = DAC:GetGameStage()
 	local data = gameStage:GetData()
 
-    if data.name == "MATCH" then
+    if data.name == "MATCH" || data.name == "OVERTIME" then
 
         -- We're just hard referencing team indexes for now. In the future, if we make this support multiple teams, we'll have to change this up a bit.
         drawTrapeziumReversed(RED_PANE_POS, RED_PANE_HEIGHT, RED_PANE_LENGTH, PANE_COLOR)
