@@ -61,7 +61,11 @@ function GameStage:GetData()
 end
 
 function GameStage:Think()
+
 	if self:GetData().name == "BUILD" then
 		self:GetData().duration = GetConVar("dac_build_time"):GetInt() -- Dynamic cVar adjustment for build time
+	elseif self:GetData().name == "MATCH" then
+		self:GetData().duration = GetConVar("dac_match_time"):GetInt()
 	end
+
 end

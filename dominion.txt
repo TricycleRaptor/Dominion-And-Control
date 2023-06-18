@@ -21,32 +21,50 @@
 
 		2
 		{
-			"name"		"dac_zone_scale"
-			"text"		"Build Zone Scale"
-			"help"		"The scale of the team build area."
+			"name"		"dac_match_time"
+			"text"		"Match Time"
+			"help"		"The number in minutes before a match goes into overtime."
 			"type"		"Numeric"
-			"default"	"3"
+			"default"	"30"
 		}
 
 		3
 		{
-			"name"		"dac_capture_target"
-			"text"		"Capture Target"
-			"help"		"Number of flag captures needed to win."
+			"name"		"dac_income_timer"
+			"text"		"Salary Time"
+			"help"		"The number in minutes between passive credit awards."
 			"type"		"Numeric"
-			"default"	"3"
+			"default"	"300"
 		}
-		
+
 		4
 		{
 			"name"		"dac_respawn_time"
-			"text"		"Respawn Time"
-			"help"		"Number of seconds before a player can respawn."
+			"text"		"Respawn Time (Seconds)"
+			"help"		"The number in seconds before a player can respawn."
 			"type"		"Numeric"
 			"default"	"15"
 		}
-		
+
 		5
+		{
+			"name"		"dac_capture_target"
+			"text"		"Capture Target"
+			"help"		"The number of flag captures needed to win."
+			"type"		"Numeric"
+			"default"	"3"
+		}
+
+		6
+		{
+			"name"		"dac_zone_scale"
+			"text"		"Build Zone Scale"
+			"help"		"The scale ratio of the team build area."
+			"type"		"Numeric"
+			"default"	"3"
+		}
+	
+		7
 		{
 			"name"		"dac_friendlyfire"
 			"text"		"Friendly Fire"
@@ -54,25 +72,7 @@
 			"type"		"CheckBox"
 			"default"	"1"
 		}
-		
-		6
-		{
-			"name"		"dac_income_timer"
-			"text"		"Income Timer (seconds)"
-			"help"		"Sets the interval for passive income timer (In seconds)."
-			"type"		"Numeric"
-			"default"	"300"
-		}
-		
-		7
-		{
-			"name"		"dac_income_amount"
-			"text"		"Income Reward"
-			"help"		"Amount awarded to players passively."
-			"type"		"Numeric"
-			"default"	"250"
-		}
-		
+
 		8
 		{
 			"name"		"dac_income_balance"
@@ -84,6 +84,15 @@
 		
 		9
 		{
+			"name"		"dac_income_amount"
+			"text"		"Salary Amount"
+			"help"		"Amount awarded to players passively."
+			"type"		"Numeric"
+			"default"	"250"
+		}
+		
+		10
+		{
 			"name"		"dac_kill_reward"
 			"text"		"Kill Reward"
 			"help"		"Amount awarded to players for killing another player."
@@ -91,7 +100,16 @@
 			"default"	"100"
 		}
 
-		10
+		11
+		{
+			"name"		"dac_overtime"
+			"text"		"Overtime"
+			"help"		"Whether or not the game can go into overtime."
+			"type"		"CheckBox"
+			"default"	"1"
+		}
+
+		12
 		{
 			"name"		"dac_eastereggs"
 			"text"		"Easter Eggs"

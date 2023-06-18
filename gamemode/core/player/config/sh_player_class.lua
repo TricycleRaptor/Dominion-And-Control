@@ -37,7 +37,7 @@ function PLAYER:Loadout()
     self.Player:GiveAmmo(120, "AR2", true)
     self.Player:GiveAmmo(24, "Buckshot", true)
     self.Player:GiveAmmo(9, "XBowBolt", true)
-    --self.Player:GiveAmmo(1, "RPG_Round", true)
+    self.Player:GiveAmmo(1, "RPG_Round", true)
     self.Player:GiveAmmo(1, "Grenade", true)
     -- This will change later, hard coded for now
 
