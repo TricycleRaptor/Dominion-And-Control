@@ -31,6 +31,8 @@ hook.Add("PostCleanupMap", "DAC.MapCleaned", function(ply, cmd)
 			ply:SetNWInt("storeCredits", GetConVar("dac_income_balance"):GetInt())
 			ply:SetNWBool("IsSpawningVehicle", false)
 			ply:SetNWBool("IsInBase", false)
+			ply:SetFrags(0)
+			ply:SetDeaths(0)
 			player_manager.RunClass(ply, "Loadout") -- Get the player loadout
 
 			if ply.IsCaptain then

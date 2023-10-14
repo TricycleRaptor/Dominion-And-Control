@@ -299,6 +299,8 @@ function BeginMatch()
 
 	for k, ply in pairs(player.GetAll()) do
 		ply:Spawn()
+		ply:SetFrags(0)
+		ply:SetDeaths(0)
 		--ply:ChatPrint("[DAC]: The match has begun!")
 		ply:ChatMessage_Basic("The match has begun!")
 	end
@@ -353,6 +355,8 @@ function EndMatch(winningTeam) -- Pass in the winning team
 			ply:SetNWInt("storeCredits", GetConVar("dac_income_balance"):GetInt())
 			ply:SetNWBool("IsSpawningVehicle", false)
 			ply:SetNWBool("IsInBase", false)
+			ply:SetFrags(0)
+			ply:SetDeaths(0)
 			ply:Spawn()
 
 			--ply:ConCommand( "ctf_team" ) -- Call the team menu again

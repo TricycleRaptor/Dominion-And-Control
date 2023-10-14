@@ -7,7 +7,7 @@ local V = {
 	ListName = "dac_items_ammo",
 	Category = "AMMO RESUPPLY",
 	Class = "shop_ammo_pistol",
-	Cost = 25,
+	Cost = 10,
 	SpawnOffset = 5,
 }
 list.Set("dac_items_ammo", 1, V )
@@ -19,7 +19,7 @@ local V = {
 	ListName = "dac_items_ammo",
 	Category = "AMMO RESUPPLY",
 	Class = "shop_ammo_smg",
-	Cost = 50,
+	Cost = 25,
 	SpawnOffset = 5,
 }
 list.Set("dac_items_ammo", 2, V )
@@ -31,7 +31,7 @@ local V = {
 	ListName = "dac_items_ammo",
 	Category = "AMMO RESUPPLY",
 	Class = "shop_ammo_ar2",
-	Cost = 50,
+	Cost = 25,
 	SpawnOffset = 5,
 }
 list.Set("dac_items_ammo", 3, V )
@@ -43,7 +43,7 @@ local V = {
 	ListName = "dac_items_ammo",
 	Category = "AMMO RESUPPLY",
 	Class = "shop_ammo_shotgun",
-	Cost = 50,
+	Cost = 25,
 	SpawnOffset = 5,
 }
 list.Set("dac_items_ammo", 4, V )
@@ -55,7 +55,7 @@ local V = {
 	ListName = "dac_items_ammo",
 	Category = "AMMO RESUPPLY",
 	Class = "shop_ammo_crossbow",
-	Cost = 100,
+	Cost = 50,
 	SpawnOffset = 5,
 }
 list.Set("dac_items_ammo", 5, V )
@@ -67,7 +67,7 @@ local V = {
 	ListName = "dac_items_ammo",
 	Category = "AMMO RESUPPLY",
 	Class = "shop_ammo_rpg",
-	Cost = 100,
+	Cost = 50,
 	SpawnOffset = 5,
 }
 list.Set("dac_items_ammo", 6, V )
@@ -79,7 +79,7 @@ local V = {
 	ListName = "dac_items_ammo",
 	Category = "AMMO RESUPPLY",
 	Class = "shop_ammo_smg_grenade",
-	Cost = 225,
+	Cost = 50,
 	SpawnOffset = 5,
 }
 list.Set("dac_items_ammo", 7, V )
@@ -91,7 +91,7 @@ local V = {
 	ListName = "dac_items_ammo",
 	Category = "AMMO RESUPPLY",
 	Class = "shop_ammo_ar2_comball",
-	Cost = 225,
+	Cost = 50,
 	SpawnOffset = 5,
 }
 list.Set("dac_items_ammo", 8, V )

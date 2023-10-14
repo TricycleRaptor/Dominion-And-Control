@@ -14,7 +14,7 @@ hook.Add("EntityTakeDamage", "DAC.ExplosionModifiers", function(target, dmginfo)
 			and IsValid(target)
 			and dmginfo:IsExplosionDamage()
 		) then
-			dmginfo:ScaleDamage(0.75) -- Negate 25% of damage from explosions on foot
+			dmginfo:ScaleDamage(0.25) -- Negate 75% of damage from explosions on foot
 			--print("[DAC DEBUG]: Standard explosion modifier triggered. Damage reduced.")
 		end
 	end

@@ -2215,7 +2215,7 @@ if CLIENT then
                     end
 
             --- KOFI TIP TAB ---
-
+            --[[
             local shopSheet_Tip = vgui.Create("DHTML", mainColumnSheet)
             shopSheet_Tip:Dock(FILL)
             shopSheet_Tip:InvalidateParent(true)
@@ -2234,7 +2234,7 @@ if CLIENT then
                 local shopSheet_Tip_Window = vgui.Create( "DHTML", shopSheet_Tip_Panel )
                 shopSheet_Tip_Window:Dock(FILL)
                 shopSheet_Tip_Window:OpenURL("ko-fi.com/dragonbyte1546")
-
+            ]]
             --- Helper Functions ---
 
             local function UpdateFromConvars()

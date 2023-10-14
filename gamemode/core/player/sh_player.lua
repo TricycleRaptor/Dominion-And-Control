@@ -237,5 +237,55 @@ function GM:PlayerDisconnected(ply)
 			end
 		end
 	end
+
+	ply:SetPlayerCarrierStatus(false)
+
+	for _, child in pairs(ply:GetChildren()) do
+		
+		if (child:GetClass() == "dac_flag") then
+
+			--print("[DAC DEBUG]: Child flag identified. Returning.")
+			--print("[DAC DEBUG]: " .. tostring(child) .. "'s availability is " .. tostring(child:GetAvailable()))
+			child:ReturnFlag()
+
+			timer.Simple(3, function() -- Three second delay
+				child:SetAvailable(true) -- Make the flag available for capture again
+				--print("[DAC DEBUG]: " .. tostring(child) .. "'s availability is " .. tostring(child:GetAvailable()))
+			end)
+
+			net.Start("SendDroppedAudio")
+			net.WriteFloat(child:GetCarrier():Team()) -- Pass in the flag carrier's team for networking behavior
+			net.Broadcast() -- This sends to all players, not just the flag carrier
+
+            net.Start("SendFlagHUDNotify") -- Notify the carrying player's HUD
+            net.WriteEntity(child.Entity)
+            net.WriteBool(false)
+            net.Send(child:GetCarrier())
+
+            child.Entity:SetPos(child.Entity:GetPos() + Vector(0, 0, 100)) -- Set the vector above the ground first
+
+            child.Entity:SetAngles(Angle(0,0,0)) -- Set angles to zero
+            local tr = util.TraceLine( {
+                start = child.Entity:GetPos(),
+                endpos = child.Entity:GetPos() + child.Entity:GetAngles():Up() * -10000, -- Perform a trace downward on a long single Y vector
+                filter = function( ent ) return ( ent:GetClass() == "prop_physics" ) end -- Only hit the world and physics props
+            } )
+            child.Entity:SetPos(tr.HitPos) -- Set the flag's position to that trace result, kinda buggy
+
+            child.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
+            --print("[DAC DEBUG]: A flag was dropped!")
+
+            child.Entity:SetHeld(false)
+            --print("[DAC DEBUG]: Set " .. child.Entity:GetCarrier():Nick() .. "'s flag carrier status to " .. tostring(child.Entity:GetCarrier():GetPlayerCarrierStatus()) .. ".")
+            child.Entity:SetCarrier(NULL)
+            
+            child.Entity:PhysWake()
+            child.Entity:SetParent(NULL)
+            child.Entity:SetAngles(Angle(0,90,0))
+            child.Entity:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+
+			break -- Stop iterations after flag is identified
+		end
+	end
 	
 end

@@ -115,7 +115,7 @@ local V = {
     Icon = "entities/sim_fphys_conscriptapc_armed.png",
 	Category = "ANTI-AIR",
     VehicleType = "simfphys",
-    IsFlagTransport = false,
+    IsFlagTransport = true,
 	Cost = 500,
 
 	SpawnOffset = 90,
