@@ -301,7 +301,6 @@ function BeginMatch()
 		ply:Spawn()
 		ply:SetFrags(0)
 		ply:SetDeaths(0)
-		--ply:ChatPrint("[DAC]: The match has begun!")
 		ply:ChatMessage_Basic("The match has begun!")
 	end
 
@@ -330,7 +329,7 @@ function EndMatch(winningTeam) -- Pass in the winning team
 		end
 
 		net.Start("SendGameOverAudio")
-		net.WriteFloat(winningTeam)
+		net.WriteInt(winningTeam, 32)
 		net.Broadcast()
 
 	end)

@@ -94,7 +94,7 @@ list.Set( "weapons_primary", 5, V )]]
 
 local V = {
 
-	Name = "M83 Frag Grenade",
+	Name = "Frag Grenade",
 	Model = "models/weapons/w_grenade.mdl",
 	Icon = "entities/weapon_frag.png",
 	Class = "weapon_frag",
@@ -108,7 +108,7 @@ list.Set( "weapons_equipment", 1, V )
 
 local V = {
 
-	Name = "AT4 Missile Launcher",
+	Name = "Missile Launcher",
 	--Model = "models/weapons/w_rocket_launcher.mdl",
 	Model = "models/weapons/w_rpg.mdl",
 	Icon = "entities/weapon_rpg.png",

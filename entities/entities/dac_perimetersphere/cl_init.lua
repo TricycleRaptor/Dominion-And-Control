@@ -7,7 +7,7 @@ function ENT:DrawTranslucent()
 	local gameStage = DAC:GetGameStage()
 	local data = gameStage:GetData()
 
-    if data.name == "MATCH" then -- We should only draw these rings during the match
+    if data.name == "MATCH" or data.name == "OVERTIME" then -- We should only draw these rings during the match
 		local playerDistanceDelta = LocalPlayer():GetPos():Distance(self.Entity:GetPos()) - GetConVar("dac_zone_scale"):GetFloat() * 1000
 		local colorR, colorG, colorB, colorA = team.GetColor(self.Entity:GetTeam()):Unpack()
 		local adjustedColor = Color(colorR, colorG, colorB, colorA - Lerp((playerDistanceDelta  - 700) / 150, 90, 255))

@@ -35,10 +35,10 @@ function GM:PlayerSpawn(ply)
 	ply:SetPlayerColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )
 	ply:SetWeaponColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )
 
-	-- Brief 3-second invulnerability when spawning
-	if stageData.name == "MATCH" then 
+	-- Brief 5-second invulnerability when spawning
+	if stageData.name ~= "SETUP" then 
 		ply:GodEnable()
-		timer.Simple(3, function() 
+		timer.Simple(5, function() 
 			ply:GodDisable()
 		end)
 	end

@@ -439,6 +439,7 @@ local V = {
 }
 list.Set("dac_simfphys_armed", "sim_fphys_combineapc_armed", V )
 
+--[[
 local V = {
 	Name = "Leopard Tank",
 	Model = "models/blu/tanks/leopard2a7.mdl",
@@ -609,5 +610,6 @@ local V = {
 	}
 }
 list.Set("dac_simfphys_armed", "sim_fphys_tank3", V )
+]]
 
 --- [ Armed Vehicles End ] ---

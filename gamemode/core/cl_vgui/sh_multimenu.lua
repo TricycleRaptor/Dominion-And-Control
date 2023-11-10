@@ -327,21 +327,30 @@ if CLIENT then
                     shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE (" .. selectedEntityCost .. "cR)")
                     shopSheet_Items_Secondary_BuyButton:InvalidateParent(true)
                     shopSheet_Items_Secondary_BuyButton.Paint = function(self, w, h)
+
+                        local gameStage = DAC:GetGameStage()
+                        local gameStageData = gameStage:GetData()
+
                         if LocalPlayer():GetNWInt("storeCredits") >= selectedEntityCost 
                             and LocalPlayer():Alive()
                             and LocalPlayer():InVehicle() == false
                             and LocalPlayer():GetNWBool("IsInBase") == true 
                             and (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetPos()):Length() <= 300 -- Entities need a distance check before they can be purchased
                         then
-                                shopSheet_Items_Secondary_BuyButton:SetEnabled(true)
+                            shopSheet_Items_Secondary_BuyButton:SetEnabled(true)
                             draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
-                            surface.SetDrawColor(109,255,73)
-                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            --surface.SetDrawColor(109,255,73)
+                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
                         else
                             shopSheet_Items_Secondary_BuyButton:SetEnabled(false)
                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,255))
-                            surface.SetDrawColor(255,126,126)
-                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            --surface.SetDrawColor(255,126,126)
+                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            if gameStageData.name == "SETUP" then
+                                shopSheet_Items_Secondary_BuyButton:SetText("DISABLED")
+                            else
+                                shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE (" .. selectedEntityCost .. "cR)")
+                            end
                         end
                     end
                     shopSheet_Items_Secondary_BuyButton.DoClick = function(self, w, h)
@@ -859,20 +868,29 @@ if CLIENT then
                     shopSheet_Vehicles_Secondary_BuyButton:SetFont("DAC.PickTeam")
                     shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
                     shopSheet_Vehicles_Secondary_BuyButton:InvalidateParent(true)
+
+                    local gameStage = DAC:GetGameStage()
+                    local gameStageData = gameStage:GetData()
+
                     shopSheet_Vehicles_Secondary_BuyButton.Paint = function(self, w, h)
                         if LocalPlayer():GetNWInt("storeCredits") >= selectedVehicleCost 
                         and LocalPlayer():Alive() 
                         and LocalPlayer():InVehicle() == false
-                        and LocalPlayer():GetNWBool("IsInBase") == true then
+                        and LocalPlayer():GetNWBool("IsInBase") == true and gameStage.name ~= 'SETUP' then 
                             shopSheet_Vehicles_Secondary_BuyButton:SetEnabled(true)
                             draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
-                            surface.SetDrawColor(109,255,73)
-                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            --surface.SetDrawColor(109,255,73)
+                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
                         else
                             shopSheet_Vehicles_Secondary_BuyButton:SetEnabled(false)
                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,255))
-                            surface.SetDrawColor(255,126,126)
-                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            --surface.SetDrawColor(255,126,126)
+                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            if gameStageData.name == "SETUP" then
+                                shopSheet_Vehicles_Secondary_BuyButton:SetText("DISABLED")
+                            else
+                                shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                            end
                         end
                     end
                     shopSheet_Vehicles_Secondary_BuyButton.DoClick = function(self, w, h)
@@ -1454,19 +1472,19 @@ if CLIENT then
                             and LocalPlayer():GetNWBool("IsInBase") == true 
                             and (LocalPlayer():GetEyeTrace().HitPos - LocalPlayer():GetPos()):Length() <= 300 -- Entities need a distance check before they can be purchased
                             and LocalPlayer():InVehicle() == false
-                            and gameStageData.name == "MATCH" -- Not allowed to buy ammo or health during pre-setup
+                            and gameStageData.name ~= "SETUP" -- Not allowed to buy ammo or health during pre-setup
                         then
                             shopSheet_Ammo_Secondary_BuyButton:SetEnabled(true)
                             draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
-                            surface.SetDrawColor(109,255,73)
-                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            --surface.SetDrawColor(109,255,73)
+                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
                             shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
                         else
                             shopSheet_Ammo_Secondary_BuyButton:SetEnabled(false)
                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,255))
-                            surface.SetDrawColor(255,126,126)
-                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
-                            if gameStageData.name ~= "MATCH" then
+                            --surface.SetDrawColor(255,126,126)
+                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
+                            if gameStageData.name == "SETUP" then
                                 shopSheet_Ammo_Secondary_BuyButton:SetText("DISABLED")
                             else
                                 shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
@@ -2296,6 +2314,7 @@ if CLIENT then
                 LocalPlayer():EmitSound(CloseNoise)
                 gui.EnableScreenClicker(false)
                 MENU_FRAME:SetVisible(false)
+                MENU_FRAME = nil -- Just for developing the menu. Comment out for gameplay
             else
                 -- Menu isn't visible, but created, so we'll open it again
                 LocalPlayer():EmitSound(OpenNoise)
