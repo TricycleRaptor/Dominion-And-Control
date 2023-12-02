@@ -2314,7 +2314,7 @@ if CLIENT then
                 LocalPlayer():EmitSound(CloseNoise)
                 gui.EnableScreenClicker(false)
                 MENU_FRAME:SetVisible(false)
-                MENU_FRAME = nil -- Just for developing the menu. Comment out for gameplay
+                --MENU_FRAME = nil -- Just for developing the menu. Comment out for gameplay
             else
                 -- Menu isn't visible, but created, so we'll open it again
                 LocalPlayer():EmitSound(OpenNoise)
