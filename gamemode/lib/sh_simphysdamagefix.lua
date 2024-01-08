@@ -1,5 +1,5 @@
 -- Reduce explosion damage
-hook.Add("EntityTakeDamage", "DAC.ExplosionModifiers", function(target, dmginfo)
+--[[hook.Add("EntityTakeDamage", "DAC.ExplosionModifiers", function(target, dmginfo)
 	if (
 		target:IsPlayer()
 		and target:InVehicle()
@@ -18,4 +18,4 @@ hook.Add("EntityTakeDamage", "DAC.ExplosionModifiers", function(target, dmginfo)
 			--print("[DAC DEBUG]: Standard explosion modifier triggered. Damage reduced.")
 		end
 	end
-end)
+end)]]

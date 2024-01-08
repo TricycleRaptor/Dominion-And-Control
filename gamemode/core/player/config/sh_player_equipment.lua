@@ -72,24 +72,6 @@ local V = {
 }
 list.Set( "weapons_primary", 4, V )
 
---[[local V = {
-
-	Name = ".357 Magnum",
-	Model = "models/weapons/c_357.mdl",
-	Icon = "entities/weapon_357.png",
-	Class = "weapon_357",
-	Category = "Primary",
-	Damage = 40,
-	RPM = 80,
-	Capacity = 6,
-	AmmoType = "357",
-	Accuracy = "High",
-	Projectile = "Hitscan",
-	Description = "A pre-war Python revolver with a six-inch barrel, loaded in .357 caliber ammunition. Manufactured by Colt.",
-
-}
-list.Set( "weapons_primary", 5, V )]]
-
 -- Tools
 
 local V = {
@@ -108,15 +90,15 @@ list.Set( "weapons_equipment", 1, V )
 
 local V = {
 
-	Name = "Missile Launcher",
+	Name = "RPG Launcher",
 	--Model = "models/weapons/w_rocket_launcher.mdl",
 	Model = "models/weapons/w_rpg.mdl",
 	Icon = "entities/weapon_rpg.png",
-	Class = "weapon_lfsmissilelauncher",
+	Class = "weapon_rpg",
 	Category = "Equipment",
-	Capacity = 6,
+	Capacity = 3,
 	AmmoType = "RPG_Round",
-	Description = "A powerful missile launcher with onboard radar for detecting and locking onto aircraft.",
+	Description = "A powerful lasaer-guided rocket launcher for vehicles, tanks and light armor.",
 
 }
 list.Set( "weapons_equipment", 2, V )
@@ -139,12 +121,12 @@ local V = {
 
 	Name = "Vehicle Repair Tool",
 	Model = "models/weapons/w_physics.mdl",
-	Icon = "entities/weapon_simrepair.png",
-	Class = "weapon_dac_vehiclerepair",
+	Icon = "entities/weapon_lvsrepair.png",
+	Class = "weapon_lvsrepair",
 	Category = "Equipment",
 	Capacity = 1,
 	AmmoType = "None",
-	Description = "A handheld tool for repairing and restocking purchasable vehicles.",
+	Description = "A handheld tool for repairing ground and air vehicles.",
 
 }
 list.Set( "weapons_equipment", 4, V )

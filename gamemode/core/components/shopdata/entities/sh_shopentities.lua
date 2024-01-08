@@ -80,25 +80,61 @@ local V = {
 	Name = "Combine Turret",
 	Model = "models/combine_turrets/floor_turret.mdl",
 	Icon = "entities/shop_combine_turret.png",
-	ListName = "dac_pointdefense",
+	ListName = "dac_defense",
 	Category = "POINT DEFENSE",
 	Class = "shop_combine_turret",
 	Cost = 350,
 	SpawnOffset = 10,
 }
-list.Set("dac_pointdefense", 1, V )
+list.Set("dac_defense", 1, V )
 
 local V = {
 	Name = "Combine Mine",
 	Model = "models/props_combine/combine_mine01.mdl",
 	Icon = "entities/shop_combine_mine.png",
-	ListName = "dac_pointdefense",
+	ListName = "dac_defense",
 	Category = "POINT DEFENSE",
 	Class = "shop_combine_mine",
 	Cost = 200,
 	SpawnOffset = 5,
 }
-list.Set("dac_pointdefense", 2, V )
+list.Set("dac_defense", 2, V )
+
+local V = {
+	Name = "Vehicle Repair Station",
+	Model = "models/props_vehicles/generatortrailer01.mdl",
+	Icon = "entities/lvs_vehicle_repair.png",
+	ListName = "dac_defense",
+	Category = "UTILITY",
+	Class = "lvs_vehicle_repair",
+	Cost = 300,
+	SpawnOffset = 5,
+}
+list.Set("dac_defense", 3, V )
+
+local V = {
+	Name = "Vehicle Gas Station",
+	Model = "models/props_wasteland/gaspump001a.mdl",
+	Icon = "entities/lvs_item_refuel.png",
+	ListName = "dac_defense",
+	Category = "UTILITY",
+	Class = "lvs_item_refuel",
+	Cost = 100,
+	SpawnOffset = 5,
+}
+list.Set("dac_defense", 4, V )
+
+local V = {
+	Name = "Heli Ammo Station",
+	Model = "models/balloons/hot_airballoon.mdl",
+	Icon = "entities/lvs_vehicle_air_refil.png",
+	ListName = "dac_defense",
+	Category = "UTILITY",
+	Class = "lvs_vehicle_air_refil",
+	Cost = 300,
+	SpawnOffset = 5,
+}
+list.Set("dac_defense", 5, V )
 
 --- [ Point Defense End ] --- 
 

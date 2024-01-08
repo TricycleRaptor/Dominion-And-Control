@@ -13,13 +13,13 @@ function GM:PlayerSpawn(ply)
 	local teamColor = team.GetColor(teamNum)
 	ply:SetNWBool("IsSpawningVehicle", false)
 	ply:SetNWBool("IsInBase", false)
+	ply:lvsGetAITeam(ply:Team())
 
 	self.BaseClass:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)
 
 	-- Reset player variables used for previewing vehicles
 	ply.vehicleName = nil
-	ply.vehicleType = nil
 	ply.vehicleCategory = nil
 	ply.vehicleCost = nil
 	ply.vehicleIsFlagTransport = nil

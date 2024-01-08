@@ -42,7 +42,6 @@ function ENT:Think()
 					ent:StripWeapon("weapon_dac_vehiclepreviewer")
 					ent:SetNWBool("IsSpawningVehicle", false)
 					ent.vehicleName = nil
-					ent.vehicleType = nil
 					ent.vehicleCategory = nil
 					ent.vehicleCost = nil
 					ent.vehicleIsFlagTransport = nil

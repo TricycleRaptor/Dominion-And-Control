@@ -90,14 +90,19 @@ function SWEP:Think()
 
             else
 
-                -- If we're previewing an LFS vehicle, we need to make the height higher for helicopters to have ample spawn room
-                if self.user.vehicleType == "lfs" then
+                -- If we're previewing a helicopter, we need to make the height higher for ample spawn room
+                if self.user.vehicleListName == "dac_lvs_helicopters" then
                     self.user.vehicleSpawnPos = Trace.HitPos + Trace.HitNormal * self.user.vehicleSpawnOffset
-                    self.vehicleModelPreview:SetAngles(Angle(0, self.user:EyeAngles().Y - 180, _)) -- Set the prop angles to face the vehicle toward the player, but maintain the Z axis
+                    self.vehicleModelPreview:SetAngles(Angle(0, self.user:EyeAngles().Y - 90, _)) -- Set the prop angles to face the vehicle toward the player, but maintain the Z axis
                 else
                 -- Ground vehicles need less space and vertical height
-                    self.user.vehicleSpawnPos = Trace.HitPos + Trace.HitNormal * self.user.vehicleSpawnOffset
-                    self.vehicleModelPreview:SetAngles(Angle(0, self.user:EyeAngles().Y - 90, _)) -- Set the prop angles to face the vehicle away from the player, but maintain the Z axis
+                    if self.user.vehicleModel == "models/diggercars/222/222.mdl" then -- Bad facing axis for this model
+                        self.user.vehicleSpawnPos = Trace.HitPos + Trace.HitNormal * self.user.vehicleSpawnOffset
+                        self.vehicleModelPreview:SetAngles(Angle(0, self.user:EyeAngles().Y - 90, _))
+                    else
+                        self.user.vehicleSpawnPos = Trace.HitPos + Trace.HitNormal * self.user.vehicleSpawnOffset
+                        self.vehicleModelPreview:SetAngles(Angle(0, self.user:EyeAngles().Y, _)) -- Set the prop angles to face the vehicle away from the player, but maintain the Z axis
+                    end
                 end
 
                 self.vehicleModelPreview:SetModel(self.user.vehicleModel)
@@ -180,7 +185,6 @@ end)
 net.Receive("dac_sendvehicledata", function(len, ply)
 
     ply.vehicleName = net.ReadString() -- Name
-    ply.vehicleType = net.ReadString() -- VehicleType
     ply.vehicleCategory = net.ReadString() -- Category
     ply.vehicleCost = net.ReadString() -- Cost
     ply.vehicleIsFlagTransport = net.ReadBool() -- IsFlagTransport
@@ -209,92 +213,52 @@ net.Receive("dac_vehicle_confirmation", function(len, ply)
         
     local confirmationBool = net.ReadBool()
 
-    if confirmationBool == true then
-        --print("[DAC DEBUG]: Server received confirmation message.")
-
-        --print("[DAC DEBUG]: Vehicle class " .. tostring(ply.vehicleClass))
-    
+    if confirmationBool == true then    
         -- Pass in all the necessary data here for spawning a vehicle, including deducting credits from the player's balance
-        if ply.vehicleType == "simfphys" then
-            --print("[DAC DEBUG]: Spawning simfphys vehicle...")
-            local initalizedSimfphysVehicleList = list.Get(ply.vehicleListName)
-            local initializedSimfphysVehicle = initalizedSimfphysVehicleList[ply.vehicleClass]
-            local initializedSimfphysVehicleEntity = simfphys.SpawnVehicle_DAC(ply, ply.vehicleIsFlagTransport, ply.vehicleSpawnPos, ply.vehicleSpawnAng, ply.vehicleModel, ply.vehicleClass, ply.vehicleClass, initializedSimfphysVehicle)
-            --print("[DAC DEBUG]: Spawned vehicle entity ID is " .. tostring(initializedSimfphysVehicleEntity))
-            --print("[DAC DEBUG]: Initializing vehicle seat data... ")
-            --print("[DAC DEBUG]: Transport boolean is " .. tostring(self.vehicleIsFlagTransport))
+        local initializedSimfphysVehicleEntity = DAC_SpawnLVSVehicle(ply, ply.vehicleIsFlagTransport, ply.vehicleSpawnPos, ply.vehicleSpawnAng, ply.vehicleClass)
     
-            local simfphysSeatTransportBool = ply.vehicleIsFlagTransport
+        local simfphysSeatTransportBool = ply.vehicleIsFlagTransport
     
-            timer.Simple(0.5, function() -- This has to be staggered so the simfphys vehicle can fully initialize
+        timer.Simple(0.5, function() -- This has to be staggered so the simfphys vehicle can fully initialize
     
-                if initializedSimfphysVehicleEntity:GetChildren() ~= nil then -- Check if the children are valid
-    
-                    for vehicleKey, vehicleChildren in pairs(initializedSimfphysVehicleEntity:GetChildren()) do -- Get the entity children first
-                        if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then -- Specify that we only want the seats, rather than the simfphys attachments
-                            --print(vehicleChildren)
-                            vehicleChildren:SetNWBool('FlagTransport', simfphysSeatTransportBool) -- Set each seat to their respective flag transport status
-                            vehicleChildren:SetNWInt('OwningTeam', ply:Team())
-                        end
-                    end
-                    --print("[DAC DEBUG]: Initialized.")
-    
-                else
-                    print("[DAC DEBUG]: ERROR, FOUND NO SEAT DATA ON SIMFPHYS VEHICLE: " .. tostring(initializedSimfphysVehicleEntity))
-                end
-    
-            end)
-    
-        else 
-            --print("[DAC DEBUG]: Spawning LFS vehicle...")
-            local initializedLFSVehicle = ents.Create(ply.vehicleClass)
-            initializedLFSVehicle:SetPos(ply.vehicleSpawnPos) -- ADJUST
-            initializedLFSVehicle:SetAngles(ply.vehicleSpawnAng) -- ADJUST
-            initializedLFSVehicle:SetNWInt('OwningTeam', ply:Team())
-            initializedLFSVehicle:SetNWBool('IsLFSVehicle', true)
-            initializedLFSVehicle:Spawn()
-            initializedLFSVehicle:Activate()
-    
-            if initializedLFSVehicle:GetChildren() ~= nil then
-                for vehicleKey, vehicleChildren in pairs(initializedLFSVehicle:GetChildren()) do
-                    if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then
-                        vehicleChildren:SetNWBool('FlagTransport', ply.vehicleIsFlagTransport)
+            if initializedSimfphysVehicleEntity:GetChildren() ~= nil then -- Check if the children are valid
+                for vehicleKey, vehicleChildren in pairs(initializedSimfphysVehicleEntity:GetChildren()) do -- Get the entity children first
+                    if vehicleChildren:GetClass():lower() == "prop_vehicle_prisoner_pod" then -- Specify that we only want the seats, rather than the simfphys attachments
+                        --print(vehicleChildren)
+                        vehicleChildren:SetNWBool('FlagTransport', simfphysSeatTransportBool) -- Set each seat to their respective flag transport status
                         vehicleChildren:SetNWInt('OwningTeam', ply:Team())
-                        --v:SetNWInt("lfsAITeam", ply:Team())
                     end
                 end
             else
-                print("[DAC DEBUG]: ERROR, FOUND NO SEAT DATA ON LFS VEHICLE: " .. tostring(initializedLFSVehicle))
+                print("[DAC DEBUG]: ERROR, FOUND NO SEAT DATA ON VEHICLE: " .. tostring(initializedSimfphysVehicleEntity))
             end
     
-    
-        end
+        end)
 
-        ply:SetNWInt("storeCredits", ply:GetNWInt("storeCredits") - ply.vehicleCost)
-        ply:EmitSound("ambient/levels/labs/coinslot1.wav") -- We want this serverside so other players can hear if the player buys something
-    
-        ply.vehicleName = nil
-        ply.vehicleType = nil
-        ply.vehicleCategory = nil
-        ply.vehicleCost = nil
-        ply.vehicleIsFlagTransport = nil
-        ply.vehicleModel = nil
-        ply.vehicleListName = nil
-        ply.vehicleClass = nil
-        ply.vehicleSpawnOffset = nil
-        ply.vehicleSpawnPos = nil
-        ply.vehicleSpawnAng = nil
-    
-        ply:SelectWeapon("weapon_physcannon")
-        ply:StripWeapon("weapon_dac_vehiclepreviewer")
     end
+
+    ply:SetNWInt("storeCredits", ply:GetNWInt("storeCredits") - ply.vehicleCost)
+    ply:EmitSound("ambient/levels/labs/coinslot1.wav") -- We want this serverside so other players can hear if the player buys something
+    
+    ply.vehicleName = nil
+    ply.vehicleCategory = nil
+    ply.vehicleCost = nil
+    ply.vehicleIsFlagTransport = nil
+    ply.vehicleModel = nil
+    ply.vehicleListName = nil
+    ply.vehicleClass = nil
+    ply.vehicleSpawnOffset = nil
+    ply.vehicleSpawnPos = nil
+    ply.vehicleSpawnAng = nil
+    
+    ply:SelectWeapon("weapon_physcannon")
+    ply:StripWeapon("weapon_dac_vehiclepreviewer")
 
 end)
 
 function CancelVehiclePurchase(ply)
 
     ply.vehicleName = nil
-    ply.vehicleType = nil
     ply.vehicleCategory = nil
     ply.vehicleCost = nil
     ply.vehicleIsFlagTransport = nil
