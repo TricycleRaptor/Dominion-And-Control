@@ -107,7 +107,7 @@ hook.Add("HUDPaint", "DAC.MainFrameHud", function()
 	end
 
 	-- Ammo Panel
-	if active_weapon then --Is a weapon active?
+	if active_weapon and !LocalPlayer():InVehicle() then --Is a weapon active?
 		if primary_ammo_id ~= -1 then --If it has an ammo pool, we'll proceed
 			drawTrapeziumReversed(AMMO_PANE_POS, AMMO_PANE_HEIGHT, AMMO_PANE_LENGTH, PANE_COLOR) --Build the basic shape
 
@@ -155,7 +155,10 @@ hook.Add("HUDPaint", "DAC.MainFrameHud", function()
 		}
 		surface.SetDrawColor(team.GetColor(LocalPlayer():Team())) -- Change this shape's color based on the player's team
 		--surface.SetDrawColor(Color(100, 100, 100, 235))
-		surface.DrawPoly(ammo_group_indicator_coordinates)
+		if !LocalPlayer():InVehicle() then
+			surface.DrawPoly(ammo_group_indicator_coordinates)
+		end
+		
 	end
 
 	-- Ping & FPS

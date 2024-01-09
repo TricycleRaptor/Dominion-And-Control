@@ -13,7 +13,7 @@ function GM:PlayerSpawn(ply)
 	local teamColor = team.GetColor(teamNum)
 	ply:SetNWBool("IsSpawningVehicle", false)
 	ply:SetNWBool("IsInBase", false)
-	ply:lvsGetAITeam(ply:Team())
+	ply:lvsSetAITeam(ply:Team())
 
 	self.BaseClass:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)

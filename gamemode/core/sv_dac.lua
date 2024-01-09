@@ -194,13 +194,13 @@ hook.Add("PlayerNoClip", "DAC.NoclipPolicy", function( ply, desiredState )
 	end
 end )
 
-hook.Add("CanPlayerEnterVehicle", "DAC.VehicleRestrictions", function(ply, vehicleEnt, seatNum) 
+--hook.Add("CanPlayerEnterVehicle", "DAC.VehicleRestrictions", function(ply, vehicleEnt, seatNum) 
 
 	--[[if IsValid(vehicleEnt) then
 		print("[DAC Debug]: " .. tostring(vehicleEnt) .. "'s transport status is " .. tostring(vehicleEnt:GetNWBool('FlagTransport')))
 	end]]
 
-	if IsValid(vehicleEnt) then
+	--[[if IsValid(vehicleEnt) then
 
 		--print(tostring("Vehicle team: " .. vehicleEnt:GetNWInt('OwningTeam') .. " Player team: ".. ply:Team()))
 
@@ -229,7 +229,7 @@ hook.Add("CanPlayerEnterVehicle", "DAC.VehicleRestrictions", function(ply, vehic
 	end
 
 
-end)
+end)]]
 
 function BuildArea(ply, team, spawnPos, flagPos)
 	SpawnPlatform = ents.Create("dac_spawnplatform")

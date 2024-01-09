@@ -8,6 +8,8 @@ function GM:Initialize()
 	GetConVar("sbox_weapons"):SetBool(false)
 	RunConsoleCommand("mp_falldamage", "1") -- Realistic fall damage
 	RunConsoleCommand("sv_alltalk", "2") -- Proximity voice chat
+	RunConsoleCommand("lvs_teampassenger", "1") -- Only teammates can enter LVS vehicles
+	RunConsoleCommand("lvs_force_forceindicator", "1") -- Hide LVS vehicle team/health identifiers
 
 	for teamKey, teamData in pairs(GAMEMODE.Teams) do -- Sort through team indexes (There are only two)
 		teamData.basePos = Vector(0,0,0)
