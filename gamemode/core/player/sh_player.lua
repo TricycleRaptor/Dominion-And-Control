@@ -13,8 +13,20 @@ function GM:PlayerSpawn(ply)
 	local teamColor = team.GetColor(teamNum)
 	ply:SetNWBool("IsSpawningVehicle", false)
 	ply:SetNWBool("IsInBase", false)
-	ply:lvsSetAITeam(ply:Team())
-
+	
+	if ply:Team() ~= nil then
+		
+		-- Not on the teams designated as joining, unassigned, or spectator
+		if ply:Team() ~= 0 and ply:Team() ~= 1001 and ply:Team() ~= 1002 then
+			ply:lvsSetAITeam(ply:Team())
+			ply:SetNWInt("lvsAITeam", ply:Team())
+		else
+			ply:lvsSetAITeam(0) -- Fallback to 0
+			ply:SetNWInt("lvsAITeam", 0)
+		end
+		
+	end
+	
 	self.BaseClass:PlayerSpawn(ply)
 	DAC:SyncGameStage(ply)
 
@@ -244,45 +256,37 @@ function GM:PlayerDisconnected(ply)
 		
 		if (child:GetClass() == "dac_flag") then
 
-			--print("[DAC DEBUG]: Child flag identified. Returning.")
-			--print("[DAC DEBUG]: " .. tostring(child) .. "'s availability is " .. tostring(child:GetAvailable()))
-			child:ReturnFlag()
-
-			timer.Simple(3, function() -- Three second delay
-				child:SetAvailable(true) -- Make the flag available for capture again
-				--print("[DAC DEBUG]: " .. tostring(child) .. "'s availability is " .. tostring(child:GetAvailable()))
-			end)
-
-			net.Start("SendDroppedAudio")
+            net.Start("SendDroppedAudio")
 			net.WriteFloat(child:GetCarrier():Team()) -- Pass in the flag carrier's team for networking behavior
 			net.Broadcast() -- This sends to all players, not just the flag carrier
 
             net.Start("SendFlagHUDNotify") -- Notify the carrying player's HUD
-            net.WriteEntity(child.Entity)
+            net.WriteEntity(child)
             net.WriteBool(false)
             net.Send(child:GetCarrier())
 
-            child.Entity:SetPos(child.Entity:GetPos() + Vector(0, 0, 100)) -- Set the vector above the ground first
+            child:SetPos(child:GetPos() + Vector(0, 0, 100)) -- Set the vector above the ground first
 
-            child.Entity:SetAngles(Angle(0,0,0)) -- Set angles to zero
+            child:SetAngles(Angle(0,0,0)) -- Set angles to zero
             local tr = util.TraceLine( {
-                start = child.Entity:GetPos(),
-                endpos = child.Entity:GetPos() + child.Entity:GetAngles():Up() * -10000, -- Perform a trace downward on a long single Y vector
+                start = child:GetPos(),
+                endpos = child:GetPos() + child:GetAngles():Up() * -10000, -- Perform a trace downward on a long single Y vector
                 filter = function( ent ) return ( ent:GetClass() == "prop_physics" ) end -- Only hit the world and physics props
             } )
-            child.Entity:SetPos(tr.HitPos) -- Set the flag's position to that trace result, kinda buggy
+            child:SetPos(tr.HitPos) -- Set the flag's position to that trace result, kinda buggy
 
-            child.Entity:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
+            child:SetDropTime(CurTime()) -- Flag has been dropped, initiate countdown, where curTime() is the precise moment it was dropped
             --print("[DAC DEBUG]: A flag was dropped!")
 
-            child.Entity:SetHeld(false)
-            --print("[DAC DEBUG]: Set " .. child.Entity:GetCarrier():Nick() .. "'s flag carrier status to " .. tostring(child.Entity:GetCarrier():GetPlayerCarrierStatus()) .. ".")
-            child.Entity:SetCarrier(NULL)
+            child:SetHeld(false)
+            child:GetCarrier():SetPlayerCarrierStatus(false) -- Send carrier boolean status to player entity
+            --print("[DAC DEBUG]: Set " .. child:GetCarrier():Nick() .. "'s flag carrier status to " .. tostring(child:GetCarrier():GetPlayerCarrierStatus()) .. ".")
+            child:SetCarrier(NULL)
             
-            child.Entity:PhysWake()
-            child.Entity:SetParent(NULL)
-            child.Entity:SetAngles(Angle(0,90,0))
-            child.Entity:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+            child:PhysWake()
+            child:SetParent(NULL)
+            child:SetAngles(Angle(0,90,0))
+            child:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
 
 			break -- Stop iterations after flag is identified
 		end
