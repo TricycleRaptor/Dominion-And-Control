@@ -46,12 +46,17 @@ function GM:PlayerSpawn(ply)
 	-- Changes player model colors, if the model has any, as well as the physgun
 	ply:SetPlayerColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )
 	ply:SetWeaponColor( Vector( teamColor.r / 255, teamColor.g / 255, teamColor.b / 255 ) )
+	ply:SetRenderMode(1) -- Allow transparency on player render
 
 	-- Brief 5-second invulnerability when spawning
 	if stageData.name ~= "SETUP" then 
 		ply:GodEnable()
-		timer.Simple(5, function() 
+		ply:SetColor(Color(255, 255, 255, 127.5)) -- Set player transparency to half
+		ply:SetRenderFX(24) -- Apply visual invulnerability effect
+		timer.Simple(4, function() 
 			ply:GodDisable()
+			ply:SetRenderFX(0) -- Remove visual invulnerability effect
+			ply:SetColor(Color(255, 255, 255, 255)) -- Remove transparency render filter
 		end)
 	end
 

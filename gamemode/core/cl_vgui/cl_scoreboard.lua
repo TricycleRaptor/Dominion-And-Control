@@ -170,14 +170,17 @@ function createPlayerPanel(ply, team)
       end
       draw.RoundedBox(0, 0, 39, PlayerPanel:GetWide(), 10, Color(0, 0, 0, 100))
 
-      draw.SimpleText(ply:GetName(), "DermaDefaultBold", 52, 12, Color(255, 255, 255))
-      draw.SimpleText(ply:Ping(), "DermaDefaultBold", PlayerPanel:GetWide()-20, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
-      draw.SimpleText(ply:Deaths(), "DermaDefaultBold", PlayerPanel:GetWide()-70, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
-      draw.SimpleText(ply:Frags(), "DermaDefaultBold", PlayerPanel:GetWide()-120, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+      if (ply:IsValid()) then
+        draw.SimpleText(ply:GetName(), "DermaDefaultBold", 52, 12, Color(255, 255, 255))
+        draw.SimpleText(ply:Ping(), "DermaDefaultBold", PlayerPanel:GetWide()-20, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.SimpleText(ply:Deaths(), "DermaDefaultBold", PlayerPanel:GetWide()-70, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        draw.SimpleText(ply:Frags(), "DermaDefaultBold", PlayerPanel:GetWide()-120, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
 
-      if(!ply:Alive()) then
-        draw.SimpleText("DEAD", "DermaDefaultBold", PlayerPanel:GetWide()/2, 12, Color(255, 0, 0, 200), TEXT_ALIGN_CENTER)
+        if(!ply:Alive()) then
+          draw.SimpleText("DEAD", "DermaDefaultBold", PlayerPanel:GetWide()/2, 12, Color(255, 0, 0, 200), TEXT_ALIGN_CENTER)
+        end
       end
+
     end
   end
 
@@ -195,14 +198,17 @@ function createPlayerPanel(ply, team)
         end
         draw.RoundedBox(0, 0, 39, PlayerPanel:GetWide(), 10, Color(0, 0, 0, 100))
 
-        draw.SimpleText(ply:GetName(), "DermaDefaultBold", 52, 12, Color(255, 255, 255))
-        draw.SimpleText(ply:Ping(), "DermaDefaultBold", PlayerPanel:GetWide()-20, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
-        draw.SimpleText(ply:Deaths(), "DermaDefaultBold", PlayerPanel:GetWide()-70, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
-        draw.SimpleText(ply:Frags(), "DermaDefaultBold", PlayerPanel:GetWide()-120, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+        if (ply:IsValid()) then
+          draw.SimpleText(ply:GetName(), "DermaDefaultBold", 52, 12, Color(255, 255, 255))
+          draw.SimpleText(ply:Ping(), "DermaDefaultBold", PlayerPanel:GetWide()-20, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+          draw.SimpleText(ply:Deaths(), "DermaDefaultBold", PlayerPanel:GetWide()-70, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+          draw.SimpleText(ply:Frags(), "DermaDefaultBold", PlayerPanel:GetWide()-120, 12, Color(255, 255, 255), TEXT_ALIGN_CENTER)
 
-        if(!ply:Alive()) then
-          draw.SimpleText("DEAD", "DermaDefaultBold", PlayerPanel:GetWide()/2, 12, Color(255, 0, 0, 200), TEXT_ALIGN_CENTER)
+          if(!ply:Alive()) then
+            draw.SimpleText("DEAD", "DermaDefaultBold", PlayerPanel:GetWide()/2, 12, Color(255, 0, 0, 200), TEXT_ALIGN_CENTER)
+          end
         end
+
       end
     end
 

@@ -1,11 +1,8 @@
 -- Reduce explosion damage
 hook.Add("EntityTakeDamage", "DAC.ExplosionModifiers", function(target, dmginfo)
-	if (
-		target:IsPlayer()
-		and target:InVehicle()
-		and IsValid(target)
-		and dmginfo:IsExplosionDamage()
-	) then
-		dmginfo:ScaleDamage(0) -- Negate explosion damage in vehicles, this does not include vehicles inflicting damage onto the driver or passengers
+	if (target:IsPlayer() and IsValid(target)) then
+		if target:InVehicle() then
+			dmginfo:ScaleDamage(0.01) -- All damage received by players in vehicles reduced to 1% of original damage value
+		end
 	end
 end)

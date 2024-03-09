@@ -12,7 +12,7 @@ function DAC_SpawnLVSVehicle(Player, Transport, Pos, Ang, ClassName)
     ent:SetAITEAM(Player:Team())
 
     for k, v in pairs( ent:GetPassengerSeats() ) do
-        print(v)
+        --print(v)
         v:SetNWInt('OwningTeam', Player:Team())
         v:SetNWBool('FlagTransport', Transport)
     end

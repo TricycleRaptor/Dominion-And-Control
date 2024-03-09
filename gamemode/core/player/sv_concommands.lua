@@ -18,3 +18,8 @@ concommand.Add("dac_set_gamestage", function(ply, cmd, args)
 	DAC:SyncGameStage()
 	--ply:ChatPrint("[DAC]: Setting game stage to "..newStage:GetData().name)
 end)
+
+-- Adjust salary timer when changed via cvars
+cvars.AddChangeCallback("dac_income_timer", function(convar_name, value_old, value_new)
+    timer.Adjust("DAC.timerSalary", value_new * 60, nil, nil)
+end)

@@ -13,7 +13,7 @@
 		1
 		{
 			"name"		"dac_build_time"
-			"text"		"Build Time"
+			"text"		"Build Time (Minutes)"
 			"help"		"The number in minutes where teams can build."
 			"type"		"Numeric"
 			"default"	"15"
@@ -22,7 +22,7 @@
 		2
 		{
 			"name"		"dac_match_time"
-			"text"		"Match Time"
+			"text"		"Match Time (Minutes)"
 			"help"		"The number in minutes before a match goes into overtime."
 			"type"		"Numeric"
 			"default"	"30"
@@ -31,10 +31,10 @@
 		3
 		{
 			"name"		"dac_income_timer"
-			"text"		"Salary Time"
+			"text"		"Salary Time (Minutes)"
 			"help"		"The number in minutes between passive credit awards."
 			"type"		"Numeric"
-			"default"	"300"
+			"default"	"5"
 		}
 
 		4
