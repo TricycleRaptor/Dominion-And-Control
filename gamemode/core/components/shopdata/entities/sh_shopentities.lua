@@ -101,6 +101,18 @@ local V = {
 list.Set("dac_defense", 2, V )
 
 local V = {
+	Name = "AR3 Emplacement Gun",
+	Model = "models/props_combine/bunker_gun01.mdl",
+	Icon = "entities/shop_ar3.png",
+	ListName = "dac_defense",
+	Category = "POINT DEFENSE",
+	Class = "shop_ar3",
+	Cost = 350,
+	SpawnOffset = 5,
+}
+list.Set("dac_defense", 3, V )
+
+local V = {
 	Name = "Vehicle Repair Station",
 	Model = "models/props_vehicles/generatortrailer01.mdl",
 	Icon = "entities/lvs_vehicle_repair.png",
@@ -110,7 +122,7 @@ local V = {
 	Cost = 300,
 	SpawnOffset = 5,
 }
-list.Set("dac_defense", 3, V )
+list.Set("dac_defense", 4, V )
 
 local V = {
 	Name = "Vehicle Gas Station",
@@ -122,7 +134,7 @@ local V = {
 	Cost = 100,
 	SpawnOffset = 5,
 }
-list.Set("dac_defense", 4, V )
+list.Set("dac_defense", 5, V )
 
 local V = {
 	Name = "Heli Ammo Station",
@@ -134,7 +146,7 @@ local V = {
 	Cost = 300,
 	SpawnOffset = 5,
 }
-list.Set("dac_defense", 5, V )
+list.Set("dac_defense", 6, V )
 
 --- [ Point Defense End ] --- 
 

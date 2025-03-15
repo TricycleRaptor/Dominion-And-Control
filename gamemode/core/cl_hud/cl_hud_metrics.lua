@@ -55,7 +55,7 @@ end
 
 -- Disable Default HUD
 hook.Add("HUDShouldDraw", "DAC.DisableDefaultHud", function(part_name)
-	if part_name == "CHudBattery" or part_name == "CHudHealth" or part_name == "CHudAmmo" or part_name == "CHudSecondaryAmmo" or part_name == "CHudSuitPower" then
+	if part_name == "CHudBattery" or part_name == "CHudHealth" or part_name == "CHudAmmo" or part_name == "CHudSecondaryAmmo" then
 		return false
 	end
 end)

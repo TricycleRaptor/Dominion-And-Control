@@ -88,6 +88,7 @@ if CLIENT then
                     selectedVehicleCost = vehicleValue.Cost
                     selectedVehicleClass = vehicleValue.Class
                     selectedVehicleSpawnOffset = vehicleValue.SpawnOffset
+                    selectedVehicleList = vehicleValue.ListName -- I somehow didn't set this a year ago because I'm retarded
                     break
                 end
 
@@ -118,16 +119,16 @@ if CLIENT then
             -- MAIN FRAME SETUP --
             
             MENU_FRAME = vgui.Create( "DFrame" )
-            MENU_FRAME:SetSize(SW * 0.70, SH * 0.70)
+            MENU_FRAME:SetSize(SW * 0.75, SH * 0.70)
             MENU_FRAME:Center()
             MENU_FRAME:ShowCloseButton(false)
             MENU_FRAME:SetDraggable(false)
             MENU_FRAME:SetTitle("")
-            MENU_FRAME.Paint = function( self, w, h )
+            --[[MENU_FRAME.Paint = function( self, w, h )
                 draw.RoundedBox(3, 0, 0, MENU_FRAME:GetWide(), MENU_FRAME:GetTall(), Color(0, 0, 0, 240))
                 surface.SetDrawColor(255,255,255)
                 surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-            end
+            end]]
 
             local panelX, panelY = MENU_FRAME:GetSize()
 
@@ -135,7 +136,7 @@ if CLIENT then
 
             --- MAIN PANELS SETUP ---
 
-            local closeButton = vgui.Create("DButton", MENU_FRAME)
+            --[[local closeButton = vgui.Create("DButton", MENU_FRAME)
             closeButton:SetText("CLOSE")
             closeButton:SetSize(50, 30)
             closeButton:SetPos( panelX - 50, 0)
@@ -145,7 +146,7 @@ if CLIENT then
                 elseif closeButton:IsHovered() then
                     closeButton:SetColor(Color(200, 255, 200))
                 else
-                    closeButton:SetColor(Color(138, 138, 138))
+                    closeButton:SetColor(Color(255, 255, 255))
                 end
             end
 
@@ -153,18 +154,29 @@ if CLIENT then
                 LocalPlayer():EmitSound(CloseNoise)
                 gui.EnableScreenClicker(false)
                 MENU_FRAME:SetVisible(false)
-            end
+            end]]
 
             local titleLabel = vgui.Create("DLabel", MENU_FRAME)
             titleLabel:SetFont("DAC.PickTeam") -- Size 32px
-            titleLabel:SetText("DOMINION & CONTROL")
-            titleLabel:SetPos(panelX * 0.01,6)
+            titleLabel:SetText("Buy Menu")
+            titleLabel:SetColor(Color(255,255,255,255))
+            titleLabel:SetPos(panelX * 0.45,6)
             titleLabel:SizeToContents()
+
+            local balanceLabel = vgui.Create("DLabel", MENU_FRAME)
+            balanceLabel:SetFont("DAC.ScoreboardTitle") -- Size 22px
+            balanceLabel:SetColor(Color(255,217,0))
+            balanceLabel:SetPos(panelX * 0.865, 12)
+            balanceLabel.Paint = function(self, w, h)
+                balanceLabel:SetText("Balance: ")
+                balanceLabel:SetColor(Color(255,255,255))
+                balanceLabel:SizeToContents()
+            end
 
             local creditsLabel = vgui.Create("DLabel", MENU_FRAME)
             creditsLabel:SetFont("DAC.ScoreboardTitle") -- Size 22px
             creditsLabel:SetColor(Color(255,217,0))
-            creditsLabel:SetPos(panelX * 0.91, 12)
+            creditsLabel:SetPos(panelX * 0.93, 12)
             creditsLabel.Paint = function(self, w, h)
                 creditsLabel:SetText(LocalPlayer():GetNWInt("storeCredits") .. " cR")
                 creditsLabel:SetColor(Color(255,217,0))
@@ -192,7 +204,7 @@ if CLIENT then
             end
 
             local mainPanel = vgui.Create("DPanel", MENU_FRAME)
-            mainPanel:SetPos(4, 38)
+            mainPanel:SetPos(4, 40)
             mainPanel:SetSize(panelX - 8, panelY - 38 - 4)
             mainPanel.Paint = function(self, w, h)
                 draw.RoundedBox(0,0,0, w, h, Color(100,100,100,100))
@@ -240,8 +252,8 @@ if CLIENT then
                 shopSheet_Items_Secondary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                    draw.SimpleText("PREVIEW", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText(selectedEntity, "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                 end
 
                 local shopSheet_Items_Secondary_PreviewPanel = vgui.Create("DPanel", shopSheet_Items_Secondary)
@@ -252,7 +264,7 @@ if CLIENT then
                 shopSheet_Items_Secondary_PreviewPanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                 end
 
                     local shopSheet_Items_Secondary_PreviewPanel_Model = vgui.Create("DModelPanel", shopSheet_Items_Secondary_PreviewPanel)
@@ -282,8 +294,8 @@ if CLIENT then
                     shopSheet_Items_Secondary_StatsTitle.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                        draw.SimpleText("INFORMATION", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        draw.SimpleText(selectedEntityCost .. " cR", "DAC.PickTeam", w * 0.5, 12, Color(255,217,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                     end
 
                     local shopSheet_Items_Secondary_StatsFrame = vgui.Create("DPanel", shopSheet_Items_Secondary)
@@ -294,7 +306,7 @@ if CLIENT then
                     shopSheet_Items_Secondary_StatsFrame.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(71,71,71,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
                         local shopSheet_Items_Secondary_StatsPanel_NameLabel = vgui.Create("DLabel", shopSheet_Items_Secondary_StatsFrame)
@@ -320,7 +332,7 @@ if CLIENT then
                     shopSheet_Items_Secondary_BuyButton:DockMargin(24,24,24,24)
                     shopSheet_Items_Secondary_BuyButton:Dock(FILL)
                     shopSheet_Items_Secondary_BuyButton:SetFont("DAC.PickTeam")
-                    shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE (" .. selectedEntityCost .. "cR)")
+                    shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE")
                     shopSheet_Items_Secondary_BuyButton:InvalidateParent(true)
                     shopSheet_Items_Secondary_BuyButton.Paint = function(self, w, h)
 
@@ -345,7 +357,7 @@ if CLIENT then
                             --[[if gameStageData.name == "SETUP" then
                                 shopSheet_Items_Secondary_BuyButton:SetText("DISABLED")
                             else]]
-                                shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE (" .. selectedEntityCost .. "cR)")
+                                shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE")
                             --end
                         end
                     end
@@ -379,7 +391,7 @@ if CLIENT then
                         end
                     end
 
-                local shopSheet_Items_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Items_Primary)
+                --[[local shopSheet_Items_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Items_Primary)
                 shopSheet_Items_Primary_TitlePanel:SetTall(shopSheet_Items:GetTall() / 12)
                 shopSheet_Items_Primary_TitlePanel:DockPadding(20,20,20,20)
                 shopSheet_Items_Primary_TitlePanel:Dock(TOP)
@@ -387,9 +399,9 @@ if CLIENT then
                 shopSheet_Items_Primary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                    draw.SimpleText("ENTITIES CATALOG", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
-                end
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("Entities", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end]]
 
                     local shopSheet_Items_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Items_Primary)
                     --shopSheet_Items_Primary_PreviewPanel:SetTall(shopSheet_Items_Primary:GetTall() / 1.5)
@@ -399,7 +411,7 @@ if CLIENT then
                     shopSheet_Items_Primary_PreviewPanel.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
                         local shopSheet_Items_Primary_ScrollPanel = vgui.Create("DScrollPanel", shopSheet_Items_Primary_PreviewPanel)
@@ -417,9 +429,9 @@ if CLIENT then
                         shopSheet_Items_AutoDefense_TitlePanel:InvalidateParent(true)
                         shopSheet_Items_AutoDefense_TitlePanel.Paint = function(self, w, h)
                             draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
-                            surface.SetDrawColor(255,255,255)
-                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                            draw.SimpleText("DEFENSE & UTILITY", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                            --surface.SetDrawColor(255,255,255)
+                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                            draw.SimpleText("Defense & Utility", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                         end
 
                             local shopSheet_Items_AutoDefense_IconLayout = vgui.Create( "DIconLayout", shopSheet_Items_Primary_ScrollPanel )
@@ -460,7 +472,7 @@ if CLIENT then
                                     shopSheet_Items_AutoDefense_IconLayout_IconSlot.Paint = function(self, w, h)
                                         draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                         surface.SetDrawColor(255,255,255)
-                                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                     end
 
                                     local shopSheet_Items_AutoDefense_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Items_AutoDefense_IconLayout_IconSlot)
@@ -489,7 +501,7 @@ if CLIENT then
 
                                     shopSheet_Items_AutoDefense_IconLayout_PanelFrame_Button.DoClick = function()
 
-                                        LocalPlayer():EmitSound(ButtonNoise)
+                                        --LocalPlayer():EmitSound(ButtonNoise)
 
                                         selectedEntity = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Name
                                         selectedEntityModel = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.Model
@@ -500,7 +512,7 @@ if CLIENT then
                                         selectedEntitySpawnOffset = shopSheet_Items_AutoDefense_IconLayout_PanelFrame.SpawnOffset
 
                                         shopSheet_Items_Secondary_PreviewPanel_Model:SetModel(selectedEntityModel)
-                                        shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE (" .. selectedEntityCost .. "cR)")
+                                        shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE")
                                         shopSheet_Items_Secondary_StatsPanel_NameLabel:SetText(selectedEntity)
                                         shopSheet_Items_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedEntityCategory)
             
@@ -526,8 +538,8 @@ if CLIENT then
                             shopSheet_Items_AmmoCrates_TitlePanel.Paint = function(self, w, h)
                                 draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                 surface.SetDrawColor(255,255,255)
-                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                                draw.SimpleText("AMMO CRATES", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                draw.SimpleText("Ammo Crates", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                             end
 
                                 local shopSheet_Items_AmmoCrates_IconLayout = vgui.Create( "DIconLayout", shopSheet_Items_Primary_ScrollPanel )
@@ -569,7 +581,7 @@ if CLIENT then
                                         shopSheet_Items_AmmoCrates_IconLayout_IconSlot.Paint = function(self, w, h)
                                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                             surface.SetDrawColor(255,255,255)
-                                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                         end
 
                                         local shopSheet_Items_AmmoCrates_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Items_AmmoCrates_IconLayout_IconSlot)
@@ -598,7 +610,7 @@ if CLIENT then
 
                                         shopSheet_Items_AmmoCrates_IconLayout_PanelFrame_Button.DoClick = function()
 
-                                            LocalPlayer():EmitSound(ButtonNoise)
+                                            --LocalPlayer():EmitSound(ButtonNoise)
 
                                             selectedEntity = shopSheet_Items_AmmoCrates_IconLayout_PanelFrame.Name
                                             selectedEntityModel = shopSheet_Items_AmmoCrates_IconLayout_PanelFrame.Model
@@ -610,7 +622,7 @@ if CLIENT then
                                             selectedEntitySpawnOffset = shopSheet_Items_AmmoCrates_IconLayout_PanelFrame.SpawnOffset
 
                                             shopSheet_Items_Secondary_PreviewPanel_Model:SetModel(selectedEntityModel)
-                                            shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE (" .. selectedEntityCost .. "cR)")
+                                            shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE")
                                             shopSheet_Items_Secondary_StatsPanel_NameLabel:SetText(selectedEntity)
                                             shopSheet_Items_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedEntityCategory)
                 
@@ -636,8 +648,8 @@ if CLIENT then
                                             shopSheet_Items_PhysicsProps_TitlePanel.Paint = function(self, w, h)
                                                 draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                                 surface.SetDrawColor(255,255,255)
-                                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                                                draw.SimpleText("PHYSICS OBJECTS", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                                --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                                draw.SimpleText("Physics Objects", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                                             end
                 
                                                 local shopSheet_Items_PhysicsProps_IconLayout = vgui.Create( "DIconLayout", shopSheet_Items_Primary_ScrollPanel )
@@ -678,7 +690,7 @@ if CLIENT then
                                                         shopSheet_Items_PhysicsProps_IconLayout_IconSlot.Paint = function(self, w, h)
                                                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                                             surface.SetDrawColor(255,255,255)
-                                                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                                         end
                 
                                                         local shopSheet_Items_PhysicsProps_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Items_PhysicsProps_IconLayout_IconSlot)
@@ -707,7 +719,7 @@ if CLIENT then
                 
                                                         shopSheet_Items_PhysicsProps_IconLayout_PanelFrame_Button.DoClick = function()
                 
-                                                            LocalPlayer():EmitSound(ButtonNoise)
+                                                            --LocalPlayer():EmitSound(ButtonNoise)
                 
                                                             selectedEntity = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Name
                                                             selectedEntityModel = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.Model
@@ -718,7 +730,7 @@ if CLIENT then
                                                             selectedEntitySpawnOffset = shopSheet_Items_PhysicsProps_IconLayout_PanelFrame.SpawnOffset
                 
                                                             shopSheet_Items_Secondary_PreviewPanel_Model:SetModel(selectedEntityModel)
-                                                            shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE (" .. selectedEntityCost .. "cR)")
+                                                            shopSheet_Items_Secondary_BuyButton:SetText("PURCHASE")
                                                             shopSheet_Items_Secondary_StatsPanel_NameLabel:SetText(selectedEntity)
                                                             shopSheet_Items_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedEntityCategory)
                                 
@@ -773,8 +785,8 @@ if CLIENT then
                 shopSheet_Vehicles_Secondary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                    draw.SimpleText("PREVIEW", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText(selectedVehicle, "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                 end
 
                 local shopSheet_Vehicles_Secondary_PreviewPanel = vgui.Create("DPanel", shopSheet_Vehicles_Secondary)
@@ -785,7 +797,7 @@ if CLIENT then
                 shopSheet_Vehicles_Secondary_PreviewPanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                 end
 
                     local shopSheet_Vehicles_Secondary_PreviewPanel_Model = vgui.Create("DModelPanel", shopSheet_Vehicles_Secondary_PreviewPanel)
@@ -815,8 +827,8 @@ if CLIENT then
                     shopSheet_Vehicles_Secondary_StatsTitle.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                        draw.SimpleText("STATISTICS", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        draw.SimpleText(selectedVehicleCost .. " cR", "DAC.PickTeam", w * 0.5, 12, Color(255,217,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                     end
 
                     local shopSheet_Vehicles_Secondary_StatsFrame = vgui.Create("DPanel", shopSheet_Vehicles_Secondary)
@@ -827,7 +839,7 @@ if CLIENT then
                     shopSheet_Vehicles_Secondary_StatsFrame.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(71,71,71,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
                         local shopSheet_Vehicles_Secondary_StatsPanel_NameLabel = vgui.Create("DLabel", shopSheet_Vehicles_Secondary_StatsFrame)
@@ -862,7 +874,7 @@ if CLIENT then
                     shopSheet_Vehicles_Secondary_BuyButton:DockMargin(24,24,24,24)
                     shopSheet_Vehicles_Secondary_BuyButton:Dock(FILL)
                     shopSheet_Vehicles_Secondary_BuyButton:SetFont("DAC.PickTeam")
-                    shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                    shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE")
                     shopSheet_Vehicles_Secondary_BuyButton:InvalidateParent(true)
 
                     local gameStage = DAC:GetGameStage()
@@ -885,7 +897,7 @@ if CLIENT then
                             --[[if gameStageData.name == "SETUP" then
                                 shopSheet_Vehicles_Secondary_BuyButton:SetText("DISABLED")
                             else]]
-                                shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                                shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE")
                             --end
                         end
                     end
@@ -932,7 +944,7 @@ if CLIENT then
                         end
                     end
 
-                local shopSheet_Vehicles_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary)
+                --[[local shopSheet_Vehicles_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary)
                 shopSheet_Vehicles_Primary_TitlePanel:SetTall(shopSheet_Vehicles:GetTall() / 12)
                 shopSheet_Vehicles_Primary_TitlePanel:DockPadding(20,20,20,20)
                 shopSheet_Vehicles_Primary_TitlePanel:Dock(TOP)
@@ -940,9 +952,9 @@ if CLIENT then
                 shopSheet_Vehicles_Primary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                    draw.SimpleText("VEHICLE CATALOG", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
-                end
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("Vehicles", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end]]
 
                     local shopSheet_Vehicles_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Vehicles_Primary)
                     --shopSheet_Vehicles_Primary_PreviewPanel:SetTall(shopSheet_Vehicles_Primary:GetTall() / 1.5)
@@ -952,7 +964,7 @@ if CLIENT then
                     shopSheet_Vehicles_Primary_PreviewPanel.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
                         local shopSheet_Vehicles_Primary_ScrollPanel = vgui.Create("DScrollPanel", shopSheet_Vehicles_Primary_PreviewPanel)
@@ -971,8 +983,8 @@ if CLIENT then
                         shopSheet_Vehicles_CivilianVehicles_TitlePanel.Paint = function(self, w, h)
                             draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                             surface.SetDrawColor(255,255,255)
-                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                            draw.SimpleText("TRANSPORTATION", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                            draw.SimpleText("Lightweight", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                         end
 
                         local shopSheet_Vehicles_CivilianVehicles_IconLayout = vgui.Create( "DIconLayout", shopSheet_Vehicles_Primary_ScrollPanel )
@@ -1015,7 +1027,7 @@ if CLIENT then
                             shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot.Paint = function(self, w, h)
                                 draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                 surface.SetDrawColor(255,255,255)
-                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                             end
 
                             local shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Vehicles_CivilianVehicles_IconLayout_IconSlot)
@@ -1044,7 +1056,7 @@ if CLIENT then
 
                             shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame_Button.DoClick = function()
 
-                                LocalPlayer():EmitSound(ButtonNoise)
+                                --LocalPlayer():EmitSound(ButtonNoise)
 
                                 selectedVehicle = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Name
                                 selectedVehicleModel = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.Model
@@ -1057,7 +1069,7 @@ if CLIENT then
                                 selectedVehicleSpawnOffset = shopSheet_Vehicles_CivilianVehicles_IconLayout_PanelFrame.SpawnOffset
 
                                 shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
-                                shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                                shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE")
                                 shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetText(selectedVehicle)
                                 shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetText("Flag Transport: " .. string.upper(tostring(selectedVehicleTransportStatus)))
                                 shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetText("Primary Role: " .. selectedVehicleCategory)
@@ -1096,8 +1108,8 @@ if CLIENT then
                             shopSheet_Vehicles_ArmedVehicles_TitlePanel.Paint = function(self, w, h)
                                 draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                 surface.SetDrawColor(255,255,255)
-                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                                draw.SimpleText("HEAVY ARMOR", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                draw.SimpleText("Heavyweight", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                             end
 
                                 local shopSheet_Vehicles_ArmedVehicles_IconLayout = vgui.Create( "DIconLayout", shopSheet_Vehicles_Primary_ScrollPanel )
@@ -1139,7 +1151,7 @@ if CLIENT then
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot.Paint = function(self, w, h)
                                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                             surface.SetDrawColor(255,255,255)
-                                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                         end
 
                                         local shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Vehicles_ArmedVehicles_IconLayout_IconSlot)
@@ -1168,7 +1180,7 @@ if CLIENT then
 
                                         shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame_Button.DoClick = function()
 
-                                            LocalPlayer():EmitSound(ButtonNoise)
+                                            --LocalPlayer():EmitSound(ButtonNoise)
 
                                             selectedVehicle = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Name
                                             selectedVehicleModel = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.Model
@@ -1181,7 +1193,7 @@ if CLIENT then
                                             selectedVehicleSpawnOffset = shopSheet_Vehicles_ArmedVehicles_IconLayout_PanelFrame.SpawnOffset
 
                                             shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
-                                            shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                                            shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE")
                                             shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetText(selectedVehicle)
                                             shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetText("Flag Transport: " .. string.upper(tostring(selectedVehicleTransportStatus)))
                                             shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetText("Primary Role: " .. selectedVehicleCategory)
@@ -1220,8 +1232,8 @@ if CLIENT then
                             shopSheet_Vehicles_AirVehicles_TitlePanel.Paint = function(self, w, h)
                                 draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                 surface.SetDrawColor(255,255,255)
-                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                                draw.SimpleText("AIRCRAFT", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                draw.SimpleText("Aircraft", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                             end
 
                             local shopSheet_Vehicles_AirVehicles_IconLayout = vgui.Create( "DIconLayout", shopSheet_Vehicles_Primary_ScrollPanel )
@@ -1230,7 +1242,7 @@ if CLIENT then
                             shopSheet_Vehicles_AirVehicles_IconLayout:SetSpaceY(5)
                             shopSheet_Vehicles_AirVehicles_IconLayout:SetSpaceX(5)
 
-                            for vehicleIndex, vehicleValue in pairs (list.Get("dac_lvs_helicopters")) do
+                            for vehicleIndex, vehicleValue in pairs (list.Get("dac_lvs_aircraft")) do
 
                                 local shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame = shopSheet_Vehicles_AirVehicles_IconLayout:Add( "DPanel" )
                                 shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame:SetSize( shopSheet_Vehicles_Primary_PreviewPanel:GetWide() / 6, shopSheet_Vehicles_Primary_PreviewPanel:GetWide() / 6 )
@@ -1264,7 +1276,7 @@ if CLIENT then
                                 shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot.Paint = function(self, w, h)
                                     draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                     surface.SetDrawColor(255,255,255)
-                                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                 end
 
                                 local shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Vehicles_AirVehicles_IconLayout_IconSlot)
@@ -1293,7 +1305,7 @@ if CLIENT then
 
                                 shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame_Button.DoClick = function()
 
-                                    LocalPlayer():EmitSound(ButtonNoise)
+                                    --LocalPlayer():EmitSound(ButtonNoise)
 
                                     selectedVehicle = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Name
                                     selectedVehicleModel = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.Model
@@ -1306,7 +1318,7 @@ if CLIENT then
                                     selectedVehicleSpawnOffset = shopSheet_Vehicles_AirVehicles_IconLayout_PanelFrame.SpawnOffset
 
                                     shopSheet_Vehicles_Secondary_PreviewPanel_Model:SetModel(selectedVehicleModel)
-                                    shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE (" .. selectedVehicleCost .. "cR)")
+                                    shopSheet_Vehicles_Secondary_BuyButton:SetText("PURCHASE")
                                     shopSheet_Vehicles_Secondary_StatsPanel_NameLabel:SetText(selectedVehicle)
                                     shopSheet_Vehicles_Secondary_StatsPanel_TransportStatusLabel:SetText("Flag Transport: " .. string.upper(tostring(selectedVehicleTransportStatus)))
                                     shopSheet_Vehicles_Secondary_StatsPanel_CategoryLabel:SetText("Primary Role: " .. selectedVehicleCategory)
@@ -1374,8 +1386,8 @@ if CLIENT then
                 shopSheet_Ammo_Secondary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                    draw.SimpleText("PREVIEW", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText(selectedItem, "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                 end
 
                 local shopSheet_Ammo_Secondary_PreviewPanel = vgui.Create("DPanel", shopSheet_Ammo_Secondary)
@@ -1386,7 +1398,7 @@ if CLIENT then
                 shopSheet_Ammo_Secondary_PreviewPanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                 end
 
                     local shopSheet_Ammo_Secondary_PreviewPanel_Model = vgui.Create("DModelPanel", shopSheet_Ammo_Secondary_PreviewPanel)
@@ -1416,8 +1428,8 @@ if CLIENT then
                     shopSheet_Ammo_Secondary_StatsTitle.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                        draw.SimpleText("INFORMATION", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        draw.SimpleText(selectedItemCost .. " cR", "DAC.PickTeam", w * 0.5, 12, Color(255,217,0), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                     end
 
                     local shopSheet_Ammo_Secondary_StatsFrame = vgui.Create("DPanel", shopSheet_Ammo_Secondary)
@@ -1428,7 +1440,7 @@ if CLIENT then
                     shopSheet_Ammo_Secondary_StatsFrame.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(71,71,71,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
                         local shopSheet_Ammo_Secondary_StatsPanel_NameLabel = vgui.Create("DLabel", shopSheet_Ammo_Secondary_StatsFrame)
@@ -1454,7 +1466,7 @@ if CLIENT then
                     shopSheet_Ammo_Secondary_BuyButton:DockMargin(24,24,24,24)
                     shopSheet_Ammo_Secondary_BuyButton:Dock(FILL)
                     shopSheet_Ammo_Secondary_BuyButton:SetFont("DAC.PickTeam")
-                    shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                    shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE")
                     shopSheet_Ammo_Secondary_BuyButton:InvalidateParent(true)
                     shopSheet_Ammo_Secondary_BuyButton.Paint = function(self, w, h)
 
@@ -1472,7 +1484,7 @@ if CLIENT then
                             draw.RoundedBox(3,0,0, w, h, Color(226,226,226))
                             --surface.SetDrawColor(109,255,73)
                             --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 4)
-                            shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                            shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE")
                         else
                             shopSheet_Ammo_Secondary_BuyButton:SetEnabled(false)
                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,255))
@@ -1481,7 +1493,7 @@ if CLIENT then
                             --[[if gameStageData.name == "SETUP" then
                                 shopSheet_Ammo_Secondary_BuyButton:SetText("DISABLED")
                             else]]
-                                shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                                shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE")
                             --end
                         end
                     end
@@ -1515,7 +1527,7 @@ if CLIENT then
                         end
                     end
 
-                local shopSheet_Ammo_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Ammo_Primary)
+                --[[local shopSheet_Ammo_Primary_TitlePanel = vgui.Create("DPanel", shopSheet_Ammo_Primary)
                 shopSheet_Ammo_Primary_TitlePanel:SetTall(shopSheet_Upgrades:GetTall() / 12)
                 shopSheet_Ammo_Primary_TitlePanel:DockPadding(20,20,20,20)
                 shopSheet_Ammo_Primary_TitlePanel:Dock(TOP)
@@ -1523,9 +1535,9 @@ if CLIENT then
                 shopSheet_Ammo_Primary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                    draw.SimpleText("UPGRADES CATALOG", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
-                end
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("Items", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                end]]
 
                     local shopSheet_Ammo_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Ammo_Primary)
                     --shopSheet_Ammo_Primary_PreviewPanel:SetTall(shopSheet_Ammo_Primary:GetTall() / 1.5)
@@ -1535,7 +1547,7 @@ if CLIENT then
                     shopSheet_Ammo_Primary_PreviewPanel.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
                         local shopSheet_Ammo_Primary_ScrollPanel = vgui.Create("DScrollPanel", shopSheet_Ammo_Primary_PreviewPanel)
@@ -1554,8 +1566,8 @@ if CLIENT then
                             shopSheet_Ammo_AmmoCrates_TitlePanel.Paint = function(self, w, h)
                                 draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                 surface.SetDrawColor(255,255,255)
-                                surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                                draw.SimpleText("INDIVIDUAL AMMO", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                draw.SimpleText("Ammo", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                             end
 
                                 local shopSheet_Ammo_AmmoCrates_IconLayout = vgui.Create( "DIconLayout", shopSheet_Ammo_Primary_ScrollPanel )
@@ -1596,7 +1608,7 @@ if CLIENT then
                                         shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot.Paint = function(self, w, h)
                                             draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                             surface.SetDrawColor(255,255,255)
-                                            surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                            --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                         end
 
                                         local shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Ammo_AmmoCrates_IconLayout_IconSlot)
@@ -1625,7 +1637,7 @@ if CLIENT then
 
                                         shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame_Button.DoClick = function()
 
-                                            LocalPlayer():EmitSound(ButtonNoise)
+                                            --LocalPlayer():EmitSound(ButtonNoise)
 
                                             selectedItem = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Name
                                             selectedItemModel = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.Model
@@ -1636,7 +1648,7 @@ if CLIENT then
                                             selectedItemSpawnOffset = shopSheet_Ammo_AmmoCrates_IconLayout_PanelFrame.SpawnOffset
 
                                             shopSheet_Ammo_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
-                                            shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                                            shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE")
                                             shopSheet_Ammo_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
                                             shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
                 
@@ -1662,8 +1674,8 @@ if CLIENT then
                                     shopSheet_Ammo_AutoDefense_TitlePanel.Paint = function(self, w, h)
                                         draw.RoundedBox(3,0,0, w, h, Color(0,0,0,200))
                                         surface.SetDrawColor(255,255,255)
-                                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                                        draw.SimpleText("HEALTH & ARMOR", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                        draw.SimpleText("Health & Armor", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                                     end
         
                                         local shopSheet_Ammo_AutoDefense_IconLayout = vgui.Create( "DIconLayout", shopSheet_Ammo_Primary_ScrollPanel )
@@ -1704,7 +1716,7 @@ if CLIENT then
                                                 shopSheet_Ammo_AutoDefense_IconLayout_IconSlot.Paint = function(self, w, h)
                                                     draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                                     surface.SetDrawColor(255,255,255)
-                                                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                                 end
         
                                                 local shopSheet_Ammo_AutoDefense_IconLayout_IconSlot_Image = vgui.Create("DImage", shopSheet_Ammo_AutoDefense_IconLayout_IconSlot)
@@ -1733,7 +1745,7 @@ if CLIENT then
         
                                                 shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame_Button.DoClick = function()
         
-                                                    LocalPlayer():EmitSound(ButtonNoise)
+                                                    --LocalPlayer():EmitSound(ButtonNoise)
         
                                                     selectedItem = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Name
                                                     selectedItemModel = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.Model
@@ -1745,7 +1757,7 @@ if CLIENT then
                                                     selectedItemSpawnOffset = shopSheet_Ammo_AutoDefense_IconLayout_PanelFrame.SpawnOffset
         
                                                     shopSheet_Ammo_Secondary_PreviewPanel_Model:SetModel(selectedItemModel)
-                                                    shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE (" .. selectedItemCost .. "cR)")
+                                                    shopSheet_Ammo_Secondary_BuyButton:SetText("PURCHASE")
                                                     shopSheet_Ammo_Secondary_StatsPanel_NameLabel:SetText(selectedItem)
                                                     shopSheet_Ammo_Secondary_StatsPanel_CategoryLabel:SetText("Category: " .. selectedItemCategory)
                         
@@ -1771,7 +1783,7 @@ if CLIENT then
             shopSheet_Loadout.Paint = function(self, w, h)
                 draw.RoundedBox(0,0,0, w, h, Color(10,10,10,100))
             end
-            mainColumnSheet:AddSheet("Loadout", shopSheet_Loadout, "icon16/briefcase.png")
+            mainColumnSheet:AddSheet("Loadout", shopSheet_Loadout, "icon16/gun.png")
 
             -- [LEFT LOADOUT PANEL] --
             -- Divide the loadout panel into two pieces, dock this child panel to the left
@@ -1792,8 +1804,8 @@ if CLIENT then
                 shopSheet_Loadout_Primary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                    draw.SimpleText("PRIMARY WEAPON", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("Primary Weapon", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                 end
 
                     -- Build a panel within the second portion of the layout screen to build a list
@@ -1805,7 +1817,7 @@ if CLIENT then
                     shopSheet_Loadout_Primary_PreviewPanel.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
                         -- Assign a scroll panel in the event that the weapon list exceeds the total height of the parent panel
@@ -1860,7 +1872,7 @@ if CLIENT then
                                     shopSheet_Loadout_Primary_ListItem_Panel_IconSlot.Paint = function(self, w, h)
                                         draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                         surface.SetDrawColor(255,255,255)
-                                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                     end
 
                                     -- Make the actual icon for the weapon itself and parent it to the slot we built previously
@@ -1928,8 +1940,8 @@ if CLIENT then
                 shopSheet_Loadout_Secondary_TitlePanel.Paint = function(self, w, h)
                     draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                     surface.SetDrawColor(255,255,255)
-                    surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                    draw.SimpleText("SECONDARY WEAPON", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                    --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                    draw.SimpleText("Secondary Weapon", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                 end
 
                     -- Build a panel within the second portion of the layout screen to build a list
@@ -1941,7 +1953,7 @@ if CLIENT then
                     shopSheet_Loadout_Secondary_PreviewPanel.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
 
                         -- Assign a scroll panel in the event that the weapon list exceeds the total height of the parent panel
@@ -1996,7 +2008,7 @@ if CLIENT then
                                     shopSheet_Loadout_Secondary_ListItem_Panel_IconSlot.Paint = function(self, w, h)
                                         draw.RoundedBox(3,0,0, w, h, Color(179,179,179,100))
                                         surface.SetDrawColor(255,255,255)
-                                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                                     end
 
                                     -- Make the actual icon for the weapon itself and parent it to the slot we built previously
@@ -2070,8 +2082,8 @@ if CLIENT then
                     shopSheet_Player_PrimaryTitlePanel.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(0,0,0,150))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
-                        draw.SimpleText("PLAYER MODEL PREVIEW", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        draw.SimpleText("Player Model", "DAC.PickTeam", w * 0.5, 12, Color(255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2)
                     end
 
                     local shopSheet_Player_Primary_PreviewPanel = vgui.Create("DPanel", shopSheet_Player_Primary)
@@ -2081,7 +2093,7 @@ if CLIENT then
                     shopSheet_Player_Primary_PreviewPanel.Paint = function(self, w, h)
                         draw.RoundedBox(3,0,0, w, h, Color(97,97,97,100))
                         surface.SetDrawColor(255,255,255)
-                        surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
+                        --surface.DrawOutlinedRect(2, 2, w - 4, h - 4, 2)
                     end
                 
                     local shopSheet_Player_Primary_ModelPanel = shopSheet_Player_Primary_PreviewPanel:Add( "DModelPanel" )
